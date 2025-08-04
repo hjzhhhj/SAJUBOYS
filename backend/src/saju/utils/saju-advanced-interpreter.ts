@@ -169,7 +169,7 @@ export class SajuAdvancedInterpreter {
     return this.SIPSEONG_RELATIONS[dayElement]?.[targetElement] || '비겁';
   }
 
-  static getLoveFortune(dayMaster: string, yearBranch: string): string {
+  static getLoveFortune(_dayMaster: string, yearBranch: string): string {
     let fortune = '💕 연애운: ';
 
     if (this.LOVE_STARS.includes(yearBranch)) {
@@ -285,12 +285,20 @@ export class SajuAdvancedInterpreter {
         throw new Error(`Gemini API Error: ${response.status}`);
       }
 
-      const data = await response.json();
+      const data = (await response.json()) as {
+        candidates?: Array<{
+          content?: { parts?: Array<{ text?: string }> };
+        }>;
+      };
       const text =
         data.candidates?.[0]?.content?.parts?.[0]?.text || JSON.stringify(data);
 
       const jsonText = this.extractJSON(text);
-      const aiResult = JSON.parse(jsonText);
+      const aiResult = JSON.parse(jsonText) as {
+        keywords?: string[];
+        shouldDo?: string[];
+        shouldAvoid?: string[];
+      };
 
       return this.formatAdvice(aiResult);
     } catch (error) {

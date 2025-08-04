@@ -129,19 +129,12 @@ export class SajuService {
   private analyzeElements(fourPillars: FourPillars): Elements {
     const elements: Elements = { 목: 0, 화: 0, 토: 0, 금: 0, 수: 0 };
 
-    const pillars = [
-      fourPillars.year,
-      fourPillars.month,
-      fourPillars.day,
-      fourPillars.time,
-    ].filter((p): p is Pillar => p !== null);
-
-    pillars.forEach(({ heaven, earth }) => {
-      const heavenElement = FIVE_ELEMENTS.getElementFromStem(heaven);
-      const earthElement = FIVE_ELEMENTS.getElementFromBranch(earth);
-      elements[heavenElement as keyof Elements]++;
-      elements[earthElement as keyof Elements]++;
-    });
+    [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.time]
+      .filter((p): p is Pillar => p !== null)
+      .forEach(({ heaven, earth }) => {
+        elements[FIVE_ELEMENTS.getElementFromStem(heaven) as keyof Elements]++;
+        elements[FIVE_ELEMENTS.getElementFromBranch(earth) as keyof Elements]++;
+      });
 
     return elements;
   }
@@ -153,19 +146,14 @@ export class SajuService {
     let yin = 0;
     let yang = 0;
 
-    const pillars = [
-      fourPillars.year,
-      fourPillars.month,
-      fourPillars.day,
-      fourPillars.time,
-    ].filter((p): p is Pillar => p !== null);
-
-    pillars.forEach(({ heaven, earth }) => {
-      if (YANG_HEAVENLY.has(heaven)) yang++;
-      else yin++;
-      if (YANG_EARTHLY.has(earth)) yang++;
-      else yin++;
-    });
+    [fourPillars.year, fourPillars.month, fourPillars.day, fourPillars.time]
+      .filter((p): p is Pillar => p !== null)
+      .forEach(({ heaven, earth }) => {
+        yang += YANG_HEAVENLY.has(heaven) ? 1 : 0;
+        yin += YANG_HEAVENLY.has(heaven) ? 0 : 1;
+        yang += YANG_EARTHLY.has(earth) ? 1 : 0;
+        yin += YANG_EARTHLY.has(earth) ? 0 : 1;
+      });
 
     return { yin, yang };
   }
@@ -182,9 +170,7 @@ export class SajuService {
     const yearEarth = fourPillars.year.earth;
 
     const personalityInfo =
-      SajuInterpreter.PERSONALITY_BY_DAY_STEM[
-        dayHeavenly as keyof typeof SajuInterpreter.PERSONALITY_BY_DAY_STEM
-      ];
+      SajuInterpreter.PERSONALITY_BY_DAY_STEM[dayHeavenly];
     const personality = personalityInfo
       ? `${personalityInfo.basic}\n강점: ${personalityInfo.strength}\n약점: ${personalityInfo.weakness}`
       : '균형잡힌 성격으로 다양한 상황에 잘 적응합니다.';

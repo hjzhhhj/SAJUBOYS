@@ -1,9 +1,6 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../constants';
 
-/**
- * Axios 인스턴스 생성 및 인터셉터 설정
- */
 class ApiClient {
   constructor() {
     this.client = axios.create({
@@ -17,7 +14,6 @@ class ApiClient {
   }
 
   setupInterceptors() {
-    // Request 인터셉터
     this.client.interceptors.request.use(
       (config) => {
         const token = this.getToken();
@@ -29,7 +25,6 @@ class ApiClient {
       (error) => Promise.reject(error)
     );
 
-    // Response 인터셉터
     this.client.interceptors.response.use(
       (response) => response,
       (error) => {
@@ -62,7 +57,6 @@ class ApiClient {
     }
   }
 
-  // HTTP 메서드 래퍼
   async get(url, config) {
     const response = await this.client.get(url, config);
     return response.data;

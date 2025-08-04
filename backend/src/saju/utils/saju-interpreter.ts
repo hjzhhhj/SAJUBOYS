@@ -141,8 +141,8 @@ export class SajuInterpreter {
   }
 
   private static interpretDominantElement(item: ElementBalance): string {
-    const emoji = ELEMENT_EMOJI[item.element];
-    const hanja = ELEMENT_HANJA[item.element];
+    const emoji = ELEMENT_EMOJI[item.element] || '';
+    const hanja = ELEMENT_HANJA[item.element] || '';
 
     let result = `${emoji} ${item.element}(${hanja}) 기운이 강한 체질\n\n`;
 
@@ -159,8 +159,8 @@ export class SajuInterpreter {
   }
 
   private static interpretLackingElement(item: ElementBalance): string {
-    const emoji = ELEMENT_EMOJI[item.element];
-    const hanja = ELEMENT_HANJA[item.element];
+    const emoji = ELEMENT_EMOJI[item.element] || '';
+    const hanja = ELEMENT_HANJA[item.element] || '';
 
     let result = `\n${emoji} ${item.element}(${hanja}) 기운이 약한 체질\n\n`;
 
@@ -475,7 +475,8 @@ export class SajuInterpreter {
 
   static interpretSocialRelationship(dayHeavenly: string): string {
     const isYang = ['갑', '병', '무', '경', '임'].includes(dayHeavenly);
-    const dayElement = FIVE_ELEMENTS.getElementFromStem(dayHeavenly);
+    const dayElement: string =
+      FIVE_ELEMENTS.getElementFromStem(dayHeavenly) || '목';
 
     const relationshipStyle: Record<string, string> = {
       갑: '신뢰와 의리를 중시하며, 자신과 가치관이 맞는 사람과 깊은 유대를 맺습니다. 리더십이 강해 주변 사람들을 이끄는 역할을 자주 맡습니다.',
