@@ -1,10 +1,20 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import styled, { createGlobalStyle } from 'styled-components'
+import Starting from './Starting.jsx'
+
+const GlobalStyle = createGlobalStyle`
+  * {
+    margin: 0;
+    padding: 0;
+    background-color: black;
+    font-family: "Pretendard";
+  }
+`
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
+    <GlobalStyle />
+      <Starting />
   </StrictMode>,
 )
