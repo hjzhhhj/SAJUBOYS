@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
 
 const float1 = keyframes`
@@ -105,6 +106,12 @@ const Button = styled.button`
 `
 
 function Starting() {
+  const navigate = useNavigate()
+
+  const handleClick = () => {
+    navigate('/test')
+  }
+
   return (
     <Container>
       <GradientCircle1 />
@@ -112,7 +119,7 @@ function Starting() {
       <ContentWrapper>
         <SubTitle>오늘 당신의 사주를 확인해보세요</SubTitle>
         <Title>SAJUBOYS</Title>
-        <Button>사주팔자 보러가기</Button>
+        <Button onClick={handleClick}>사주팔자 보러가기</Button>
       </ContentWrapper>
     </Container>
   )
