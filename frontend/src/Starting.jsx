@@ -109,7 +109,7 @@ function Starting() {
   const navigate = useNavigate()
 
   const handleClick = () => {
-    navigate('/test')
+    navigate('/login')
   }
 
   return (

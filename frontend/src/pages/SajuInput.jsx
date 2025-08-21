@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useSaju } from '../context/SajuContext'
 import styled, { keyframes } from 'styled-components'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -282,13 +284,48 @@ const CityInput = styled.input`
   box-sizing: border-box;
 `
 
-function Test() {
+function SajuInput() {
+  const navigate = useNavigate()
+  const { calculateSaju, loading } = useSaju()
   const [name, setName] = useState('')
   const [gender, setGender] = useState('male')
   const [calendarType, setCalendarType] = useState('solar')
   const [birthDate, setBirthDate] = useState(null)
   const [birthTime, setBirthTime] = useState('')
   const [city, setCity] = useState('')
+
+  const handleSajuAnalysis = async () => {
+    if (!name || !birthDate || !birthTime || !city) {
+      alert('모든 필드를 입력해주세요')
+      return
+    }
+
+    const formData = {
+      name,
+      gender: gender === 'male' ? '남성' : '여성',
+      birthDate: birthDate ? birthDate.toLocaleDateString('ko-KR') : '',
+      birthTime: timeOptions.find(option => option.value === birthTime)?.label || '',
+      calendarType: calendarType === 'solar' ? '양력' : '음력',
+      city
+    }
+
+    try {
+      const result = await calculateSaju(formData)
+      
+      if (result.success) {
+        navigate('/saju-result', { state: result.data })
+      } else {
+        alert(result.error || '사주 계산에 실패했습니다')
+      }
+    } catch (error) {
+      alert('사주 계산 중 오류가 발생했습니다')
+    }
+  }
+
+  const handleSavedResults = () => {
+    // TODO: 저장된 결과 페이지로 이동
+    alert('저장된 사주팔자 기능은 준비 중입니다')
+  }
 
   const timeOptions = [
     { value: '', label: '시간을 선택해주세요' },
@@ -397,11 +434,13 @@ function Test() {
           />
         </InputWrapper>
         
-        <Button id='btn1'>사주팔자 확인하기</Button>
-        <Button>저장된 사주팔자 보러가기</Button>
+        <Button id='btn1' onClick={handleSajuAnalysis} disabled={loading}>
+          {loading ? '분석 중...' : '사주팔자 확인하기'}
+        </Button>
+        <Button onClick={handleSavedResults}>저장된 사주팔자 보러가기</Button>
       </ContentWrapper>
     </Container>
   )
 }
 
-export default Test
+export default SajuInput
