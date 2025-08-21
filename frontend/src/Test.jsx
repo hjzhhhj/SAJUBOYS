@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import styled, { keyframes } from 'styled-components'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 const float1 = keyframes`
   0%, 100% {
@@ -37,10 +39,11 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: black;
-  height: 96vh;
+  height: 97vh;
   position: relative;
   overflow: hidden;
   padding: 0 0 40px 0;
+  margin: 0px;
 `
 
 const ContentWrapper = styled.div`
@@ -92,14 +95,16 @@ const Input = styled.input`
   font-size: 1rem;
   cursor: pointer;
   margin-bottom: 0;
-  width: 800px;
+  width: 100%;
   padding: 1.25rem 2rem;
+  box-sizing: border-box;
 `
 
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 1.5rem;
+  width: 840px;
 `
 
 const Label = styled.label`
@@ -116,7 +121,7 @@ const Button = styled.button`
   font-size: 1.25rem;
   cursor: pointer;
   margin-top: 1rem;
-  width: 870px;
+  width: 840px;
   height: 3.75rem;
   
   &#btn1 {
@@ -132,29 +137,266 @@ const Button = styled.button`
   }
 `
 
+const ToggleWrapper = styled.div`
+  display: flex;
+  gap: 0;
+  background-color: white;
+  border-radius: 16px;
+  width: 100%;
+  border: 1px solid #ffffff;
+  box-sizing: border-box;
+`
+
+const ToggleButton = styled.button`
+  flex: 1;
+  padding: 1rem 1.5rem;
+  background-color: ${props => props.$active ? '#150137' : 'transparent'};
+  color: ${props => props.$active ? 'white' : '#a7a7a7'};
+  border: none;
+  border-radius: 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: ${props => props.$active ? '#150137' : '#ffffff'};
+  }
+`
+
+const DateToggleWrapper = styled.div`
+  display: flex;
+  gap: 0;
+  background-color: white;
+  border: 1px solid #ffffff;
+  border-radius: 16px;
+  width: 200px;
+  box-sizing: border-box;
+`
+
+const DateToggleButton = styled.button`
+  flex: 1;
+  padding: 1.25rem 1rem;
+  background-color: ${props => props.$active ? '#150137' : 'transparent'};
+  color: ${props => props.$active ? 'white' : '#a7a7a7'};
+  border: none;
+  border-radius: 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: ${props => props.$active ? '#150137' : '#f0f0f0'};
+  }
+`
+
+const DateInputRow = styled.div`
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  width: 100%;
+`
+
+const DatePickerWrapper = styled.div`
+  flex: 1;
+  
+  .react-datepicker-wrapper {
+    width: 100%;
+  }
+  
+  .react-datepicker__input-container input {
+    color: gray;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    padding: 1.25rem 2rem;
+    box-sizing: border-box;
+  }
+
+  .react-datepicker {
+    background-color: #1a1a1a;
+    border: 1px solid #ffffff30;
+    border-radius: 16px;
+  }
+
+  .react-datepicker__header {
+    background-color: #2a2a2a;
+    border-bottom: 1px solid #ffffff20;
+  }
+
+  .react-datepicker__current-month,
+  .react-datepicker__day-name {
+    color: white;
+  }
+
+  .react-datepicker__day {
+    color: white;
+    
+    &:hover {
+      background-color: #6200ff;
+    }
+  }
+
+  .react-datepicker__day--selected {
+    background-color: #6200ff;
+  }
+
+  .react-datepicker__day--disabled {
+    color: #666;
+  }
+`
+
+const TimeSelect = styled.select`
+  color: gray;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 250px;
+  padding: 1.25rem 1.5rem;
+  box-sizing: border-box;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 1.5rem center;
+  background-size: 20px;
+
+  option {
+    background-color: #1a1a1a;
+    color: white;
+  }
+`
+
+const CityInput = styled.input`
+  color: gray;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 16px;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  padding: 1.25rem 2rem;
+  box-sizing: border-box;
+`
+
 function Test() {
+  const [name, setName] = useState('')
+  const [gender, setGender] = useState('male')
+  const [calendarType, setCalendarType] = useState('solar')
+  const [birthDate, setBirthDate] = useState(null)
+  const [birthTime, setBirthTime] = useState('')
+  const [city, setCity] = useState('')
+
+  const timeOptions = [
+    { value: '', label: '시간을 선택해주세요' },
+    { value: 'unknown', label: '시간 모름' },
+    { value: '23-01', label: '자시 (23:00 - 01:00)' },
+    { value: '01-03', label: '축시 (01:00 - 03:00)' },
+    { value: '03-05', label: '인시 (03:00 - 05:00)' },
+    { value: '05-07', label: '묘시 (05:00 - 07:00)' },
+    { value: '07-09', label: '진시 (07:00 - 09:00)' },
+    { value: '09-11', label: '사시 (09:00 - 11:00)' },
+    { value: '11-13', label: '오시 (11:00 - 13:00)' },
+    { value: '13-15', label: '미시 (13:00 - 15:00)' },
+    { value: '15-17', label: '신시 (15:00 - 17:00)' },
+    { value: '17-19', label: '유시 (17:00 - 19:00)' },
+    { value: '19-21', label: '술시 (19:00 - 21:00)' },
+    { value: '21-23', label: '해시 (21:00 - 23:00)' },
+  ]
+
   return (
     <Container>
       <GradientCircle1 />
       <GradientCircle2 />
       <ContentWrapper>
         <Title>SAJUBOYS</Title>
+        
         <InputWrapper>
           <Label>이름</Label>
-          <Input placeholder='이름을 입력해주세요' type='text'></Input>
+          <Input 
+            placeholder='이름을 입력해주세요' 
+            type='text'
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </InputWrapper>
+        
         <InputWrapper>
-          <Label>생년월일</Label>
-          <Input placeholder='생년월일을 입력해주세요' type='text'></Input>
+          <Label>성별</Label>
+          <ToggleWrapper>
+            <ToggleButton 
+              $active={gender === 'male'}
+              onClick={() => setGender('male')}
+            >
+              남성
+            </ToggleButton>
+            <ToggleButton 
+              $active={gender === 'female'}
+              onClick={() => setGender('female')}
+            >
+              여성
+            </ToggleButton>
+          </ToggleWrapper>
         </InputWrapper>
+        
         <InputWrapper>
-          <Label>시간</Label>
-          <Input placeholder='태어난 시간을 입력해주세요' type='text'></Input>
+          <Label>생년월일시</Label>
+          <DateInputRow>
+            <DateToggleWrapper>
+              <DateToggleButton 
+                $active={calendarType === 'solar'}
+                onClick={() => setCalendarType('solar')}
+              >
+                양력
+              </DateToggleButton>
+              <DateToggleButton 
+                $active={calendarType === 'lunar'}
+                onClick={() => setCalendarType('lunar')}
+              >
+                음력
+              </DateToggleButton>
+            </DateToggleWrapper>
+            <DatePickerWrapper>
+              <DatePicker
+                selected={birthDate}
+                onChange={(date) => setBirthDate(date)}
+                dateFormat="yyyy년 MM월 dd일"
+                placeholderText="생년월일을 선택해주세요"
+                showYearDropdown
+                showMonthDropdown
+                dropdownMode="select"
+                yearDropdownItemNumber={100}
+                scrollableYearDropdown
+                maxDate={new Date()}
+                locale="ko"
+              />
+            </DatePickerWrapper>
+            <TimeSelect 
+              value={birthTime} 
+              onChange={(e) => setBirthTime(e.target.value)}
+            >
+              {timeOptions.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </TimeSelect>
+          </DateInputRow>
         </InputWrapper>
+        
         <InputWrapper>
           <Label>도시명</Label>
-          <Input placeholder='도시명을 입력해주세요' type='text'></Input>
+          <CityInput 
+            placeholder='도시명을 입력해주세요' 
+            type='text'
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
         </InputWrapper>
+        
         <Button id='btn1'>사주팔자 확인하기</Button>
         <Button>저장된 사주팔자 보러가기</Button>
       </ContentWrapper>
