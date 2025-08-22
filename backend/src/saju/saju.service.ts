@@ -10,20 +10,24 @@ export class SajuService {
     @InjectModel(SajuResult.name) private sajuResultModel: Model<SajuResultDocument>,
   ) {}
 
-  async calculateSaju(userId: string, calculateSajuDto: CalculateSajuDto) {
+  async calculateSaju(userId: string | null, calculateSajuDto: CalculateSajuDto) {
     // TODO: 실제 사주 계산 로직 구현
     // 현재는 더미 데이터 생성
     const fourPillars = this.generateDummyFourPillars();
     const interpretation = this.generateDummyInterpretation();
 
     const sajuResult = new this.sajuResultModel({
-      userId: new Types.ObjectId(userId),
+      userId: userId ? new Types.ObjectId(userId) : null,
       ...calculateSajuDto,
       fourPillars,
       interpretation,
     });
 
-    await sajuResult.save();
+    // userId가 있을 때만 저장
+    if (userId) {
+      await sajuResult.save();
+    }
+    
     return sajuResult;
   }
 
