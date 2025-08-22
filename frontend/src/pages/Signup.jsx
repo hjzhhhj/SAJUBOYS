@@ -42,7 +42,6 @@ const Container = styled.div`
   min-height: 100vh;
   position: relative;
   overflow: hidden;
-  padding: 2rem 0;
 `
 
 const GradientCircle1 = styled.div`
@@ -69,63 +68,84 @@ const GradientCircle2 = styled.div`
   filter: blur(40px);
 `
 
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  margin-top: 3rem;
+`
+
 const SignupForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 2.5rem 2rem;
-  width: 400px;
-  z-index: 1;
+  width: 840px;
 `
 
 const Title = styled.h1`
   color: white;
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 3rem;
+`
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  width: 100%;
+`
+
+const Label = styled.label`
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
 `
 
 const Input = styled.input`
-  width: 100%;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
+  color: gray;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 16px;
   font-size: 1rem;
-  color: #333;
+  cursor: pointer;
+  margin-bottom: 0;
+  width: 100%;
+  padding: 1.25rem 2rem;
+  box-sizing: border-box;
   
   &::placeholder {
-    color: #999;
+    color: #a7a7a7;
   }
   
   &:focus {
     outline: none;
-    border-color: #150137;
     background-color: white;
   }
 `
 
 const Button = styled.button`
-  width: 100%;
-  padding: 1rem;
-  margin-top: 1rem;
-  background-color: #150137;
+  background-color: #ffffff20;
   color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  border: 1px solid #ffffff;
+  border-radius: 100px;
+  font-size: 1.25rem;
   cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+  height: 3.75rem;
   transition: all 0.3s ease;
   
   &:hover {
-    background-color: #1e0250;
-    transform: translateY(-2px);
+    background: #ffffff30;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `
 
@@ -227,45 +247,59 @@ function Signup() {
     <Container>
       <GradientCircle1 />
       <GradientCircle2 />
-      <SignupForm onSubmit={handleSubmit}>
-        <Title>회원가입</Title>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        {success && <SuccessMessage>{success}</SuccessMessage>}
-        <Input
-          type="text"
-          name="name"
-          placeholder="이름"
-          value={formData.name}
-          onChange={handleChange}
-        />
-        <Input
-          type="email"
-          name="email"
-          placeholder="이메일"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="비밀번호 (6자 이상)"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        <Input
-          type="password"
-          name="confirmPassword"
-          placeholder="비밀번호 확인"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-        />
-        <Button type="submit" disabled={loading}>
-          {loading ? '가입 중...' : '가입하기'}
-        </Button>
-        <LinkText>
-          이미 계정이 있으신가요? <Link to="/login">로그인</Link>
-        </LinkText>
-      </SignupForm>
+      <ContentWrapper>
+        <Title>SAJUBOYS</Title>
+        <SignupForm onSubmit={handleSubmit}>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          {success && <SuccessMessage>{success}</SuccessMessage>}
+          <InputWrapper>
+            <Label>이름</Label>
+            <Input
+              type="text"
+              name="name"
+              placeholder="이름을 입력해주세요"
+              value={formData.name}
+              onChange={handleChange}
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <Label>이메일</Label>
+            <Input
+              type="email"
+              name="email"
+              placeholder="이메일을 입력해주세요"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <Label>비밀번호</Label>
+            <Input
+              type="password"
+              name="password"
+              placeholder="비밀번호를 입력해주세요 (6자 이상)"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <Label>비밀번호 확인</Label>
+            <Input
+              type="password"
+              name="confirmPassword"
+              placeholder="비밀번호를 다시 입력해주세요"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+            />
+          </InputWrapper>
+          <Button type="submit" disabled={loading}>
+            {loading ? '가입 중...' : '회원가입'}
+          </Button>
+          <LinkText>
+            이미 계정이 있으신가요? <Link to="/login">로그인</Link>
+          </LinkText>
+        </SignupForm>
+      </ContentWrapper>
     </Container>
   )
 }

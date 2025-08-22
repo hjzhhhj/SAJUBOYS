@@ -68,63 +68,84 @@ const GradientCircle2 = styled.div`
   filter: blur(40px);
 `
 
+const ContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+  margin-top: 3rem;
+`
+
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 3rem 2rem;
-  width: 400px;
-  z-index: 1;
+  width: 840px;
 `
 
 const Title = styled.h1`
   color: white;
-  font-size: 2.5rem;
-  font-weight: 700;
-  margin-bottom: 2rem;
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 3rem;
+`
+
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  width: 100%;
+`
+
+const Label = styled.label`
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
 `
 
 const Input = styled.input`
-  width: 100%;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  background-color: rgba(255, 255, 255, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  border-radius: 10px;
+  color: gray;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 16px;
   font-size: 1rem;
-  color: #333;
+  cursor: pointer;
+  margin-bottom: 0;
+  width: 100%;
+  padding: 1.25rem 2rem;
+  box-sizing: border-box;
   
   &::placeholder {
-    color: #999;
+    color: #a7a7a7;
   }
   
   &:focus {
     outline: none;
-    border-color: #150137;
     background-color: white;
   }
 `
 
 const Button = styled.button`
-  width: 100%;
-  padding: 1rem;
-  margin-top: 1rem;
-  background-color: #150137;
+  background-color: #ffffff20;
   color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  border: 1px solid #ffffff;
+  border-radius: 100px;
+  font-size: 1.25rem;
   cursor: pointer;
+  margin-top: 1rem;
+  width: 100%;
+  height: 3.75rem;
   transition: all 0.3s ease;
   
   &:hover {
-    background-color: #1e0250;
-    transform: translateY(-2px);
+    background: #ffffff30;
+  }
+  
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `
 
@@ -188,30 +209,38 @@ function Login() {
     <Container>
       <GradientCircle1 />
       <GradientCircle2 />
-      <LoginForm onSubmit={handleSubmit}>
-        <Title>로그인</Title>
-        {error && <ErrorMessage>{error}</ErrorMessage>}
-        <Input
-          type="email"
-          name="email"
-          placeholder="이메일"
-          value={formData.email}
-          onChange={handleChange}
-        />
-        <Input
-          type="password"
-          name="password"
-          placeholder="비밀번호"
-          value={formData.password}
-          onChange={handleChange}
-        />
-        <Button type="submit" disabled={loading}>
-          {loading ? '로그인 중...' : '로그인'}
-        </Button>
-        <LinkText>
-          계정이 없으신가요? <Link to="/signup">회원가입</Link>
-        </LinkText>
-      </LoginForm>
+      <ContentWrapper>
+        <Title>SAJUBOYS</Title>
+        <LoginForm onSubmit={handleSubmit}>
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <InputWrapper>
+            <Label>이메일</Label>
+            <Input
+              type="email"
+              name="email"
+              placeholder="이메일을 입력해주세요"
+              value={formData.email}
+              onChange={handleChange}
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <Label>비밀번호</Label>
+            <Input
+              type="password"
+              name="password"
+              placeholder="비밀번호를 입력해주세요"
+              value={formData.password}
+              onChange={handleChange}
+            />
+          </InputWrapper>
+          <Button type="submit" disabled={loading}>
+            {loading ? '로그인 중...' : '로그인'}
+          </Button>
+          <LinkText>
+            계정이 없으신가요? <Link to="/signup">회원가입하기</Link>
+          </LinkText>
+        </LoginForm>
+      </ContentWrapper>
     </Container>
   )
 }
