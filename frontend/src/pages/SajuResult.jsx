@@ -71,36 +71,35 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
-  max-width: 900px;
+  width: 840px;
   z-index: 1;
-  padding: 2rem;
+  margin-top: 3rem;
 `
 
 const Title = styled.h1`
   color: white;
-  font-size: 3rem;
+  font-size: 4rem;
   font-weight: 900;
   margin-bottom: 3rem;
   text-align: center;
 `
 
 const ResultCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
+  border-radius: 16px;
   padding: 2rem;
   width: 100%;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 `
 
 const SectionTitle = styled.h2`
-  color: #8b5cf6;
+  color: #150137;
   font-size: 1.5rem;
+  font-weight: 700;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+  border-bottom: 1px solid #e0e0e0;
 `
 
 const InfoGrid = styled.div`
@@ -111,11 +110,13 @@ const InfoGrid = styled.div`
 `
 
 const InfoItem = styled.div`
-  color: white;
+  color: #333;
+  font-size: 1rem;
   
   span {
-    color: rgba(255, 255, 255, 0.6);
+    color: #666;
     margin-right: 0.5rem;
+    font-weight: 600;
   }
 `
 
@@ -127,35 +128,37 @@ const PillarGrid = styled.div`
 `
 
 const Pillar = styled.div`
-  background: rgba(139, 92, 246, 0.1);
-  border: 1px solid rgba(139, 92, 246, 0.3);
-  border-radius: 15px;
+  background: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
   padding: 1.5rem;
   text-align: center;
 `
 
 const PillarTitle = styled.h3`
-  color: #8b5cf6;
+  color: #150137;
   font-size: 1rem;
+  font-weight: 600;
   margin-bottom: 1rem;
 `
 
 const PillarContent = styled.div`
-  color: white;
+  color: #333;
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 `
 
 const PillarSub = styled.div`
-  color: rgba(255, 255, 255, 0.7);
+  color: #666;
   font-size: 0.9rem;
 `
 
 const Description = styled.p`
-  color: rgba(255, 255, 255, 0.8);
+  color: #333;
   line-height: 1.8;
   margin: 1rem 0;
+  font-size: 1rem;
 `
 
 const ButtonGroup = styled.div`
@@ -166,19 +169,19 @@ const ButtonGroup = styled.div`
 `
 
 const Button = styled.button`
-  background-color: ${props => props.primary ? '#150137' : 'transparent'};
+  background-color: ${props => props.primary ? '#ffffff20' : 'transparent'};
   color: white;
-  border: 1px solid ${props => props.primary ? '#150137' : '#ffffff'};
-  border-radius: 50px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  padding: 1rem 2rem;
+  border: 1px solid #ffffff;
+  border-radius: 100px;
+  font-size: 1.25rem;
   cursor: pointer;
+  padding: 0 2rem;
+  height: 3.75rem;
+  min-width: 200px;
   transition: all 0.3s ease;
   
   &:hover {
-    background-color: ${props => props.primary ? '#1e0250' : 'rgba(255, 255, 255, 0.1)'};
-    transform: translateY(-2px);
+    background: #ffffff30;
   }
 `
 

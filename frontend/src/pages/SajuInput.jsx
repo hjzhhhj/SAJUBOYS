@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSaju } from '../context/SajuContext'
+import { useAuth } from '../context/AuthContext'
 import styled, { keyframes } from 'styled-components'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -89,6 +90,13 @@ const Title = styled.h1`
   margin-bottom: 2rem;
 `
 
+const InputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5rem;
+  width: 840px;
+`
+
 const Input = styled.input`
   color: gray;
   background-color: #ffffff;
@@ -100,13 +108,6 @@ const Input = styled.input`
   width: 100%;
   padding: 1.25rem 2rem;
   box-sizing: border-box;
-`
-
-const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.5rem;
-  width: 840px;
 `
 
 const Label = styled.label`
@@ -287,7 +288,8 @@ const CityInput = styled.input`
 function SajuInput() {
   const navigate = useNavigate()
   const { calculateSaju, loading } = useSaju()
-  const [name, setName] = useState('')
+  const { user } = useAuth()
+  const [name, setName] = useState(user?.name || '')
   const [gender, setGender] = useState('male')
   const [calendarType, setCalendarType] = useState('solar')
   const [birthDate, setBirthDate] = useState(null)
