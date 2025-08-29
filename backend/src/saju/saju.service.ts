@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { SajuResult, SajuResultDocument } from './schemas/saju-result.schema';
 import { CalculateSajuDto } from './dto/saju.dto';
+import { SajuCalculator } from './utils/saju-calculator';
+import { SajuInterpreter } from './utils/saju-interpreter';
 
 @Injectable()
 export class SajuService {
@@ -11,16 +13,63 @@ export class SajuService {
   ) {}
 
   async calculateSaju(userId: string | null, calculateSajuDto: CalculateSajuDto) {
-    // TODO: 실제 사주 계산 로직 구현
-    // 현재는 더미 데이터 생성
-    const fourPillars = this.generateDummyFourPillars();
-    const interpretation = this.generateDummyInterpretation();
+    const { name, gender, birthDate, birthTime, calendarType, city } = calculateSajuDto;
+    
+    // 생년월일시 파싱
+    const birthDateTime = new Date(`${birthDate}T${birthTime}:00`);
+    const year = birthDateTime.getFullYear();
+    const month = birthDateTime.getMonth() + 1;
+    const day = birthDateTime.getDate();
+    const hour = birthDateTime.getHours();
+    
+    // 사주 팔자 계산
+    const yearPillar = SajuCalculator.getSixtyGapja(year);
+    
+    // 절기 기준 월 계산
+    const solarMonth = SajuCalculator.getSolarMonth(birthDateTime);
+    const monthPillar = SajuCalculator.getMonthPillar(yearPillar.heaven, solarMonth);
+    
+    const dayPillar = SajuCalculator.getDayPillar(birthDateTime);
+    const timePillar = SajuCalculator.getTimePillar(dayPillar.heaven, hour);
+    
+    const fourPillars = {
+      year: yearPillar,
+      month: monthPillar,
+      day: dayPillar,
+      time: timePillar
+    };
+    
+    // 오행 분석
+    const elements = this.analyzeElements(fourPillars);
+    
+    // 대운 계산
+    const daeun = SajuCalculator.calculateDaeun(gender, monthPillar, birthDateTime);
+    
+    // 세운 계산 (현재 년도)
+    const currentYear = new Date().getFullYear();
+    const saeun = SajuCalculator.calculateSaeun(currentYear);
+    
+    // 사주 해석
+    const interpretation = this.generateInterpretation(
+      gender,
+      fourPillars,
+      elements,
+      year,
+      currentYear
+    );
+    
+    // 절기 정보
+    const solarTerm = SajuCalculator.getSolarTerm(birthDateTime);
 
     const sajuResult = new this.sajuResultModel({
       userId: userId ? new Types.ObjectId(userId) : null,
       ...calculateSajuDto,
       fourPillars,
       interpretation,
+      daeun,
+      saeun,
+      solarTerm,
+      elements
     });
 
     // userId가 있을 때만 저장
@@ -29,6 +78,81 @@ export class SajuService {
     }
     
     return sajuResult;
+  }
+  
+  private analyzeElements(fourPillars: any): { [key: string]: number } {
+    const elements = { '목': 0, '화': 0, '토': 0, '금': 0, '수': 0 };
+    
+    // 천간 오행 계산
+    const heavenElements = [
+      fourPillars.year.heaven,
+      fourPillars.month.heaven,
+      fourPillars.day.heaven,
+      fourPillars.time.heaven
+    ];
+    
+    heavenElements.forEach(stem => {
+      const element = SajuCalculator.FIVE_ELEMENTS.천간[stem];
+      if (element) elements[element]++;
+    });
+    
+    // 지지 오행 계산
+    const earthElements = [
+      fourPillars.year.earth,
+      fourPillars.month.earth,
+      fourPillars.day.earth,
+      fourPillars.time.earth
+    ];
+    
+    earthElements.forEach(branch => {
+      const element = SajuCalculator.FIVE_ELEMENTS.지지[branch];
+      if (element) elements[element]++;
+    });
+    
+    return elements;
+  }
+  
+  private generateInterpretation(
+    gender: string,
+    fourPillars: any,
+    elements: { [key: string]: number },
+    birthYear: number,
+    currentYear: number
+  ): any {
+    const dayHeavenly = fourPillars.day.heaven;
+    
+    // 성격 해석
+    const personalityInfo = SajuInterpreter.PERSONALITY_BY_DAY_STEM[dayHeavenly];
+    const personality = personalityInfo ? 
+      `${personalityInfo.basic}\n강점: ${personalityInfo.strength}\n약점: ${personalityInfo.weakness}` :
+      '균형잡힌 성격으로 다양한 상황에 잘 적응합니다.';
+    
+    // 오행 균형 해석
+    const elementBalance = SajuInterpreter.interpretFiveElements(elements);
+    
+    // 직업 적성
+    const career = SajuInterpreter.interpretCareer(dayHeavenly, elements);
+    
+    // 연애/결혼운
+    const relationship = SajuInterpreter.interpretRelationship(gender, dayHeavenly);
+    
+    // 재물운
+    const wealth = SajuInterpreter.interpretWealth(dayHeavenly, fourPillars.year.earth);
+    
+    // 건강운
+    const health = SajuInterpreter.interpretHealth(elements);
+    
+    // 올해 운세
+    const fortune = SajuInterpreter.interpretYearlyFortune(currentYear, birthYear);
+    
+    return {
+      personality: `${personality}\n\n${elementBalance}`,
+      career,
+      relationship,
+      wealth,
+      health,
+      fortune
+    };
   }
 
   async getSavedResults(userId: string) {

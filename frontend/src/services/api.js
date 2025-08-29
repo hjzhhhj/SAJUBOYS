@@ -55,8 +55,15 @@ export const authAPI = {
   },
 
   login: async (data) => {
-    const response = await api.post('/auth/login', data)
-    return response.data
+    try {
+      const response = await api.post('/auth/login', data)
+      return { success: true, data: response.data }
+    } catch (error) {
+      if (error.response?.data?.message) {
+        return { success: false, message: error.response.data.message }
+      }
+      return { success: false, message: '서버 연결에 실패했습니다' }
+    }
   },
 }
 

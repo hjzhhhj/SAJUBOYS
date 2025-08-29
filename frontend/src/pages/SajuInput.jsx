@@ -297,18 +297,55 @@ function SajuInput() {
   const [city, setCity] = useState('')
 
   const handleSajuAnalysis = async () => {
-    if (!name || !birthDate || !birthTime || !city) {
-      alert('모든 필드를 입력해주세요')
+    // 입력값 검증
+    if (!name || !name.trim()) {
+      alert('이름을 입력해주세요')
       return
     }
+    
+    if (!birthDate) {
+      alert('생년월일을 선택해주세요')
+      return
+    }
+    
+    if (!birthTime) {
+      alert('태어난 시간을 선택해주세요')
+      return
+    }
+    
+    if (!city || !city.trim()) {
+      alert('태어난 도시를 입력해주세요')
+      return
+    }
+    
+    // 시간 처리 (API 형식에 맞게)
+    let formattedTime = '12:00'; // 기본값
+    if (birthTime !== 'unknown') {
+      const timeMap = {
+        '23-01': '00:00',
+        '01-03': '02:00',
+        '03-05': '04:00',
+        '05-07': '06:00',
+        '07-09': '08:00',
+        '09-11': '10:00',
+        '11-13': '12:00',
+        '13-15': '14:00',
+        '15-17': '16:00',
+        '17-19': '18:00',
+        '19-21': '20:00',
+        '21-23': '22:00'
+      };
+      formattedTime = timeMap[birthTime] || '12:00';
+    }
 
+    // API 형식에 맞게 데이터 포맷팅
     const formData = {
-      name,
-      gender: gender === 'male' ? '남성' : '여성',
-      birthDate: birthDate ? birthDate.toLocaleDateString('ko-KR') : '',
-      birthTime: timeOptions.find(option => option.value === birthTime)?.label || '',
+      name: name.trim(),
+      gender: gender === 'male' ? '남' : '여',
+      birthDate: birthDate.toISOString().split('T')[0], // YYYY-MM-DD 형식
+      birthTime: formattedTime, // HH:MM 형식
       calendarType: calendarType === 'solar' ? '양력' : '음력',
-      city
+      city: city.trim()
     }
 
     try {
@@ -320,7 +357,8 @@ function SajuInput() {
         alert(result.error || '사주 계산에 실패했습니다')
       }
     } catch (error) {
-      alert('사주 계산 중 오류가 발생했습니다')
+      console.error('사주 계산 오류:', error)
+      alert('사주 계산 중 오류가 발생했습니다. 다시 시도해주세요.')
     }
   }
 
