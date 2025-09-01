@@ -159,6 +159,69 @@ const Description = styled.p`
   line-height: 1.8;
   margin: 1rem 0;
   font-size: 1rem;
+  white-space: pre-wrap;
+`
+
+const FiveElementsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin: 1rem 0;
+`
+
+const ElementItem = styled.div`
+  background: ${props => {
+    switch(props.element) {
+      case '목': return '#2ecc71';
+      case '화': return '#e74c3c';
+      case '토': return '#f39c12';
+      case '금': return '#95a5a6';
+      case '수': return '#3498db';
+      default: return '#95a5a6';
+    }
+  }};
+  color: white;
+  padding: 1rem;
+  border-radius: 12px;
+  text-align: center;
+  
+  .element-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .element-count {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+`
+
+const DaeunGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1rem;
+  margin: 1rem 0;
+`
+
+const DaeunItem = styled.div`
+  background: #f8f8f8;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1rem;
+  text-align: center;
+  
+  .age {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .pillar {
+    color: #333;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
 `
 
 const ButtonGroup = styled.div`
@@ -301,6 +364,59 @@ function SajuResult() {
           <SectionTitle>총운</SectionTitle>
           <Description>{resultData.interpretation.fortune}</Description>
         </ResultCard>
+
+        {resultData.interpretation.wealth && (
+          <ResultCard>
+            <SectionTitle>재물운</SectionTitle>
+            <Description>{resultData.interpretation.wealth}</Description>
+          </ResultCard>
+        )}
+
+        {resultData.interpretation.health && (
+          <ResultCard>
+            <SectionTitle>건강운</SectionTitle>
+            <Description>{resultData.interpretation.health}</Description>
+          </ResultCard>
+        )}
+
+        {resultData.elements && (
+          <ResultCard>
+            <SectionTitle>오행 분포</SectionTitle>
+            <FiveElementsGrid>
+              {Object.entries(resultData.elements).map(([element, count]) => (
+                <ElementItem key={element} element={element}>
+                  <div className="element-name">{element}</div>
+                  <div className="element-count">{count}</div>
+                </ElementItem>
+              ))}
+            </FiveElementsGrid>
+          </ResultCard>
+        )}
+
+        {resultData.daeun && resultData.daeun.length > 0 && (
+          <ResultCard>
+            <SectionTitle>대운</SectionTitle>
+            <DaeunGrid>
+              {resultData.daeun.slice(0, 8).map((item, index) => (
+                <DaeunItem key={index}>
+                  <div className="age">{item.age}세부터</div>
+                  <div className="pillar">
+                    {item.pillar.heaven}{item.pillar.earth}
+                  </div>
+                </DaeunItem>
+              ))}
+            </DaeunGrid>
+          </ResultCard>
+        )}
+
+        {resultData.saeun && (
+          <ResultCard>
+            <SectionTitle>올해 세운</SectionTitle>
+            <Description>
+              {new Date().getFullYear()}년 세운: {resultData.saeun.heaven}{resultData.saeun.earth}
+            </Description>
+          </ResultCard>
+        )}
 
         <ButtonGroup>
           <Button primary onClick={handleSaveResult}>결과 저장하기</Button>

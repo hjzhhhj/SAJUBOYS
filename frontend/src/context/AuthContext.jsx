@@ -61,26 +61,22 @@ export const AuthProvider = ({ children }) => {
   }, [])
 
   const login = async (email, password) => {
-    try {
-      dispatch({ type: 'SET_LOADING', payload: true })
-      
-      const response = await authAPI.login({ email, password })
-      
-      if (response.success) {
-        const userData = {
-          ...response.data.user,
-          accessToken: response.data.accessToken
-        }
-        
-        localStorage.setItem('user', JSON.stringify(userData))
-        dispatch({ type: 'LOGIN', payload: userData })
-        
-        return { success: true }
-      } else {
-        throw new Error(response.message || '로그인에 실패했습니다')
+    dispatch({ type: 'SET_LOADING', payload: true })
+    
+    const response = await authAPI.login({ email, password })
+    
+    if (response.success) {
+      const userData = {
+        ...response.data.user,
+        accessToken: response.data.accessToken
       }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || error.message || '로그인에 실패했습니다'
+      
+      localStorage.setItem('user', JSON.stringify(userData))
+      dispatch({ type: 'LOGIN', payload: userData })
+      
+      return { success: true }
+    } else {
+      const errorMessage = response.message || '로그인에 실패했습니다'
       dispatch({ type: 'SET_ERROR', payload: errorMessage })
       return { success: false, error: errorMessage }
     }
