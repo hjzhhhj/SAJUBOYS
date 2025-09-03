@@ -40,11 +40,26 @@ class Interpretation {
 
   @Prop({ required: true })
   fortune: string;
+
+  @Prop()
+  wealth: string;
+
+  @Prop()
+  health: string;
+}
+
+@Schema({ _id: false })
+class DaeunItem {
+  @Prop({ required: true })
+  age: number;
+
+  @Prop({ type: Pillar, required: true })
+  pillar: Pillar;
 }
 
 @Schema({ timestamps: true })
 export class SajuResult {
-  @Prop({ type: Types.ObjectId, ref: 'User', required: true })
+  @Prop({ type: Types.ObjectId, ref: 'User', required: false })
   userId: Types.ObjectId;
 
   @Prop({ required: true })
@@ -70,6 +85,18 @@ export class SajuResult {
 
   @Prop({ type: Interpretation, required: true })
   interpretation: Interpretation;
+
+  @Prop({ type: [DaeunItem] })
+  daeun: DaeunItem[];
+
+  @Prop({ type: Pillar })
+  saeun: Pillar;
+
+  @Prop()
+  solarTerm: string;
+
+  @Prop({ type: Object })
+  elements: { [key: string]: number };
 
   @Prop({ default: Date.now })
   createdAt: Date;

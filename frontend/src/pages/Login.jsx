@@ -190,6 +190,7 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    setError('') // 이전 오류 메시지 초기화
     
     if (!formData.email || !formData.password) {
       setError('모든 필드를 입력해주세요')
