@@ -6,7 +6,9 @@ import { SajuResult, SajuResultSchema } from './schemas/saju-result.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: SajuResult.name, schema: SajuResultSchema }]),
+    MongooseModule.forFeature([
+      { name: SajuResult.name, schema: SajuResultSchema },
+    ]),
   ],
   controllers: [SajuController],
   providers: [SajuService],

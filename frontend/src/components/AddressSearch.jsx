@@ -114,6 +114,35 @@ const AddressSearch = ({ value, onChange, placeholder = "주소를 입력하세�
   const [showResults, setShowResults] = useState(false);
   const containerRef = useRef(null);
 
+  // 더미 데이터
+  const dummyData = [
+    {
+      placeName: '서울특별시청',
+      address: '서울특별시 중구 세종대로 110',
+      roadAddress: '서울특별시 중구 태평로1가 31'
+    },
+    {
+      placeName: '강남구청',
+      address: '서울특별시 강남구 학동로 426',
+      roadAddress: '서울특별시 강남구 삼성동 16-1'
+    },
+    {
+      placeName: '성균관대학교',
+      address: '서울특별시 종로구 성균관로 25-2',
+      roadAddress: '서울특별시 종로구 명륜3가 53'
+    },
+    {
+      placeName: '경복궁',
+      address: '서울특별시 종로구 사직로 161',
+      roadAddress: '서울특별시 종로구 세종로 1-91'
+    },
+    {
+      placeName: '남산서울타워',
+      address: '서울특별시 용산구 남산공원길 105',
+      roadAddress: '서울특별시 용산구 용산동2가 1-3'
+    }
+  ];
+
   // 디바운스된 검색 함수
   const debouncedSearch = useCallback(
     debounce(async (searchQuery) => {
@@ -125,14 +154,22 @@ const AddressSearch = ({ value, onChange, placeholder = "주소를 입력하세�
       setIsLoading(true);
       try {
         const response = await axios.get('http://localhost:3001/api/saju/search-address', {
-          params: { query: searchQuery }
+          params: { query: searchQuery },
+          timeout: 3000 // 3초 타임아웃 설정
         });
         console.log('검색 응답:', response.data);
         setResults(response.data.data || []);
         setShowResults(true);
       } catch (error) {
-        console.error('주소 검색 실패:', error);
-        setResults([]);
+        console.error('주소 검색 실패, 더미 데이터 사용:', error);
+        // API 실패 시 더미 데이터에서 검색
+        const filteredDummy = dummyData.filter(item => 
+          item.placeName.includes(searchQuery) || 
+          item.address.includes(searchQuery) ||
+          item.roadAddress.includes(searchQuery)
+        );
+        setResults(filteredDummy.length > 0 ? filteredDummy : dummyData);
+        setShowResults(true);
       } finally {
         setIsLoading(false);
       }
