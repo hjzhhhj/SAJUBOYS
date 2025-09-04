@@ -342,7 +342,7 @@ function SajuInput() {
     const formData = {
       name: name.trim(),
       gender: gender === 'male' ? '남' : '여',
-      birthDate: birthDate.toISOString().split('T')[0], // YYYY-MM-DD 형식
+      birthDate: `${birthDate.getFullYear()}-${String(birthDate.getMonth() + 1).padStart(2, '0')}-${String(birthDate.getDate()).padStart(2, '0')}`, // YYYY-MM-DD 형식 (로컬 시간 기준)
       birthTime: formattedTime, // HH:MM 형식
       calendarType: calendarType === 'solar' ? '양력' : '음력',
       city: city.trim()
