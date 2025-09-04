@@ -1,3 +1,5 @@
+import { LICHUN_BY_YEAR } from './lichun-dates';
+
 export class SajuCalculator {
   // 천간 (10개)
   static HEAVENLY_STEMS = ['갑', '을', '병', '정', '무', '기', '경', '신', '임', '계'];
@@ -21,7 +23,7 @@ export class SajuCalculator {
     }
   };
 
-  // 60갑자 계산
+  // 60갑자 계산 (입춘 기준)
   static getSixtyGapja(year: number): { heaven: string; earth: string } {
     // 기준년도: 1984년은 갑자년 (천간 0, 지지 0)
     const baseYear = 1984;
@@ -38,6 +40,35 @@ export class SajuCalculator {
       heaven: this.HEAVENLY_STEMS[heavenIndex],
       earth: this.EARTHLY_BRANCHES[earthIndex]
     };
+  }
+
+  // 입춘 기준으로 실제 사주년도 계산
+  static getSajuYear(birthDate: Date): number {
+    const year = birthDate.getFullYear();
+    const month = birthDate.getMonth() + 1;
+    const day = birthDate.getDate();
+    
+    // 입춘 날짜 가져오기
+    const lichunDate = LICHUN_BY_YEAR[year];
+    if (!lichunDate) {
+      // 데이터가 없는 경우 기본값 사용 (2월 4일)
+      const lichunMonth = 2;
+      const lichunDay = 4;
+      
+      if (month < lichunMonth || (month === lichunMonth && day < lichunDay)) {
+        return year - 1;
+      }
+      return year;
+    }
+    
+    const [lichunMonth, lichunDay] = lichunDate.split('-').map(Number);
+    
+    // 입춘 이전이면 전년도로 계산
+    if (month < lichunMonth || (month === lichunMonth && day < lichunDay)) {
+      return year - 1;
+    }
+    
+    return year;
   }
 
   // 월간지 계산
