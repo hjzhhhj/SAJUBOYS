@@ -28,6 +28,24 @@ class FourPillars {
 }
 
 @Schema({ _id: false })
+class AdvancedAnalysis {
+  @Prop({ type: Object })
+  zodiac: any;
+
+  @Prop()
+  daeunAnalysis: string;
+
+  @Prop()
+  specialPattern: string;
+
+  @Prop()
+  tenGodsAnalysis: string;
+
+  @Prop({ type: Object })
+  timelyFortune: any;
+}
+
+@Schema({ _id: false })
 class Interpretation {
   @Prop({ required: true })
   personality: string;
@@ -46,6 +64,15 @@ class Interpretation {
 
   @Prop()
   health: string;
+
+  @Prop()
+  elementBalance: string;
+
+  @Prop()
+  yinYangBalance: string;
+
+  @Prop({ type: AdvancedAnalysis })
+  advancedAnalysis: AdvancedAnalysis;
 }
 
 @Schema({ _id: false })
@@ -97,6 +124,9 @@ export class SajuResult {
 
   @Prop({ type: Object })
   elements: { [key: string]: number };
+
+  @Prop({ type: Object })
+  yinYang: { yin: number; yang: number };
 
   @Prop({ default: Date.now })
   createdAt: Date;

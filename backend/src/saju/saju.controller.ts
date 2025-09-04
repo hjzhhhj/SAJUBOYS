@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, UseGuards, Request, ValidationPipe, Param } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Body, UseGuards, Request, ValidationPipe, Param } from '@nestjs/common';
 import { SajuService } from './saju.service';
 import { CalculateSajuDto } from './dto/saju.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -41,6 +41,27 @@ export class SajuController {
       success: true,
       message: '사주 결과를 가져왔습니다',
       data: result,
+    };
+  }
+  
+  @Post(':id/save')
+  @UseGuards(JwtAuthGuard)
+  async saveResult(@Request() req, @Param('id') sajuId: string) {
+    const result = await this.sajuService.saveResult(req.user._id, sajuId);
+    return {
+      success: true,
+      message: '사주 결과가 저장되었습니다',
+      data: result,
+    };
+  }
+  
+  @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  async deleteResult(@Request() req, @Param('id') sajuId: string) {
+    await this.sajuService.deleteResult(req.user._id, sajuId);
+    return {
+      success: true,
+      message: '사주 결과가 삭제되었습니다',
     };
   }
 }

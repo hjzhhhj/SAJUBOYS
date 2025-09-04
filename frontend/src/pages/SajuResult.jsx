@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styled, { keyframes } from 'styled-components'
+import SajuCharts from '../components/SajuCharts'
+import { useAuth } from '../context/AuthContext'
+import axios from 'axios'
 
 const float1 = keyframes`
   0%, 100% {
@@ -224,6 +227,75 @@ const DaeunItem = styled.div`
   }
 `
 
+const AdvancedCard = styled.div`
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+  margin-bottom: 1.5rem;
+`
+
+const AdvancedTitle = styled.h3`
+  color: white;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+`
+
+const AdvancedContent = styled.div`
+  color: rgba(255, 255, 255, 0.95);
+  line-height: 1.8;
+  font-size: 1rem;
+`
+
+const ZodiacCard = styled.div`
+  background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  color: white;
+  margin-bottom: 1.5rem;
+  text-align: center;
+`
+
+const ZodiacAnimal = styled.div`
+  font-size: 3rem;
+  margin-bottom: 1rem;
+`
+
+const TabContainer = styled.div`
+  margin: 2rem 0;
+`
+
+const TabButtons = styled.div`
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #e0e0e0;
+`
+
+const TabButton = styled.button`
+  background: ${props => props.active ? '#150137' : 'transparent'};
+  color: ${props => props.active ? 'white' : '#150137'};
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px 8px 0 0;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: ${props => props.active ? '600' : '400'};
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background: ${props => props.active ? '#150137' : '#f0f0f0'};
+  }
+`
+
+const TabContent = styled.div`
+  padding: 1.5rem 0;
+`
+
 const ButtonGroup = styled.div`
   display: flex;
   gap: 1rem;
@@ -251,12 +323,50 @@ const Button = styled.button`
 function SajuResult() {
   const location = useLocation()
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [resultData, setResultData] = useState(null)
+  const [saving, setSaving] = useState(false)
+  const [activeTab, setActiveTab] = useState('basic')
 
   useEffect(() => {
-    // location.state에서 데이터 받기 또는 더미 데이터 설정
+    // location.state에서 데이터 받기
     if (location.state) {
-      setResultData(location.state)
+      const data = location.state
+      
+      // 날짜 형식 변환
+      let formattedDate = data.birthDate
+      if (data.birthDate && data.birthDate.includes('-')) {
+        const [year, month, day] = data.birthDate.split('-')
+        formattedDate = `${year}년 ${month}월 ${day}일`
+      }
+      
+      // 시간 표시 형식 변환
+      let formattedTime = data.birthTime
+      if (data.birthTime) {
+        const timeMap = {
+          '00:00': '자시 (23:00 - 01:00)',
+          '02:00': '축시 (01:00 - 03:00)',
+          '04:00': '인시 (03:00 - 05:00)',
+          '06:00': '묘시 (05:00 - 07:00)',
+          '08:00': '진시 (07:00 - 09:00)',
+          '10:00': '사시 (09:00 - 11:00)',
+          '12:00': '오시 (11:00 - 13:00)',
+          '14:00': '미시 (13:00 - 15:00)',
+          '16:00': '신시 (15:00 - 17:00)',
+          '18:00': '유시 (17:00 - 19:00)',
+          '20:00': '술시 (19:00 - 21:00)',
+          '22:00': '해시 (21:00 - 23:00)'
+        }
+        formattedTime = timeMap[data.birthTime] || data.birthTime
+      }
+      
+      // 데이터 설정
+      setResultData({
+        ...data,
+        birthDate: formattedDate,
+        birthTime: formattedTime,
+        gender: data.gender === '남' ? '남성' : data.gender === '여' ? '여성' : data.gender
+      })
     } else {
       // 더미 데이터
       setResultData({
@@ -286,9 +396,40 @@ function SajuResult() {
     navigate('/saju-input')
   }
 
-  const handleSaveResult = () => {
-    // TODO: 결과 저장 API 호출
-    alert('결과가 저장되었습니다!')
+  const handleSaveResult = async () => {
+    if (!user) {
+      alert('로그인이 필요합니다.')
+      navigate('/login')
+      return
+    }
+    
+    if (!resultData._id) {
+      alert('저장할 수 있는 결과가 아닙니다.')
+      return
+    }
+    
+    setSaving(true)
+    try {
+      const token = localStorage.getItem('token')
+      const response = await axios.post(
+        `http://localhost:3001/saju/${resultData._id}/save`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      )
+      
+      if (response.data.success) {
+        alert('결과가 성공적으로 저장되었습니다!')
+      }
+    } catch (error) {
+      console.error('저장 오류:', error)
+      alert('결과 저장에 실패했습니다.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (!resultData) {
@@ -344,6 +485,17 @@ function SajuResult() {
             </Pillar>
           </PillarGrid>
         </ResultCard>
+        
+        {(resultData.elements || resultData.yinYang || resultData.fourPillars) && (
+          <ResultCard>
+            <SectionTitle>사주 분석 차트</SectionTitle>
+            <SajuCharts 
+              elements={resultData.elements}
+              yinYang={resultData.yinYang}
+              fourPillars={resultData.fourPillars}
+            />
+          </ResultCard>
+        )}
 
         <ResultCard>
           <SectionTitle>성격 분석</SectionTitle>
@@ -417,6 +569,134 @@ function SajuResult() {
             </Description>
           </ResultCard>
         )}
+        
+        {/* 고급 해석 섹션 */}
+        {resultData.interpretation?.advancedAnalysis && (
+          <>
+            {resultData.interpretation.advancedAnalysis.zodiac && (
+              <ZodiacCard>
+                <ZodiacAnimal>
+                  {getZodiacEmoji(resultData.interpretation.advancedAnalysis.zodiac.animal)}
+                </ZodiacAnimal>
+                <h3 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>
+                  {resultData.interpretation.advancedAnalysis.zodiac.animal}띠의 특성
+                </h3>
+                <p style={{ lineHeight: '1.8' }}>
+                  {resultData.interpretation.advancedAnalysis.zodiac.personality}
+                </p>
+              </ZodiacCard>
+            )}
+            
+            <TabContainer>
+              <TabButtons>
+                <TabButton 
+                  active={activeTab === 'basic'} 
+                  onClick={() => setActiveTab('basic')}
+                >
+                  기본 해석
+                </TabButton>
+                <TabButton 
+                  active={activeTab === 'advanced'} 
+                  onClick={() => setActiveTab('advanced')}
+                >
+                  심화 해석
+                </TabButton>
+                <TabButton 
+                  active={activeTab === 'timely'} 
+                  onClick={() => setActiveTab('timely')}
+                >
+                  시기별 운세
+                </TabButton>
+              </TabButtons>
+              
+              <TabContent>
+                {activeTab === 'basic' && (
+                  <div>
+                    {/* 기본 해석은 이미 위에 표시됨 */}
+                    <Description>기본 해석은 위의 카드에서 확인하실 수 있습니다.</Description>
+                  </div>
+                )}
+                
+                {activeTab === 'advanced' && (
+                  <>
+                    {resultData.interpretation.advancedAnalysis.specialPattern && (
+                      <AdvancedCard>
+                        <AdvancedTitle>🌟 특별한 격국</AdvancedTitle>
+                        <AdvancedContent>
+                          {resultData.interpretation.advancedAnalysis.specialPattern}
+                        </AdvancedContent>
+                      </AdvancedCard>
+                    )}
+                    
+                    {resultData.interpretation.advancedAnalysis.daeunAnalysis && (
+                      <AdvancedCard>
+                        <AdvancedTitle>📅 현재 대운 분석</AdvancedTitle>
+                        <AdvancedContent>
+                          {resultData.interpretation.advancedAnalysis.daeunAnalysis}
+                        </AdvancedContent>
+                      </AdvancedCard>
+                    )}
+                    
+                    {resultData.interpretation.advancedAnalysis.tenGodsAnalysis && (
+                      <AdvancedCard>
+                        <AdvancedTitle>⚡ 십신 관계 분석</AdvancedTitle>
+                        <AdvancedContent>
+                          {resultData.interpretation.advancedAnalysis.tenGodsAnalysis}
+                        </AdvancedContent>
+                      </AdvancedCard>
+                    )}
+                  </>
+                )}
+                
+                {activeTab === 'timely' && resultData.interpretation.advancedAnalysis.timelyFortune && (
+                  <>
+                    <ResultCard>
+                      <SectionTitle>올해 총운</SectionTitle>
+                      <Description>
+                        {resultData.interpretation.advancedAnalysis.timelyFortune.overall}
+                      </Description>
+                    </ResultCard>
+                    
+                    <ResultCard>
+                      <SectionTitle>연애운</SectionTitle>
+                      <Description>
+                        {resultData.interpretation.advancedAnalysis.timelyFortune.love}
+                      </Description>
+                    </ResultCard>
+                    
+                    <ResultCard>
+                      <SectionTitle>직업운</SectionTitle>
+                      <Description>
+                        {resultData.interpretation.advancedAnalysis.timelyFortune.career}
+                      </Description>
+                    </ResultCard>
+                    
+                    <ResultCard>
+                      <SectionTitle>재물운</SectionTitle>
+                      <Description>
+                        {resultData.interpretation.advancedAnalysis.timelyFortune.wealth}
+                      </Description>
+                    </ResultCard>
+                    
+                    <ResultCard>
+                      <SectionTitle>건강운</SectionTitle>
+                      <Description>
+                        {resultData.interpretation.advancedAnalysis.timelyFortune.health}
+                      </Description>
+                    </ResultCard>
+                    
+                    <ResultCard>
+                      <SectionTitle>조언</SectionTitle>
+                      <Description>
+                        {resultData.interpretation.advancedAnalysis.timelyFortune.advice}
+                      </Description>
+                    </ResultCard>
+                  </>
+                )}
+              </TabContent>
+            </TabContainer>
+          </>
+        )}
 
         <ButtonGroup>
           <Button primary onClick={handleSaveResult}>결과 저장하기</Button>
@@ -425,6 +705,25 @@ function SajuResult() {
       </ContentWrapper>
     </Container>
   )
+}
+
+// 띠별 이모지 반환 함수
+function getZodiacEmoji(animal) {
+  const zodiacEmojis = {
+    '쥐': '🐭',
+    '소': '🐮',
+    '호랑이': '🐯',
+    '토끼': '🐰',
+    '용': '🐲',
+    '뱀': '🐍',
+    '말': '🐴',
+    '양': '🐏',
+    '원숭이': '🐵',
+    '닭': '🐓',
+    '개': '🐕',
+    '돼지': '🐷'
+  }
+  return zodiacEmojis[animal] || '🌟'
 }
 
 export default SajuResult
