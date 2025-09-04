@@ -5,6 +5,7 @@ import { SajuResult, SajuResultDocument } from './schemas/saju-result.schema';
 import { CalculateSajuDto } from './dto/saju.dto';
 import { SajuCalculator } from './utils/saju-calculator';
 import { SajuInterpreter } from './utils/saju-interpreter';
+import { SajuAdvancedInterpreter } from './utils/saju-advanced-interpreter';
 
 @Injectable()
 export class SajuService {
@@ -42,6 +43,9 @@ export class SajuService {
     // 오행 분석
     const elements = this.analyzeElements(fourPillars);
     
+    // 음양 분석
+    const yinYang = this.analyzeYinYang(fourPillars);
+    
     // 대운 계산
     const daeun = SajuCalculator.calculateDaeun(gender, monthPillar, birthDateTime);
     
@@ -54,6 +58,7 @@ export class SajuService {
       gender,
       fourPillars,
       elements,
+      yinYang,
       year,
       currentYear
     );
@@ -69,7 +74,8 @@ export class SajuService {
       daeun,
       saeun,
       solarTerm,
-      elements
+      elements,
+      yinYang
     });
 
     // userId가 있을 때만 저장
@@ -112,16 +118,57 @@ export class SajuService {
     return elements;
   }
   
+  private analyzeYinYang(fourPillars: any): { yin: number; yang: number } {
+    let yin = 0;
+    let yang = 0;
+    
+    // 천간의 음양
+    const yangHeavenly = ['갑', '병', '무', '경', '임'];
+    const yinHeavenly = ['을', '정', '기', '신', '계'];
+    
+    const heavenlyStems = [
+      fourPillars.year.heaven,
+      fourPillars.month.heaven,
+      fourPillars.day.heaven,
+      fourPillars.time.heaven
+    ];
+    
+    heavenlyStems.forEach(stem => {
+      if (yangHeavenly.includes(stem)) yang++;
+      else if (yinHeavenly.includes(stem)) yin++;
+    });
+    
+    // 지지의 음양
+    const yangEarthly = ['자', '인', '진', '오', '신', '술'];
+    const yinEarthly = ['축', '묘', '사', '미', '유', '해'];
+    
+    const earthlyBranches = [
+      fourPillars.year.earth,
+      fourPillars.month.earth,
+      fourPillars.day.earth,
+      fourPillars.time.earth
+    ];
+    
+    earthlyBranches.forEach(branch => {
+      if (yangEarthly.includes(branch)) yang++;
+      else if (yinEarthly.includes(branch)) yin++;
+    });
+    
+    return { yin, yang };
+  }
+  
   private generateInterpretation(
     gender: string,
     fourPillars: any,
     elements: { [key: string]: number },
+    yinYang: { yin: number; yang: number },
     birthYear: number,
     currentYear: number
   ): any {
     const dayHeavenly = fourPillars.day.heaven;
+    const birthDateTime = new Date(`${birthYear}-01-01`);
     
-    // 성격 해석
+    // 기본 성격 해석
     const personalityInfo = SajuInterpreter.PERSONALITY_BY_DAY_STEM[dayHeavenly];
     const personality = personalityInfo ? 
       `${personalityInfo.basic}\n강점: ${personalityInfo.strength}\n약점: ${personalityInfo.weakness}` :
@@ -129,6 +176,24 @@ export class SajuService {
     
     // 오행 균형 해석
     const elementBalance = SajuInterpreter.interpretFiveElements(elements);
+    
+    // 음양 균형 해석
+    const yinYangBalance = this.interpretYinYangBalance(yinYang);
+    
+    // 고급 해석 추가
+    const advancedInterpretation = SajuAdvancedInterpreter.generateAdvancedInterpretation(
+      fourPillars,
+      elements,
+      yinYang,
+      birthDateTime,
+      gender
+    );
+    
+    // 시기별 운세
+    const timelyFortune = SajuAdvancedInterpreter.generateTimelyFortune(
+      fourPillars,
+      currentYear
+    );
     
     // 직업 적성
     const career = SajuInterpreter.interpretCareer(dayHeavenly, elements);
@@ -142,16 +207,28 @@ export class SajuService {
     // 건강운
     const health = SajuInterpreter.interpretHealth(elements);
     
-    // 올해 운세
-    const fortune = SajuInterpreter.interpretYearlyFortune(currentYear, birthYear);
+    // 올해 운세 (고급 버전 사용)
+    const fortune = timelyFortune.overall + '\n' + timelyFortune.advice;
+    
+    // 띠 해석 추가
+    const zodiacInfo = advancedInterpretation.zodiacSign;
     
     return {
-      personality: `${personality}\n\n${elementBalance}`,
-      career,
-      relationship,
-      wealth,
-      health,
-      fortune
+      personality: `${personality}\n\n${elementBalance}\n\n${yinYangBalance}\n\n띠: ${zodiacInfo?.animal || ''}\n${zodiacInfo?.personality || ''}`,
+      career: `${career}\n\n추천 직업: ${zodiacInfo?.career || ''}`,
+      relationship: `${relationship}\n\n${timelyFortune.love}\n\n궁합: ${zodiacInfo?.compatibility || ''}`,
+      wealth: `${wealth}\n\n${timelyFortune.wealth}`,
+      health: `${health}\n\n${timelyFortune.health}`,
+      fortune,
+      elementBalance,
+      yinYangBalance,
+      advancedAnalysis: {
+        zodiac: zodiacInfo,
+        daeunAnalysis: advancedInterpretation.daeunAnalysis,
+        specialPattern: advancedInterpretation.specialPattern,
+        tenGodsAnalysis: advancedInterpretation.tenGodsAnalysis,
+        timelyFortune
+      }
     };
   }
 
@@ -226,5 +303,39 @@ export class SajuService {
       relationship: relationships[Math.floor(Math.random() * relationships.length)],
       fortune: fortunes[Math.floor(Math.random() * fortunes.length)],
     };
+  }
+  
+  private interpretYinYangBalance(yinYang: { yin: number; yang: number }): string {
+    const total = yinYang.yin + yinYang.yang;
+    const yinRatio = (yinYang.yin / total) * 100;
+    const yangRatio = (yinYang.yang / total) * 100;
+    
+    if (Math.abs(yinRatio - yangRatio) < 10) {
+      return `음양이 균형을 이루고 있습니다 (음 ${yinRatio.toFixed(0)}% : 양 ${yangRatio.toFixed(0)}%). 조화로운 성격으로 다양한 상황에 유연하게 대처할 수 있습니다.`;
+    } else if (yangRatio > yinRatio) {
+      return `양기가 강한 사주입니다 (음 ${yinRatio.toFixed(0)}% : 양 ${yangRatio.toFixed(0)}%). 적극적이고 활동적이며, 리더십이 강합니다. 때로는 휴식과 내면의 평화를 찾는 것이 필요합니다.`;
+    } else {
+      return `음기가 강한 사주입니다 (음 ${yinRatio.toFixed(0)}% : 양 ${yangRatio.toFixed(0)}%). 신중하고 사려 깊으며, 내면의 힘이 강합니다. 때로는 적극적인 행동과 표현이 필요합니다.`;
+    }
+  }
+  
+  async saveResult(userId: string, sajuId: string) {
+    const result = await this.sajuResultModel.findOne({
+      _id: new Types.ObjectId(sajuId)
+    });
+    
+    if (!result) {
+      throw new Error('결과를 찾을 수 없습니다.');
+    }
+    
+    result.userId = new Types.ObjectId(userId);
+    return result.save();
+  }
+  
+  async deleteResult(userId: string, sajuId: string) {
+    return this.sajuResultModel.deleteOne({
+      _id: new Types.ObjectId(sajuId),
+      userId: new Types.ObjectId(userId)
+    });
   }
 }
