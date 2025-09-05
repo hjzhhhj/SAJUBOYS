@@ -449,6 +449,38 @@ export class SajuService {
   }
 
   async searchAddress(query: string): Promise<AddressResult[]> {
+    // 한국 시·군·구 좌표 데이터 import
+    const { KOREA_COORDINATES } = await import('./korea-coordinates.js');
+    
+    // 검색어가 비어있으면 빈 배열 반환
+    if (!query || query.trim() === '') {
+      return [];
+    }
+    
+    // 검색어를 소문자로 변환하고 공백 제거
+    const searchQuery = query.toLowerCase().replace(/\s+/g, '');
+    
+    // 좌표 데이터에서 검색
+    const results = KOREA_COORDINATES
+      .filter(coord => {
+        const cityDistrict = (coord.city + coord.district).toLowerCase().replace(/\s+/g, '');
+        const districtOnly = coord.district.toLowerCase().replace(/\s+/g, '');
+        return cityDistrict.includes(searchQuery) || districtOnly.includes(searchQuery);
+      })
+      .slice(0, 10) // 최대 10개 결과만 반환
+      .map(coord => ({
+        placeName: `${coord.district}청`,
+        address: `${coord.city} ${coord.district}`,
+        roadAddress: `${coord.city} ${coord.district}`,
+        x: coord.longitude.toString(),
+        y: coord.latitude.toString(),
+      }));
+    
+    // 결과가 있으면 반환
+    if (results.length > 0) {
+      return results;
+    }
+    
     // 더미 데이터
     const dummyData: AddressResult[] = [
       {
