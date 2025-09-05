@@ -6,7 +6,6 @@ import { CalculateSajuDto } from './dto/saju.dto';
 import { SajuCalculator } from './utils/saju-calculator';
 import { SajuInterpreter } from './utils/saju-interpreter';
 import { SajuAdvancedInterpreter } from './utils/saju-advanced-interpreter';
-import axios, { AxiosError } from 'axios';
 
 // 타입 정의
 interface Pillar {
@@ -27,26 +26,6 @@ export interface AddressResult {
   placeName: string;
   x: string;
   y: string;
-}
-
-interface KakaoDocument {
-  address_name?: string;
-  road_address_name?: string;
-  place_name?: string;
-  x?: string;
-  y?: string;
-  address?: {
-    address_name?: string;
-    x?: string;
-    y?: string;
-  };
-  road_address?: {
-    address_name?: string;
-  };
-}
-
-interface KakaoApiResponse {
-  documents: KakaoDocument[];
 }
 
 @Injectable()
@@ -467,177 +446,15 @@ export class SajuService {
         const districtOnly = coord.district.toLowerCase().replace(/\s+/g, '');
         return cityDistrict.includes(searchQuery) || districtOnly.includes(searchQuery);
       })
-      .slice(0, 10) // 최대 10개 결과만 반환
+      .slice(0, 30) // 최대 30개 결과 반환
       .map(coord => ({
-        placeName: `${coord.district}청`,
+        placeName: coord.district === '세종시' ? '세종특별자치시청' : `${coord.district}청`,
         address: `${coord.city} ${coord.district}`,
         roadAddress: `${coord.city} ${coord.district}`,
         x: coord.longitude.toString(),
         y: coord.latitude.toString(),
       }));
     
-    // 결과가 있으면 반환
-    if (results.length > 0) {
-      return results;
-    }
-    
-    // 더미 데이터
-    const dummyData: AddressResult[] = [
-      {
-        placeName: '서울특별시청',
-        address: '서울특별시 중구 세종대로 110',
-        roadAddress: '서울특별시 중구 태평로1가 31',
-        x: '126.9779',
-        y: '37.5663',
-      },
-      {
-        placeName: '강남구청',
-        address: '서울특별시 강남구 학동로 426',
-        roadAddress: '서울특별시 강남구 삼성동 16-1',
-        x: '127.0476',
-        y: '37.5172',
-      },
-      {
-        placeName: '성균관대학교',
-        address: '서울특별시 종로구 성균관로 25-2',
-        roadAddress: '서울특별시 종로구 명륜3가 53',
-        x: '126.9939',
-        y: '37.5881',
-      },
-      {
-        placeName: '경복궁',
-        address: '서울특별시 종로구 사직로 161',
-        roadAddress: '서울특별시 종로구 세종로 1-91',
-        x: '126.9769',
-        y: '37.5788',
-      },
-      {
-        placeName: '남산서울타워',
-        address: '서울특별시 용산구 남산공원길 105',
-        roadAddress: '서울특별시 용산구 용산동2가 1-3',
-        x: '126.9882',
-        y: '37.5512',
-      },
-      {
-        placeName: '잠실롯데월드타워',
-        address: '서울특별시 송파구 올림픽로 300',
-        roadAddress: '서울특별시 송파구 신천동 29',
-        x: '127.1025',
-        y: '37.5126',
-      },
-      {
-        placeName: '서울역',
-        address: '서울특별시 용산구 한강대로 405',
-        roadAddress: '서울특별시 중구 남대문로5가 122',
-        x: '126.9708',
-        y: '37.5547',
-      },
-      {
-        placeName: '광화문광장',
-        address: '서울특별시 종로구 세종로 172',
-        roadAddress: '서울특별시 종로구 세종로 1-68',
-        x: '126.9768',
-        y: '37.5718',
-      },
-    ];
-
-    try {
-      const apiKey = process.env.KAKAO_REST_API_KEY;
-
-      // API 키가 없으면 더미 데이터 반환
-      if (!apiKey) {
-        console.log('카카오 API 키가 설정되지 않음, 더미 데이터 사용');
-        const filtered = dummyData.filter(
-          (item) =>
-            item.placeName.toLowerCase().includes(query.toLowerCase()) ||
-            item.address.includes(query) ||
-            item.roadAddress.includes(query),
-        );
-        return filtered.length > 0 ? filtered : dummyData.slice(0, 5);
-      }
-
-      // 카카오 주소 검색 API 호출
-      const response = await axios.get<KakaoApiResponse>(
-        'https://dapi.kakao.com/v2/local/search/address.json',
-        {
-          headers: {
-            Authorization: `KakaoAK ${apiKey}`,
-          },
-          params: {
-            query: query,
-            size: 30,
-          },
-          timeout: 5000, // 5초 타임아웃
-        },
-      );
-
-      // 키워드 검색도 함께 수행 (더 많은 결과를 얻기 위해)
-      const keywordResponse = await axios.get<KakaoApiResponse>(
-        'https://dapi.kakao.com/v2/local/search/keyword.json',
-        {
-          headers: {
-            Authorization: `KakaoAK ${apiKey}`,
-          },
-          params: {
-            query: query,
-            size: 30,
-          },
-          timeout: 5000, // 5초 타임아웃
-        },
-      );
-
-      // 두 결과를 합치고 중복 제거
-      const addressResults: AddressResult[] = response.data.documents.map(
-        (doc: KakaoDocument) => ({
-          address: doc.address_name || doc.address?.address_name || '',
-          roadAddress:
-            doc.road_address_name || doc.road_address?.address_name || '',
-          placeName: doc.address_name || doc.address?.address_name || '',
-          x: doc.x || doc.address?.x || '',
-          y: doc.y || doc.address?.y || '',
-        }),
-      );
-
-      const keywordResults: AddressResult[] =
-        keywordResponse.data.documents.map((doc: KakaoDocument) => ({
-          address: doc.address_name || '',
-          roadAddress: doc.road_address_name || '',
-          placeName: doc.place_name || '',
-          x: doc.x || '',
-          y: doc.y || '',
-        }));
-
-      // 중복 제거 (좌표 기준)
-      const combinedResults = [...addressResults];
-      keywordResults.forEach((kResult) => {
-        if (
-          !combinedResults.some(
-            (aResult) => aResult.x === kResult.x && aResult.y === kResult.y,
-          )
-        ) {
-          combinedResults.push(kResult);
-        }
-      });
-
-      console.log(`검색어: ${query} 결과: ${combinedResults.length}개`);
-
-      return combinedResults.slice(0, 30); // 최대 30개 반환
-    } catch (error) {
-      const axiosError = error as AxiosError;
-      console.error(
-        '주소 검색 중 오류 발생:',
-        axiosError.response?.data || axiosError.message,
-      );
-
-      // API 오류 시 더미 데이터 반환
-      console.log('API 오류로 더미 데이터 사용');
-      const filtered = dummyData.filter(
-        (item) =>
-          item.placeName.toLowerCase().includes(query.toLowerCase()) ||
-          item.address.includes(query) ||
-          item.roadAddress.includes(query),
-      );
-      return filtered.length > 0 ? filtered : dummyData.slice(0, 5);
-    }
+    return results;
   }
 }
