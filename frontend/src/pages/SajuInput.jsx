@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import styled, { keyframes } from 'styled-components'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import AddressSearch from '../components/AddressSearch'
 
 const float1 = keyframes`
   0%, 100% {
@@ -342,7 +343,7 @@ function SajuInput() {
     const formData = {
       name: name.trim(),
       gender: gender === 'male' ? '남' : '여',
-      birthDate: birthDate.toISOString().split('T')[0], // YYYY-MM-DD 형식
+      birthDate: `${birthDate.getFullYear()}-${String(birthDate.getMonth() + 1).padStart(2, '0')}-${String(birthDate.getDate()).padStart(2, '0')}`, // YYYY-MM-DD 형식 (로컬 시간 기준)
       birthTime: formattedTime, // HH:MM 형식
       calendarType: calendarType === 'solar' ? '양력' : '음력',
       city: city.trim()
@@ -466,11 +467,10 @@ function SajuInput() {
         
         <InputWrapper>
           <Label>도시명</Label>
-          <CityInput 
+          <AddressSearch 
             placeholder='도시명을 입력해주세요' 
-            type='text'
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={(value) => setCity(value)}
           />
         </InputWrapper>
         

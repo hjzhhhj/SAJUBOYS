@@ -1,11 +1,21 @@
-import { Controller, Post, Get, Delete, Body, UseGuards, Request, ValidationPipe, Param } from '@nestjs/common';
+import { Controller, Post, Get, Delete, Body, UseGuards, Request, ValidationPipe, Param, Query } from '@nestjs/common';
 import { SajuService } from './saju.service';
 import { CalculateSajuDto } from './dto/saju.dto';
+import { SearchAddressDto } from './dto/search-address.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('saju')
 export class SajuController {
   constructor(private sajuService: SajuService) {}
+
+  @Get('search-address')
+  async searchAddress(@Query() searchAddressDto: SearchAddressDto) {
+    const results = await this.sajuService.searchAddress(searchAddressDto.query);
+    return {
+      success: true,
+      data: results,
+    };
+  }
 
   @Post('calculate')
   async calculateSaju(
