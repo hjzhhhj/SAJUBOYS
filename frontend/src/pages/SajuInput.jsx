@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext'
 import styled, { keyframes } from 'styled-components'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import AddressSearch from '../components/AddressSearch'
 
 const float1 = keyframes`
   0%, 100% {
@@ -466,11 +467,10 @@ function SajuInput() {
         
         <InputWrapper>
           <Label>도시명</Label>
-          <CityInput 
+          <AddressSearch 
             placeholder='도시명을 입력해주세요' 
-            type='text'
             value={city}
-            onChange={(e) => setCity(e.target.value)}
+            onChange={(value) => setCity(value)}
           />
         </InputWrapper>
         

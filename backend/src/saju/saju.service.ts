@@ -6,6 +6,7 @@ import { CalculateSajuDto } from './dto/saju.dto';
 import { SajuCalculator } from './utils/saju-calculator';
 import { SajuInterpreter } from './utils/saju-interpreter';
 import { SajuAdvancedInterpreter } from './utils/saju-advanced-interpreter';
+import axios from 'axios';
 
 @Injectable()
 export class SajuService {
@@ -395,5 +396,69 @@ export class SajuService {
       _id: new Types.ObjectId(sajuId),
       userId: new Types.ObjectId(userId),
     });
+  }
+
+  async searchAddress(query: string) {
+    try {
+      const apiKey = process.env.KAKAO_REST_API_KEY;
+      
+      // 카카오 주소 검색 API 호출
+      const response = await axios.get('https://dapi.kakao.com/v2/local/search/address.json', {
+        headers: {
+          'Authorization': `KakaoAK ${apiKey}`,
+        },
+        params: {
+          query: query,
+          size: 30,
+        },
+      });
+
+      // 키워드 검색도 함께 수행 (더 많은 결과를 얻기 위해)
+      const keywordResponse = await axios.get('https://dapi.kakao.com/v2/local/search/keyword.json', {
+        headers: {
+          'Authorization': `KakaoAK ${apiKey}`,
+        },
+        params: {
+          query: query,
+          size: 30,
+        },
+      });
+
+      // 두 결과를 합치고 중복 제거
+      const addressResults = response.data.documents.map(doc => ({
+        address: doc.address_name || doc.address?.address_name || '',
+        roadAddress: doc.road_address_name || doc.road_address?.address_name || '',
+        placeName: doc.address_name || doc.address?.address_name || '',
+        x: doc.x || doc.address?.x || '',
+        y: doc.y || doc.address?.y || '',
+      }));
+
+      const keywordResults = keywordResponse.data.documents.map(doc => ({
+        address: doc.address_name || '',
+        roadAddress: doc.road_address_name || '',
+        placeName: doc.place_name || '',
+        x: doc.x || '',
+        y: doc.y || '',
+      }));
+
+      // 중복 제거 (좌표 기준)
+      const combinedResults = [...addressResults];
+      keywordResults.forEach(kResult => {
+        if (!combinedResults.some(aResult => 
+          aResult.x === kResult.x && aResult.y === kResult.y
+        )) {
+          combinedResults.push(kResult);
+        }
+      });
+
+      console.log(`검색어: ${query} 결과: ${combinedResults.length}개`);
+      
+      return combinedResults.slice(0, 30); // 최대 30개 반환
+    } catch (error) {
+      console.error('주소 검색 중 오류 발생:', error.response?.data || error.message);
+      
+      // API 오류 시 빈 배열 반환
+      return [];
+    }
   }
 }
