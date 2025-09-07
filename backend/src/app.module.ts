@@ -12,7 +12,7 @@ import { SajuModule } from './saju/saju.module';
       isGlobal: true,
     }),
     MongooseModule.forRoot(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/sajuboys'
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/sajuboys',
     ),
     AuthModule,
     SajuModule,
