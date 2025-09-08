@@ -118,7 +118,7 @@ const Title = styled.h1`
   font-weight: 700;
   margin-bottom: 3rem;
   text-align: center;
-  font-family: 'Cinzel Decorative', cursive;
+  font-family: "Cinzel Decorative", cursive;
 
   @media (min-width: 768px) {
     font-size: 3.5rem;
@@ -603,6 +603,16 @@ function SajuResult() {
                 </ElementItem>
               ))}
             </FiveElementsGrid>
+            <Description>
+              {resultData.interpretation.elementBalance
+                .split("\n")
+                .map((line, index) => (
+                  <span key={index}>
+                    <br />
+                    {line}
+                  </span>
+                ))}
+            </Description>
           </ResultCard>
         )}
 
