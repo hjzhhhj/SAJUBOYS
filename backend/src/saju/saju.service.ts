@@ -141,7 +141,10 @@ export class SajuService {
     ];
 
     heavenElements.forEach((stem) => {
-      const element = SajuCalculator.FIVE_ELEMENTS.천간[stem];
+      const element =
+        SajuCalculator.FIVE_ELEMENTS.천간[
+          stem as keyof typeof SajuCalculator.FIVE_ELEMENTS.천간
+        ];
       if (element) elements[element]++;
     });
 
@@ -154,7 +157,10 @@ export class SajuService {
     ];
 
     earthElements.forEach((branch) => {
-      const element = SajuCalculator.FIVE_ELEMENTS.지지[branch];
+      const element =
+        SajuCalculator.FIVE_ELEMENTS.지지[
+          branch as keyof typeof SajuCalculator.FIVE_ELEMENTS.지지
+        ];
       if (element) elements[element]++;
     });
 
@@ -264,20 +270,16 @@ export class SajuService {
     // 올해 운세 (고급 버전 사용)
     const fortune = timelyFortune.overall + '\n' + timelyFortune.advice;
 
-    // 띠 해석 추가
-    const zodiacInfo = advancedInterpretation.zodiacSign;
-
     return {
-      personality: `${personality}\n\n${elementBalance}\n\n${yinYangBalance}\n\n띠: ${zodiacInfo?.animal || ''}\n${zodiacInfo?.personality || ''}`,
-      career: `${career}\n\n추천 직업: ${zodiacInfo?.career || ''}`,
-      relationship: `${relationship}\n\n${timelyFortune.love}\n\n궁합: ${zodiacInfo?.compatibility || ''}`,
+      personality: `${personality}\n\n${elementBalance}\n\n${yinYangBalance}`,
+      career: `${career}`,
+      relationship: `${relationship}\n\n${timelyFortune.love}`,
       wealth: `${wealth}\n\n${timelyFortune.wealth}`,
       health: `${health}\n\n${timelyFortune.health}`,
       fortune,
       elementBalance,
       yinYangBalance,
       advancedAnalysis: {
-        zodiac: zodiacInfo,
         daeunAnalysis: advancedInterpretation.daeunAnalysis,
         specialPattern: advancedInterpretation.specialPattern,
         tenGodsAnalysis: advancedInterpretation.tenGodsAnalysis,

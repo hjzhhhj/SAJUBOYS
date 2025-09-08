@@ -90,6 +90,7 @@ const Title = styled.h1`
   font-size: 4rem;
   font-weight: 900;
   margin-bottom: 3rem;
+  font-family: 'Cinzel Decorative', cursive;
 `
 
 const InputWrapper = styled.div`

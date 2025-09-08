@@ -118,6 +118,7 @@ const Title = styled.h1`
   font-weight: 700;
   margin-bottom: 3rem;
   text-align: center;
+  font-family: 'Cinzel Decorative', cursive;
 
   @media (min-width: 768px) {
     font-size: 3.5rem;
@@ -383,7 +384,7 @@ function SajuResult() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [resultData, setResultData] = useState(null);
-  const [saving, setSaving] = useState(false);
+  const [setSaving] = useState(false);
 
   useEffect(() => {
     // location.state에서 데이터 받기
@@ -490,8 +491,7 @@ function SajuResult() {
       if (response.data.success) {
         alert("결과가 성공적으로 저장되었습니다!");
       }
-    } catch (error) {
-      console.error("저장 오류:", error);
+    } catch {
       alert("결과 저장에 실패했습니다.");
     } finally {
       setSaving(false);
@@ -534,7 +534,8 @@ function SajuResult() {
             </InfoItem>
             {resultData.interpretation?.advancedAnalysis?.zodiac && (
               <InfoItem>
-                <span>띠:</span> {resultData.interpretation.advancedAnalysis.zodiac.animal}띠
+                <span>띠:</span>{" "}
+                {resultData.interpretation.advancedAnalysis.zodiac.animal}띠
               </InfoItem>
             )}
           </InfoGrid>
@@ -676,10 +677,7 @@ function SajuResult() {
                 color: "#666",
               }}
             >
-              {
-                resultData.interpretation.advancedAnalysis.zodiac
-                  .personality
-              }
+              {resultData.interpretation.advancedAnalysis.zodiac.personality}
             </p>
             <div
               style={{
@@ -711,8 +709,7 @@ function SajuResult() {
                   <strong>성격적 특징:</strong>{" "}
                   {
                     getZodiacDetails(
-                      resultData.interpretation.advancedAnalysis.zodiac
-                        .animal
+                      resultData.interpretation.advancedAnalysis.zodiac.animal
                     ).personality
                   }
                 </div>
@@ -720,8 +717,7 @@ function SajuResult() {
                   <strong>장점:</strong>{" "}
                   {
                     getZodiacDetails(
-                      resultData.interpretation.advancedAnalysis.zodiac
-                        .animal
+                      resultData.interpretation.advancedAnalysis.zodiac.animal
                     ).strengths
                   }
                 </div>
@@ -729,8 +725,7 @@ function SajuResult() {
                   <strong>주의할 점:</strong>{" "}
                   {
                     getZodiacDetails(
-                      resultData.interpretation.advancedAnalysis.zodiac
-                        .animal
+                      resultData.interpretation.advancedAnalysis.zodiac.animal
                     ).weaknesses
                   }
                 </div>
@@ -738,8 +733,7 @@ function SajuResult() {
                   <strong>행운의 방향:</strong>{" "}
                   {
                     getZodiacDetails(
-                      resultData.interpretation.advancedAnalysis.zodiac
-                        .animal
+                      resultData.interpretation.advancedAnalysis.zodiac.animal
                     ).lucky
                   }
                 </div>
@@ -769,7 +763,6 @@ function SajuResult() {
         {/* 고급 해석 섹션 */}
         {resultData.interpretation?.advancedAnalysis && (
           <>
-
             {/* 심화 해석 섹션 */}
             {resultData.interpretation.advancedAnalysis.specialPattern && (
               <AdvancedCard>
@@ -789,9 +782,9 @@ function SajuResult() {
               </AdvancedCard>
             )}
 
-
             {/* 조언 섹션 */}
-            {resultData.interpretation.advancedAnalysis.timelyFortune?.advice && (
+            {resultData.interpretation.advancedAnalysis.timelyFortune
+              ?.advice && (
               <ResultCard>
                 <SectionTitle>올해 행동 가이드</SectionTitle>
                 <Description>

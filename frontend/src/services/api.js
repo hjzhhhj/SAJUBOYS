@@ -20,8 +20,7 @@ api.interceptors.request.use(
         if (userData.accessToken) {
           config.headers.Authorization = `Bearer ${userData.accessToken}`
         }
-      } catch (error) {
-        console.error('Error parsing user data:', error)
+      } catch {
         localStorage.removeItem('user')
       }
     }

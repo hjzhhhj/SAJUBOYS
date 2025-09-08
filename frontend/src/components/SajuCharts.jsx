@@ -13,7 +13,6 @@ import {
   YAxis,
   CartesianGrid,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import styled from "styled-components";
@@ -55,7 +54,7 @@ const COLORS = {
 
 const YIN_YANG_COLORS = ["#FF6B6B", "#4ECDC4"];
 
-export function SajuCharts({ elements, yinYang, fourPillars }) {
+export function SajuCharts({ elements, yinYang }) {
   // 오행 데이터 준비
   const elementsData = elements
     ? Object.entries(elements).map(([key, value]) => ({
@@ -73,36 +72,6 @@ export function SajuCharts({ elements, yinYang, fourPillars }) {
       ]
     : [];
 
-  // 사주 팔자 데이터 준비
-  const pillarData = fourPillars
-    ? [
-        {
-          name: "년주",
-          천간: fourPillars.year?.heaven || "",
-          지지: fourPillars.year?.earth || "",
-          value: 1,
-        },
-        {
-          name: "월주",
-          천간: fourPillars.month?.heaven || "",
-          지지: fourPillars.month?.earth || "",
-          value: 1,
-        },
-        {
-          name: "일주",
-          천간: fourPillars.day?.heaven || "",
-          지지: fourPillars.day?.earth || "",
-          value: 1,
-        },
-        {
-          name: "시주",
-          천간: fourPillars.time?.heaven || "",
-          지지: fourPillars.time?.earth || "",
-          value: 1,
-        },
-      ]
-    : [];
-
   // 오행 균형 레이더 차트 데이터
   const maxElement = elements ? Math.max(...Object.values(elements)) : 0;
   const radarData = elements
@@ -116,29 +85,6 @@ export function SajuCharts({ elements, yinYang, fourPillars }) {
   // 커스텀 라벨 렌더링
   const renderCustomLabel = (entry) => {
     return `${entry.name} (${entry.value})`;
-  };
-
-  const renderPillarLabel = (props) => {
-    const { cx, cy, index } = props;
-    const data = pillarData[index];
-    if (!data) return null;
-
-    return (
-      <text
-        x={cx}
-        y={cy}
-        fill="#150137"
-        textAnchor="middle"
-        dominantBaseline="middle"
-      >
-        <tspan x={cx} dy="-0.5em" fontSize="12">
-          {data.천간}
-        </tspan>
-        <tspan x={cx} dy="1.2em" fontSize="12">
-          {data.지지}
-        </tspan>
-      </text>
-    );
   };
 
   return (
