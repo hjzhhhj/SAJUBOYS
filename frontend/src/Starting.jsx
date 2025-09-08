@@ -88,14 +88,16 @@ const GradientCircle2 = styled.div`
 
 const SubTitle = styled.h1`
   color: white;
-  font-size: 1.4rem;
+  font-size: 1.25rem;
   font-weight: 400;
+  margin-bottom: 1rem;
 `;
 
 const Title = styled.h1`
   color: white;
   font-size: 6.5rem;
-  font-weight: 900;  font-family: 'Cinzel Decorative', cursive;
+  font-weight: 900;
+  font-family: "Cinzel Decorative", cursive;
 `;
 
 const Button = styled.button`
@@ -105,7 +107,7 @@ const Button = styled.button`
   border-radius: 100px;
   font-size: 1.25rem;
   cursor: pointer;
-  margin-top: 5rem;
+  margin-top: 7rem;
   width: 28rem;
   height: 4rem;
 
