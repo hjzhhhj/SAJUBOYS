@@ -52,8 +52,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const user = JSON.parse(savedUser)
         dispatch({ type: 'LOGIN', payload: user })
-      } catch (error) {
-        console.error('Invalid user data in localStorage:', error)
+      } catch {
         localStorage.removeItem('user')
       }
     }

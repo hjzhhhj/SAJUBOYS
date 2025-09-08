@@ -23,7 +23,7 @@ export class AuthService {
     // 이메일 중복 체크
     const existingUser = await this.userModel.findOne({ email });
     if (existingUser) {
-      throw new ConflictException('이미 등록된 이메일입니다');
+      throw new ConflictException('이미 가입된 이메일입니다');
     }
 
     // 비밀번호 암호화
@@ -40,7 +40,7 @@ export class AuthService {
     await user.save();
 
     // 비밀번호 제외하고 반환
-    const { password: _, ...userWithoutPassword } = user.toObject();
+    const { password, ...userWithoutPassword } = user.toObject();
     return userWithoutPassword;
   }
 
@@ -50,13 +50,13 @@ export class AuthService {
     // 사용자 찾기
     const user = await this.userModel.findOne({ email });
     if (!user) {
-      throw new UnauthorizedException('이메일 또는 비밀번호가 잘못되었습니다');
+      throw new UnauthorizedException('존재하지 않는 이메일입니다');
     }
 
     // 비밀번호 확인
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException('이메일 또는 비밀번호가 잘못되었습니다');
+      throw new UnauthorizedException('비밀번호가 일치하지 않습니다');
     }
 
     // JWT 토큰 생성
