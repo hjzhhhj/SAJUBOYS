@@ -1,11 +1,34 @@
-import { Controller, Post, Get, Delete, Body, UseGuards, Request, ValidationPipe, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Delete,
+  Body,
+  UseGuards,
+  Request,
+  ValidationPipe,
+  Param,
+  Query,
+} from '@nestjs/common';
 import { SajuService } from './saju.service';
 import { CalculateSajuDto } from './dto/saju.dto';
+import { SearchAddressDto } from './dto/search-address.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('saju')
 export class SajuController {
   constructor(private sajuService: SajuService) {}
+
+  @Get('search-address')
+  async searchAddress(@Query() searchAddressDto: SearchAddressDto) {
+    const results = await this.sajuService.searchAddress(
+      searchAddressDto.query,
+    );
+    return {
+      success: true,
+      data: results,
+    };
+  }
 
   @Post('calculate')
   async calculateSaju(
@@ -14,7 +37,10 @@ export class SajuController {
   ) {
     // 임시로 사용자 ID 없이 처리 (인증 옵션)
     const userId = req.user?._id || null;
-    const result = await this.sajuService.calculateSaju(userId, calculateSajuDto);
+    const result = await this.sajuService.calculateSaju(
+      userId,
+      calculateSajuDto,
+    );
     return {
       success: true,
       message: '사주 계산이 완료되었습니다',
@@ -43,7 +69,7 @@ export class SajuController {
       data: result,
     };
   }
-  
+
   @Post(':id/save')
   @UseGuards(JwtAuthGuard)
   async saveResult(@Request() req, @Param('id') sajuId: string) {
@@ -54,7 +80,7 @@ export class SajuController {
       data: result,
     };
   }
-  
+
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
   async deleteResult(@Request() req, @Param('id') sajuId: string) {
