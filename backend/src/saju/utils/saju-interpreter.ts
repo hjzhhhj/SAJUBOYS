@@ -229,28 +229,34 @@ export class SajuInterpreter {
       if (percentage > 40) {
         switch (element) {
           case '목':
-            interpretation += '간, 담낭, 근육, 눈 건강에 주의하세요.\n스트레스 관리가 중요합니다.';
+            interpretation +=
+              '간, 담낭, 근육, 눈 건강에 주의하세요.\n스트레스 관리가 중요합니다.';
             break;
           case '화':
-            interpretation += '심장, 소장, 혈액순환에 주의하세요.\n과로를 피하고 충분한 휴식이 필요합니다.';
+            interpretation +=
+              '심장, 소장, 혈액순환에 주의하세요.\n과로를 피하고 충분한 휴식이 필요합니다.';
             break;
           case '토':
-            interpretation += '비장, 위장, 소화기관에 주의하세요.\n규칙적인 식사가 중요합니다.';
+            interpretation +=
+              '비장, 위장, 소화기관에 주의하세요.\n규칙적인 식사가 중요합니다.';
             break;
           case '금':
-            interpretation += '폐, 대장, 호흡기에 주의하세요.\n공기 좋은 곳에서 운동하세요.';
+            interpretation +=
+              '폐, 대장, 호흡기에 주의하세요.\n공기 좋은 곳에서 운동하세요.';
             break;
           case '수':
-            interpretation += '신장, 방광, 비뇨기에 주의하세요.\n충분한 수분 섭취가 필요합니다.';
+            interpretation +=
+              '신장, 방광, 비뇨기에 주의하세요.\n충분한 수분 섭취가 필요합니다.';
             break;
         }
       }
     });
 
     if (interpretation === '건강운: ') {
-      interpretation += '전반적으로 건강한 체질입니다.\n규칙적인 생활습관을 유지하세요.';
+      interpretation +=
+        '전반적으로 건강한 체질입니다.\n규칙적인 생활습관을 유지하세요.';
     }
-    
+
     return interpretation;
   }
 
