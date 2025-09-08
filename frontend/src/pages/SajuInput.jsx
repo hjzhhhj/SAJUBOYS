@@ -89,6 +89,7 @@ const Title = styled.h1`
   font-size: 4rem;
   font-weight: 900;
   margin-bottom: 2rem;
+  font-family: 'Cinzel Decorative', cursive;
 `
 
 const InputWrapper = styled.div`
@@ -357,14 +358,12 @@ function SajuInput() {
       } else {
         alert(result.error || '사주 계산에 실패했습니다')
       }
-    } catch (error) {
-      console.error('사주 계산 오류:', error)
+    } catch {
       alert('사주 계산 중 오류가 발생했습니다. 다시 시도해주세요.')
     }
   }
 
   const handleSavedResults = () => {
-    // TODO: 저장된 결과 페이지로 이동
     alert('저장된 사주팔자 기능은 준비 중입니다')
   }
 

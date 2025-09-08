@@ -282,7 +282,10 @@ export class SajuInterpreter {
     };
 
     const careers = careerMap[dayHeavenly] || [];
-    const dayInfo = this.PERSONALITY_BY_DAY_STEM[dayHeavenly];
+    const dayInfo =
+      this.PERSONALITY_BY_DAY_STEM[
+        dayHeavenly as keyof typeof this.PERSONALITY_BY_DAY_STEM
+      ];
 
     // 오행별 추가 직업 추천
     const dominantElement = Object.entries(elements).reduce(
@@ -311,7 +314,7 @@ export class SajuInterpreter {
 
     return (
       `직업 적성:\n` +
-      `◆ 일간 ${dayHeavenly}(${dayInfo?.element})의 적성: ${careers.slice(0, 5).join(', ')}\n` +
+      `◆ 일간 ${dayHeavenly}(${dayInfo.element})의 적성: ${careers.slice(0, 5).join(', ')}\n` +
       `◆ 오행 ${dominantElement}이 강한 적성: ${elementCareer}\n` +
       `일간의 특성과 오행 균형을 고려할 때, 위 분야에서 탁월한 능력을 발휘할 수 있습니다.`
     );

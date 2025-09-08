@@ -141,7 +141,10 @@ export class SajuService {
     ];
 
     heavenElements.forEach((stem) => {
-      const element = SajuCalculator.FIVE_ELEMENTS.천간[stem];
+      const element =
+        SajuCalculator.FIVE_ELEMENTS.천간[
+          stem as keyof typeof SajuCalculator.FIVE_ELEMENTS.천간
+        ];
       if (element) elements[element]++;
     });
 
@@ -154,7 +157,10 @@ export class SajuService {
     ];
 
     earthElements.forEach((branch) => {
-      const element = SajuCalculator.FIVE_ELEMENTS.지지[branch];
+      const element =
+        SajuCalculator.FIVE_ELEMENTS.지지[
+          branch as keyof typeof SajuCalculator.FIVE_ELEMENTS.지지
+        ];
       if (element) elements[element]++;
     });
 
@@ -263,7 +269,6 @@ export class SajuService {
 
     // 올해 운세 (고급 버전 사용)
     const fortune = timelyFortune.overall + '\n' + timelyFortune.advice;
-
 
     return {
       personality: `${personality}\n\n${elementBalance}\n\n${yinYangBalance}`,

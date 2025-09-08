@@ -135,11 +135,9 @@ const AddressSearch = ({
             timeout: 3000, // 3초 타임아웃 설정
           }
         );
-        console.log("검색 응답:", response.data);
         setResults(response.data.data || []);
         setShowResults(true);
-      } catch (error) {
-        console.error("주소 검색 실패:", error);
+      } catch {
         // API 실패 시 빈 결과 표시
         setResults([]);
         setShowResults(true);
