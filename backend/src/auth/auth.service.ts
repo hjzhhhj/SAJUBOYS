@@ -40,6 +40,7 @@ export class AuthService {
     await user.save();
 
     // 비밀번호 제외하고 반환
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user.toObject();
     return userWithoutPassword;
   }
@@ -64,6 +65,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     // 비밀번호 제외하고 반환
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _, ...userWithoutPassword } = user.toObject();
 
     return {
@@ -73,8 +75,10 @@ export class AuthService {
   }
 
   async validateUser(payload: any): Promise<any> {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const user = await this.userModel.findById(payload.sub);
     if (user) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user.toObject();
       return result;
     }
