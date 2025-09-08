@@ -118,16 +118,7 @@ const AddressSearch = ({
   const [showResults, setShowResults] = useState(false);
   const containerRef = useRef(null);
 
-  // 더미 데이터
-  const dummyData = [
-    {
-      placeName: "서울특별시",
-      address: "서울특별시 중구 세종대로 110",
-      roadAddress: "서울특별시 중구 태평로1가 31",
-    },
-  ];
-
-  // 디바운스된 검색 함수
+  // 검색 함수
   const debouncedSearch = useCallback(
     debounce(async (searchQuery) => {
       if (!searchQuery || searchQuery.length < 2) {
@@ -148,15 +139,9 @@ const AddressSearch = ({
         setResults(response.data.data || []);
         setShowResults(true);
       } catch (error) {
-        console.error("주소 검색 실패, 더미 데이터 사용:", error);
-        // API 실패 시 더미 데이터에서 검색
-        const filteredDummy = dummyData.filter(
-          (item) =>
-            item.placeName.includes(searchQuery) ||
-            item.address.includes(searchQuery) ||
-            item.roadAddress.includes(searchQuery)
-        );
-        setResults(filteredDummy.length > 0 ? filteredDummy : dummyData);
+        console.error("주소 검색 실패:", error);
+        // API 실패 시 빈 결과 표시
+        setResults([]);
         setShowResults(true);
       } finally {
         setIsLoading(false);
