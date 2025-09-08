@@ -211,7 +211,7 @@ export class SajuInterpreter {
       계: '직관을 활용한 투자로 재물을 늘릴 수 있습니다.',
     };
 
-    return `재물운:\n${wealthLuck[dayHeavenly] || '꾸준한 노력으로 재물을 모을 수 있습니다.'}`;
+    return `재물운: ${wealthLuck[dayHeavenly] || '꾸준한 노력으로 재물을 모을 수 있습니다.'}`;
   }
 
   // 건강운 해석
@@ -220,7 +220,7 @@ export class SajuInterpreter {
       (sum, count) => sum + count,
       0,
     );
-    let interpretation = '건강운:\n';
+    let interpretation = '건강운: ';
 
     // 오행 불균형에 따른 건강 주의사항
     Object.entries(elements).forEach(([element, count]) => {
@@ -229,33 +229,29 @@ export class SajuInterpreter {
       if (percentage > 40) {
         switch (element) {
           case '목':
-            interpretation +=
-              '간, 담낭, 근육, 눈 건강에 주의하세요. 스트레스 관리가 중요합니다.\n';
+            interpretation += '간, 담낭, 근육, 눈 건강에 주의하세요.\n스트레스 관리가 중요합니다.';
             break;
           case '화':
-            interpretation +=
-              '심장, 소장, 혈액순환에 주의하세요. 과로를 피하고 충분한 휴식이 필요합니다.\n';
+            interpretation += '심장, 소장, 혈액순환에 주의하세요.\n과로를 피하고 충분한 휴식이 필요합니다.';
             break;
           case '토':
-            interpretation +=
-              '비장, 위장, 소화기관에 주의하세요. 규칙적인 식사가 중요합니다.\n';
+            interpretation += '비장, 위장, 소화기관에 주의하세요.\n규칙적인 식사가 중요합니다.';
             break;
           case '금':
-            interpretation +=
-              '폐, 대장, 호흡기에 주의하세요. 공기 좋은 곳에서 운동하세요.\n';
+            interpretation += '폐, 대장, 호흡기에 주의하세요.\n공기 좋은 곳에서 운동하세요.';
             break;
           case '수':
-            interpretation +=
-              '신장, 방광, 비뇨기에 주의하세요. 충분한 수분 섭취가 필요합니다.\n';
+            interpretation += '신장, 방광, 비뇨기에 주의하세요.\n충분한 수분 섭취가 필요합니다.';
             break;
         }
       }
     });
 
-    return (
-      interpretation ||
-      '전반적으로 건강한 체질입니다. 규칙적인 생활습관을 유지하세요.'
-    );
+    if (interpretation === '건강운: ') {
+      interpretation += '전반적으로 건강한 체질입니다.\n규칙적인 생활습관을 유지하세요.';
+    }
+    
+    return interpretation;
   }
 
   // 올해 운세 (간단한 버전)
