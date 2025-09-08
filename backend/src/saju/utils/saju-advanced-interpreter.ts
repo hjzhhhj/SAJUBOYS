@@ -434,12 +434,28 @@ export class SajuAdvancedInterpreter {
     );
     let pattern = '';
 
+    // 가장 강한 오행과 가장 약한 오행 찾기
+    const dominantElement = Object.entries(elements).reduce(
+      (max, [element, count]) =>
+        (count as number) > max.count
+          ? { element, count: count as number }
+          : max,
+      { element: '', count: 0 },
+    );
+
+    const weakestElement = Object.entries(elements).reduce(
+      (min, [element, count]) =>
+        (count as number) < min.count && (count as number) > 0
+          ? { element, count: count as number }
+          : min,
+      { element: '', count: 99 },
+    );
+
     // 편중된 오행 체크
     Object.entries(elements).forEach(([element, count]: [string, any]) => {
       const percentage = ((count as number) / (total as number)) * 100;
-      if (percentage > 50) {
+      if (percentage >= 40) {
         pattern = `${element}이 매우 강한 특수 격국입니다. `;
-
         switch (element) {
           case '목':
             pattern +=
@@ -458,8 +474,62 @@ export class SajuAdvancedInterpreter {
             pattern += '지혜와 유연성으로 변화에 적응하는 인생입니다.';
             break;
         }
+      } else if (percentage >= 30) {
+        pattern = `${element}의 기운이 강한 사주입니다. `;
+        switch (element) {
+          case '목':
+            pattern +=
+              '창의력과 성장 의지가 뛰어나 새로운 분야에서 성공할 가능성이 높습니다.';
+            break;
+          case '화':
+            pattern +=
+              '활력과 표현력이 뛰어나 사람들과의 관계에서 인기가 많습니다.';
+            break;
+          case '토':
+            pattern += '신뢰성과 안정감으로 사람들의 중심 역할을 하게 됩니다.';
+            break;
+          case '금':
+            pattern += '원칙과 의리를 중시하여 전문 분야에서 인정받게 됩니다.';
+            break;
+          case '수':
+            pattern +=
+              '깊이 있는 사고와 직관력으로 학문이나 예술 분야에서 재능을 발휘합니다.';
+            break;
+        }
       }
     });
+
+    // 오행이 부족한 경우도 체크
+    if (!pattern) {
+      Object.entries(elements).forEach(([element, count]: [string, any]) => {
+        const percentage = ((count as number) / (total as number)) * 100;
+        if (percentage === 0) {
+          pattern = `${element}이 전혀 없는 특수한 사주입니다. `;
+          switch (element) {
+            case '목':
+              pattern +=
+                '유연성과 성장력을 기르는 것이 중요하며, 학습과 도전을 통해 발전하게 됩니다.';
+              break;
+            case '화':
+              pattern +=
+                '활력과 열정을 기르는 것이 중요하며, 사회적 활동을 통해 성장하게 됩니다.';
+              break;
+            case '토':
+              pattern +=
+                '안정감과 신뢰성을 기르는 것이 중요하며, 꾸준함으로 성과를 이루게 됩니다.';
+              break;
+            case '금':
+              pattern +=
+                '결단력과 원칙을 세우는 것이 중요하며, 체계적 접근으로 성공하게 됩니다.';
+              break;
+            case '수':
+              pattern +=
+                '지혜와 통찰력을 기르는 것이 중요하며, 경험을 통해 성숙하게 됩니다.';
+              break;
+          }
+        }
+      });
+    }
 
     return pattern || '균형잡힌 사주로 다양한 가능성이 열려있습니다.';
   }
@@ -527,8 +597,142 @@ export class SajuAdvancedInterpreter {
 
     yearlyFortune.wealth = '계획적인 소비와 저축이 필요한 시기입니다.';
     yearlyFortune.health = '규칙적인 생활습관과 운동이 중요합니다.';
-    yearlyFortune.advice = `${thisYearStem}${thisYearBranch}년의 기운을 잘 활용하여 발전하시기 바랍니다.`;
+
+    // 개인의 일간과 올해 천간의 관계를 고려해 맞춤형 조언!
+    const personalAdvice = this.getPersonalizedAdvice(
+      dayMaster,
+      thisYearStem,
+      thisYearBranch,
+    );
+    yearlyFortune.advice = personalAdvice;
 
     return yearlyFortune;
+  }
+
+  // 개인화된 맞춤형 조언 생성
+  static getPersonalizedAdvice(
+    dayMaster: string,
+    yearStem: string,
+    yearBranch: string,
+  ): string {
+    // 일간과 년간의 오행 관계 분석
+    const dayElement = this.getElementFromStem(dayMaster);
+    const yearElement = this.getElementFromStem(yearStem);
+
+    // 상생/상극 관계 판단
+    const relationship = this.getFiveElementsRelationship(
+      dayElement,
+      yearElement,
+    );
+
+    let advice = `${yearStem}${yearBranch}년은 `;
+
+    if (relationship === 'supportive') {
+      advice += `당신의 ${dayElement} 기운을 강화시켜주는 ${yearElement}의 해입니다. `;
+      switch (dayElement) {
+        case '목':
+          advice +=
+            '성장과 발전에 집중하여 새로운 도전을 시도하기 좋은 해입니다.';
+          break;
+        case '화':
+          advice += '열정과 창의력을 발휘하여 큰 성과를 이룰 수 있는 해입니다.';
+          break;
+        case '토':
+          advice += '안정된 기반 위에서 꾸준한 성과를 쌓아가기 좋은 해입니다.';
+          break;
+        case '금':
+          advice += '결단력과 추진력으로 목표를 달성하기 좋은 해입니다.';
+          break;
+        case '수':
+          advice +=
+            '지혜와 유연성을 바탕으로 변화에 적응하며 발전하기 좋은 해입니다.';
+          break;
+      }
+    } else if (relationship === 'conflicting') {
+      advice += `당신의 ${dayElement} 기운과 상극인 ${yearElement}의 해입니다. `;
+      advice += '신중하게 행동하되 이 시기를 통해 더욱 성숙해질 수 있습니다. ';
+      switch (dayElement) {
+        case '목':
+          advice +=
+            '인내심을 갖고 꾸준히 노력하면 오히려 더 큰 성장을 이룰 수 있습니다.';
+          break;
+        case '화':
+          advice +=
+            '차분함을 유지하며 계획적으로 행동하면 좋은 결과를 얻을 수 있습니다.';
+          break;
+        case '토':
+          advice +=
+            '유연성을 기르고 변화에 적응하려 노력하면 새로운 기회를 얻을 수 있습니다.';
+          break;
+        case '금':
+          advice +=
+            '온화함과 포용력을 기르면 대인관계에서 큰 도움이 될 것입니다.';
+          break;
+        case '수':
+          advice +=
+            '적극성과 행동력을 기르면 정체된 상황을 돌파할 수 있습니다.';
+          break;
+      }
+    } else {
+      advice += `당신의 ${dayElement} 기운과 조화로운 ${yearElement}의 해입니다. `;
+      advice += '균형을 유지하며 다방면으로 발전할 수 있는 좋은 시기입니다.';
+    }
+
+    return advice;
+  }
+
+  // 천간에서 오행 추출
+  static getElementFromStem(stem: string): string {
+    const stemElements: { [key: string]: string } = {
+      갑: '목',
+      을: '목',
+      병: '화',
+      정: '화',
+      무: '토',
+      기: '토',
+      경: '금',
+      신: '금',
+      임: '수',
+      계: '수',
+    };
+    return stemElements[stem] || '목';
+  }
+
+  // 오행 관계 판단 (상생/상극/기타)
+  static getFiveElementsRelationship(
+    element1: string,
+    element2: string,
+  ): string {
+    // 상생 관계: 목→화→토→금→수→목
+    const supportive: { [key: string]: string } = {
+      목: '화',
+      화: '토',
+      토: '금',
+      금: '수',
+      수: '목',
+    };
+
+    // 상극 관계: 목→토, 화→금, 토→수, 금→목, 수→화
+    const conflicting: { [key: string]: string } = {
+      목: '토',
+      화: '금',
+      토: '수',
+      금: '목',
+      수: '화',
+    };
+
+    if (
+      supportive[element1] === element2 ||
+      supportive[element2] === element1
+    ) {
+      return 'supportive';
+    } else if (
+      conflicting[element1] === element2 ||
+      conflicting[element2] === element1
+    ) {
+      return 'conflicting';
+    } else {
+      return 'neutral';
+    }
   }
 }

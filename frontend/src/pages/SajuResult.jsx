@@ -603,16 +603,18 @@ function SajuResult() {
                 </ElementItem>
               ))}
             </FiveElementsGrid>
-            <Description>
-              {resultData.interpretation.elementBalance
-                .split("\n")
-                .map((line, index) => (
-                  <span key={index}>
-                    <br />
-                    {line}
-                  </span>
-                ))}
-            </Description>
+            {resultData.interpretation?.elementBalance && (
+              <Description>
+                {resultData.interpretation.elementBalance
+                  .split("\n")
+                  .map((line, index) => (
+                    <span key={index}>
+                      <br />
+                      {line}
+                    </span>
+                  ))}
+              </Description>
+            )}
           </ResultCard>
         )}
 

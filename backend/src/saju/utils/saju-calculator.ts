@@ -234,7 +234,7 @@ export class SajuCalculator {
       (gender === '남' && isYang) || (gender === '여' && !isYang);
 
     // 대운 시작 나이 계산 (간단히 10년으로 설정)
-    let startAge = 10;
+    const startAge = 10;
 
     // 월간지 기준으로 대운 계산
     const monthHeavenIndex = this.HEAVENLY_STEMS.indexOf(yearPillar.heaven);

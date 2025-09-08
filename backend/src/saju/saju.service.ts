@@ -271,11 +271,11 @@ export class SajuService {
     const fortune = timelyFortune.overall + '\n' + timelyFortune.advice;
 
     return {
-      personality: `${personality}\n\n${elementBalance}\n\n${yinYangBalance}`,
+      personality: `${personality}\n\n${yinYangBalance}`,
       career: `${career}`,
       relationship: `${relationship}\n\n${timelyFortune.love}`,
       wealth: `${wealth}\n\n${timelyFortune.wealth}`,
-      health: `${health}\n\n${timelyFortune.health}`,
+      health: `${health.trim()}\n\n${timelyFortune.health}`,
       fortune,
       elementBalance,
       yinYangBalance,
