@@ -316,7 +316,7 @@ function Signup() {
             {loading ? "가입 중..." : "회원가입"}
           </Button>
           <LinkText>
-            이미 계정이 있으신가요? <Link to="/login">로그인</Link>
+            이미 계정이 있으신가요? <Link to="/login">로그인하기</Link>
           </LinkText>
         </SignupForm>
       </ContentWrapper>
