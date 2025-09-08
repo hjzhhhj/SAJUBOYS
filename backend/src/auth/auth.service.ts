@@ -40,7 +40,7 @@ export class AuthService {
     await user.save();
 
     // 비밀번호 제외하고 반환
-    const { password, ...userWithoutPassword } = user.toObject();
+    const { password: _, ...userWithoutPassword } = user.toObject();
     return userWithoutPassword;
   }
 
