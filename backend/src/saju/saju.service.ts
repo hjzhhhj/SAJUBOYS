@@ -244,6 +244,7 @@ export class SajuService {
       );
 
     // 시기별 운세
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const timelyFortune = SajuAdvancedInterpreter.generateTimelyFortune(
       fourPillars,
       currentYear,
@@ -267,8 +268,9 @@ export class SajuService {
     // 건강운
     const health = SajuInterpreter.interpretHealth(elements);
 
-    // 올해 운세 (고급 버전 사용)
-    const fortune = timelyFortune.overall + '\n' + timelyFortune.advice;
+    // 올해 운세
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    const fortune = `${timelyFortune.overall}\n${timelyFortune.advice}`;
 
     return {
       personality: `${personality}\n\n${yinYangBalance}`,
