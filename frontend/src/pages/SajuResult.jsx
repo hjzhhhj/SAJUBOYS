@@ -399,8 +399,10 @@ function SajuResult() {
       }
 
       // 시간 표시 형식 변환
-      let formattedTime = data.birthTime;
-      if (data.birthTime) {
+      let formattedTime = null;
+      if (data.isTimeUnknown) {
+        formattedTime = "시간 모름";
+      } else if (data.birthTime) {
         const timeMap = {
           "00:00": "자시 (23:00 - 01:00)",
           "02:00": "축시 (01:00 - 03:00)",
@@ -429,6 +431,7 @@ function SajuResult() {
             : data.gender === "여"
             ? "여성"
             : data.gender,
+        isTimeUnknown: data.isTimeUnknown,
       });
     } else {
       // 더미 데이터
@@ -526,9 +529,11 @@ function SajuResult() {
               <span>생년월일:</span> {resultData.birthDate} (
               {resultData.calendarType})
             </InfoItem>
-            <InfoItem>
-              <span>태어난 시간:</span> {resultData.birthTime}
-            </InfoItem>
+            {resultData.birthTime && (
+              <InfoItem>
+                <span>태어난 시간:</span> {resultData.birthTime}
+              </InfoItem>
+            )}
             <InfoItem>
               <span>출생지:</span> {resultData.city}
             </InfoItem>
@@ -568,14 +573,16 @@ function SajuResult() {
               </PillarContent>
               <PillarSub>일간 일지</PillarSub>
             </Pillar>
-            <Pillar>
-              <PillarTitle>시주</PillarTitle>
-              <PillarContent>
-                {resultData.fourPillars.time.heaven}
-                {resultData.fourPillars.time.earth}
-              </PillarContent>
-              <PillarSub>시간 시지</PillarSub>
-            </Pillar>
+            {!resultData.isTimeUnknown && resultData.fourPillars.time && (
+              <Pillar>
+                <PillarTitle>시주</PillarTitle>
+                <PillarContent>
+                  {resultData.fourPillars.time.heaven}
+                  {resultData.fourPillars.time.earth}
+                </PillarContent>
+                <PillarSub>시간 시지</PillarSub>
+              </Pillar>
+            )}
           </PillarGrid>
         </ResultCard>
 

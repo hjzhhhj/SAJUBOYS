@@ -403,8 +403,12 @@ export class SajuAdvancedInterpreter {
     const stems = [
       fourPillars.year.heaven,
       fourPillars.month.heaven,
-      fourPillars.time.heaven,
     ];
+    
+    // 시주가 있을 때만 추가
+    if (fourPillars.time) {
+      stems.push(fourPillars.time.heaven);
+    }
 
     const counts = {
       비견겁재: 0,

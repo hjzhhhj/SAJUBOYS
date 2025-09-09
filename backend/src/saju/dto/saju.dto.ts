@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from 'class-validator';
+import { IsNotEmpty, IsString, IsOptional, IsBoolean } from 'class-validator';
 
 export class CalculateSajuDto {
   @IsNotEmpty()
@@ -24,4 +24,8 @@ export class CalculateSajuDto {
   @IsNotEmpty()
   @IsString()
   city: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isTimeUnknown?: boolean;
 }

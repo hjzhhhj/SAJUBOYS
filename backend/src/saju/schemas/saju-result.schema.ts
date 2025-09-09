@@ -23,7 +23,7 @@ class FourPillars {
   @Prop({ type: Pillar, required: true })
   day: Pillar;
 
-  @Prop({ type: Pillar, required: true })
+  @Prop({ type: Pillar, required: false })
   time: Pillar;
 }
 
@@ -127,6 +127,9 @@ export class SajuResult {
 
   @Prop({ type: Object })
   yinYang: { yin: number; yang: number };
+
+  @Prop({ default: false })
+  isTimeUnknown: boolean;
 
   @Prop({ default: Date.now })
   createdAt: Date;
