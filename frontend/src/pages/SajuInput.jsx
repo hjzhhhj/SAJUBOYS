@@ -321,7 +321,7 @@ function SajuInput() {
     }
     
     // 시간 처리 (API 형식에 맞게)
-    let formattedTime = '12:00'; // 기본값
+    let formattedTime = '00:00'; // 시간 모름일 때는 사용되지 않지만 빈 값 방지용
     if (birthTime !== 'unknown') {
       const timeMap = {
         '23-01': '00:00',
@@ -337,7 +337,7 @@ function SajuInput() {
         '19-21': '20:00',
         '21-23': '22:00'
       };
-      formattedTime = timeMap[birthTime] || '12:00';
+      formattedTime = timeMap[birthTime] || '00:00';
     }
 
     // API 형식에 맞게 데이터 포맷팅
@@ -348,6 +348,11 @@ function SajuInput() {
       birthTime: formattedTime, // HH:MM 형식
       calendarType: calendarType === 'solar' ? '양력' : '음력',
       city: city.trim()
+    }
+    
+    // 시간 모름일 때만 isTimeUnknown 추가
+    if (birthTime === 'unknown') {
+      formData.isTimeUnknown = true
     }
 
     try {

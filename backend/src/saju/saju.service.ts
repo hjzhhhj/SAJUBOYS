@@ -17,7 +17,7 @@ interface FourPillars {
   year: Pillar;
   month: Pillar;
   day: Pillar;
-  time: Pillar;
+  time: Pillar | null;
 }
 
 export interface AddressResult {
@@ -39,7 +39,7 @@ export class SajuService {
     userId: string | null,
     calculateSajuDto: CalculateSajuDto,
   ) {
-    const { gender, birthDate, birthTime } = calculateSajuDto;
+    const { gender, birthDate, birthTime, isTimeUnknown } = calculateSajuDto;
 
     // 생년월일시 파싱 - 로컬 시간대로 처리
     // birthDate는 'YYYY-MM-DD' 형식으로 들어옴
@@ -70,7 +70,7 @@ export class SajuService {
     );
 
     const dayPillar = SajuCalculator.getDayPillar(birthDateTime);
-    const timePillar = SajuCalculator.getTimePillar(dayPillar.heaven, hour);
+    const timePillar = isTimeUnknown ? null : SajuCalculator.getTimePillar(dayPillar.heaven, hour);
 
     const fourPillars = {
       year: yearPillar,
@@ -119,6 +119,7 @@ export class SajuService {
       solarTerm,
       elements,
       yinYang,
+      isTimeUnknown,
     });
 
     // userId가 있을 때만 저장
@@ -137,8 +138,10 @@ export class SajuService {
       fourPillars.year.heaven,
       fourPillars.month.heaven,
       fourPillars.day.heaven,
-      fourPillars.time.heaven,
     ];
+    if (fourPillars.time) {
+      heavenElements.push(fourPillars.time.heaven);
+    }
 
     heavenElements.forEach((stem) => {
       const element =
@@ -153,8 +156,10 @@ export class SajuService {
       fourPillars.year.earth,
       fourPillars.month.earth,
       fourPillars.day.earth,
-      fourPillars.time.earth,
     ];
+    if (fourPillars.time) {
+      earthElements.push(fourPillars.time.earth);
+    }
 
     earthElements.forEach((branch) => {
       const element =
@@ -182,8 +187,10 @@ export class SajuService {
       fourPillars.year.heaven,
       fourPillars.month.heaven,
       fourPillars.day.heaven,
-      fourPillars.time.heaven,
     ];
+    if (fourPillars.time) {
+      heavenlyStems.push(fourPillars.time.heaven);
+    }
 
     heavenlyStems.forEach((stem) => {
       if (yangHeavenly.includes(stem)) yang++;
@@ -198,8 +205,10 @@ export class SajuService {
       fourPillars.year.earth,
       fourPillars.month.earth,
       fourPillars.day.earth,
-      fourPillars.time.earth,
     ];
+    if (fourPillars.time) {
+      earthlyBranches.push(fourPillars.time.earth);
+    }
 
     earthlyBranches.forEach((branch) => {
       if (yangEarthly.includes(branch)) yang++;
