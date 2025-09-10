@@ -9,6 +9,7 @@ import Login from './pages/Login.jsx'
 import Signup from './pages/Signup.jsx'
 import SajuInput from './pages/SajuInput.jsx'
 import SajuResult from './pages/SajuResult.jsx'
+import SavedSaju from './pages/SavedSaju.jsx'
 
 
 const GlobalStyle = createGlobalStyle`
@@ -31,6 +32,7 @@ createRoot(document.getElementById('root')).render(
             <Route path="/signup" element={<Signup />} />
             <Route path="/saju-input" element={<SajuInput />} />
             <Route path="/saju-result" element={<SajuResult />} />
+            <Route path="/saved-saju" element={<SavedSaju />} />
           </Routes>
         </BrowserRouter>
       </SajuProvider>

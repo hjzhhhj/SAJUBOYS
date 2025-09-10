@@ -389,7 +389,7 @@ function SajuResult() {
   useEffect(() => {
     // location.state에서 데이터 받기
     if (location.state) {
-      const data = location.state;
+      const data = location.state.resultData || location.state;
 
       // 날짜 형식 변환
       let formattedDate = data.birthDate;
