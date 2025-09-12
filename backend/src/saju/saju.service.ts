@@ -253,7 +253,6 @@ export class SajuService {
       );
 
     // 시기별 운세
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const timelyFortune = SajuAdvancedInterpreter.generateTimelyFortune(
       fourPillars,
       currentYear,
@@ -278,7 +277,6 @@ export class SajuService {
     const health = SajuInterpreter.interpretHealth(elements);
 
     // 올해 운세
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     const fortune = `${timelyFortune.overall}\n${timelyFortune.advice}`;
 
     return {
@@ -356,53 +354,6 @@ export class SajuService {
       _id: new Types.ObjectId(sajuId),
       userId: new Types.ObjectId(userId),
     });
-  }
-
-  // 임시 저장된 (userId가 없는) 오래된 결과 정리
-  async cleanupTempResults() {
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-
-    return this.sajuResultModel.deleteMany({
-      userId: null,
-      createdAt: { $lt: thirtyDaysAgo },
-    });
-  }
-
-  // 사용자의 최근 계산 결과 가져오기 (저장 여부 관계없이)
-  async getRecentResults(userId: string | null, limit = 5) {
-    const query = userId
-      ? { $or: [{ userId: new Types.ObjectId(userId) }, { userId: null }] }
-      : { userId: null };
-
-    return this.sajuResultModel
-      .find(query)
-      .sort({ createdAt: -1 })
-      .limit(limit)
-      .exec();
-  }
-
-  // 여러 결과를 한번에 저장
-  async saveBulkResults(userId: string, sajuIds: string[]) {
-    const objectIds = sajuIds.map((id) => new Types.ObjectId(id));
-
-    const results = await this.sajuResultModel.updateMany(
-      {
-        _id: { $in: objectIds },
-        $or: [{ userId: null }, { userId: new Types.ObjectId(userId) }],
-      },
-      {
-        $set: {
-          userId: new Types.ObjectId(userId),
-          updatedAt: new Date(),
-        },
-      },
-    );
-
-    return {
-      modifiedCount: results.modifiedCount,
-      matchedCount: results.matchedCount,
-    };
   }
 
   async searchAddress(query: string): Promise<AddressResult[]> {

@@ -105,16 +105,11 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: 'LOGOUT' })
   }
 
-  const clearError = () => {
-    dispatch({ type: 'SET_ERROR', payload: null })
-  }
-
   const value = {
     ...state,
     login,
     signup,
-    logout,
-    clearError
+    logout
   }
 
   return (

@@ -14,18 +14,7 @@ import { SajuService } from './saju.service';
 import { CalculateSajuDto } from './dto/saju.dto';
 import { SearchAddressDto } from './dto/search-address.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-
-interface RequestWithUser {
-  user?: {
-    _id: string;
-  };
-}
-
-interface AuthenticatedRequest {
-  user: {
-    _id: string;
-  };
-}
+import type { AuthenticatedRequest } from '../common/interfaces/request.interface';
 
 @Controller('saju')
 export class SajuController {
@@ -44,10 +33,9 @@ export class SajuController {
 
   @Post('calculate')
   async calculateSaju(
-    @Request() req: RequestWithUser,
+    @Request() req: AuthenticatedRequest,
     @Body(ValidationPipe) calculateSajuDto: CalculateSajuDto,
   ) {
-    // 임시로 사용자 ID 없이 처리 (인증 옵션)
     const userId = req.user?._id || null;
     const result = await this.sajuService.calculateSaju(
       userId,
@@ -68,38 +56,6 @@ export class SajuController {
       success: true,
       message: '저장된 사주 결과를 가져왔습니다',
       data: results,
-    };
-  }
-
-  @Get('recent')
-  async getRecentResults(
-    @Request() req: RequestWithUser,
-    @Query('limit') limit?: string,
-  ) {
-    const userId = req.user?._id || null;
-    const limitNum = limit ? parseInt(limit, 10) : 5;
-    const results = await this.sajuService.getRecentResults(userId, limitNum);
-    return {
-      success: true,
-      message: '최근 사주 결과를 가져왔습니다',
-      data: results,
-    };
-  }
-
-  @Post('bulk-save')
-  @UseGuards(JwtAuthGuard)
-  async saveBulkResults(
-    @Request() req: AuthenticatedRequest,
-    @Body() body: { sajuIds: string[] },
-  ) {
-    const result = await this.sajuService.saveBulkResults(
-      req.user._id,
-      body.sajuIds,
-    );
-    return {
-      success: true,
-      message: `${result.modifiedCount}개의 사주 결과가 저장되었습니다`,
-      data: result,
     };
   }
 
@@ -127,16 +83,6 @@ export class SajuController {
     return {
       success: true,
       message: '사주 결과를 가져왔습니다',
-      data: result,
-    };
-  }
-
-  @Delete('cleanup/temp')
-  async cleanupTempResults() {
-    const result = await this.sajuService.cleanupTempResults();
-    return {
-      success: true,
-      message: `${result.deletedCount}개의 임시 결과가 정리되었습니다`,
       data: result,
     };
   }

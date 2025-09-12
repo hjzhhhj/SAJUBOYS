@@ -1,20 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService = app.get(ConfigService);
 
   // CORS 설정
-  app.enableCors({
-    origin: [
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'http://localhost:5177',
-      'http://localhost:3000',
-    ],
-    credentials: true,
-  });
+  app.enableCors(configService.get('cors'));
 
   // 전역 Validation Pipe 설정
   app.useGlobalPipes(
@@ -28,7 +22,7 @@ async function bootstrap() {
   // API 전역 prefix 설정
   app.setGlobalPrefix('api');
 
-  await app.listen(process.env.PORT ?? 3001);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  const port = configService.get<number>('port') || 3001;
+  await app.listen(port);
 }
-bootstrap();
+void bootstrap();

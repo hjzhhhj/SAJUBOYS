@@ -20,16 +20,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    console.log('JWT Strategy - Validating payload:', payload);
     const user = await this.authService.validateUser(payload);
-    console.log('JWT Strategy - User found:', user ? user._id : 'null');
 
     if (!user) {
-      console.log('JWT Strategy - User not found, returning null');
       return null;
     }
 
-    // Passport는 이 반환값을 req.user에 설정합니다
     return user;
   }
 }
