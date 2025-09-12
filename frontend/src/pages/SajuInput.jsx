@@ -3,9 +3,8 @@ import { useNavigate } from 'react-router-dom'
 import { useSaju } from '../context/SajuContext'
 import { useAuth } from '../context/AuthContext'
 import styled, { keyframes } from 'styled-components'
-import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import AddressSearch from '../components/AddressSearch'
+import DateInput from '../components/DateInput'
 
 const float1 = keyframes`
   0%, 100% {
@@ -201,56 +200,8 @@ const DateInputRow = styled.div`
   width: 100%;
 `
 
-const DatePickerWrapper = styled.div`
+const DateInputWrapper = styled.div`
   flex: 1;
-  
-  .react-datepicker-wrapper {
-    width: 100%;
-  }
-  
-  .react-datepicker__input-container input {
-    color: gray;
-    background-color: #ffffff;
-    border: 1px solid #ffffff;
-    border-radius: 16px;
-    font-size: 1rem;
-    cursor: pointer;
-    width: 100%;
-    padding: 1.25rem 2rem;
-    box-sizing: border-box;
-  }
-
-  .react-datepicker {
-    background-color: #1a1a1a;
-    border: 1px solid #ffffff30;
-    border-radius: 16px;
-  }
-
-  .react-datepicker__header {
-    background-color: #2a2a2a;
-    border-bottom: 1px solid #ffffff20;
-  }
-
-  .react-datepicker__current-month,
-  .react-datepicker__day-name {
-    color: white;
-  }
-
-  .react-datepicker__day {
-    color: white;
-    
-    &:hover {
-      background-color: #6200ff;
-    }
-  }
-
-  .react-datepicker__day--selected {
-    background-color: #6200ff;
-  }
-
-  .react-datepicker__day--disabled {
-    color: #666;
-  }
 `
 
 const TimeSelect = styled.select`
@@ -441,21 +392,13 @@ function SajuInput() {
                 음력
               </DateToggleButton>
             </DateToggleWrapper>
-            <DatePickerWrapper>
-              <DatePicker
-                selected={birthDate}
+            <DateInputWrapper>
+              <DateInput
+                value={birthDate}
                 onChange={(date) => setBirthDate(date)}
-                dateFormat="yyyy년 MM월 dd일"
-                placeholderText="생년월일을 선택해주세요"
-                showYearDropdown
-                showMonthDropdown
-                dropdownMode="select"
-                yearDropdownItemNumber={100}
-                scrollableYearDropdown
-                maxDate={new Date()}
-                locale="ko"
+                placeholder="생년월일 8자리를 입력해주세요"
               />
-            </DatePickerWrapper>
+            </DateInputWrapper>
             <TimeSelect 
               value={birthTime} 
               onChange={(e) => setBirthTime(e.target.value)}
