@@ -400,11 +400,8 @@ export class SajuAdvancedInterpreter {
     let analysis = '십신 분석:\n';
 
     // 간단한 십신 판단 로직
-    const stems = [
-      fourPillars.year.heaven,
-      fourPillars.month.heaven,
-    ];
-    
+    const stems = [fourPillars.year.heaven, fourPillars.month.heaven];
+
     // 시주가 있을 때만 추가
     if (fourPillars.time) {
       stems.push(fourPillars.time.heaven);

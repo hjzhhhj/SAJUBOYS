@@ -59,7 +59,13 @@ export const authAPI = {
   login: async (data) => {
     try {
       const response = await api.post("/auth/login", data);
-      return { success: true, data: response.data };
+      // response.data가 이미 {success, message, data} 구조를 가지고 있음
+      // data 내부에 user와 accessToken이 있음
+      return { 
+        success: true, 
+        data: response.data.data,  // 중첩된 data를 펼침
+        message: response.data.message 
+      };
     } catch (error) {
       // 디버깅용 로그
       console.log("Login error response:", error.response?.data);

@@ -369,7 +369,7 @@ function SajuInput() {
   }
 
   const handleSavedResults = () => {
-    alert('저장된 사주팔자 기능은 준비 중입니다')
+    navigate('/saved-saju')
   }
 
   const timeOptions = [

@@ -75,13 +75,18 @@ export class AuthService {
   }
 
   async validateUser(payload: any): Promise<any> {
+    console.log('AuthService - validateUser called with payload:', payload);
+
     // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    const user = await this.userModel.findById(payload.sub);
+    const user = await this.userModel.findById(payload.sub).select('-password');
+
     if (user) {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user.toObject();
-      return result;
+      console.log('AuthService - User found:', user._id);
+      // 사용자 객체를 그대로 반환 (_id 포함)
+      return user.toObject();
     }
+
+    console.log('AuthService - User not found for sub:', payload.sub);
     return null;
   }
 }

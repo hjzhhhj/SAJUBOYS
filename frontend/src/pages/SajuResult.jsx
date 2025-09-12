@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import SajuCharts from "../components/SajuCharts";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
+import api from "../services/api"; // axios 대신 api 인스턴스 사용
 
 const float1 = keyframes`
   0%, 100% {
@@ -354,7 +354,7 @@ const ButtonGroup = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: ${(props) => (props.primary ? "#ffffff20" : "transparent")};
+  background-color: ${(props) => (props.$primary ? "#ffffff20" : "transparent")};
   color: white;
   border: 1px solid #ffffff;
   border-radius: 100px;
@@ -384,12 +384,12 @@ function SajuResult() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [resultData, setResultData] = useState(null);
-  const [setSaving] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     // location.state에서 데이터 받기
     if (location.state) {
-      const data = location.state;
+      const data = location.state.resultData || location.state;
 
       // 날짜 형식 변환
       let formattedDate = data.birthDate;
@@ -480,16 +480,8 @@ function SajuResult() {
 
     setSaving(true);
     try {
-      const token = localStorage.getItem("token");
-      const response = await axios.post(
-        `http://localhost:3001/saju/${resultData._id}/save`,
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // api 인스턴스는 interceptor에서 자동으로 토큰을 추가함
+      const response = await api.post(`/saju/${resultData._id}/save`, {});
 
       if (response.data.success) {
         alert("결과가 성공적으로 저장되었습니다!");
@@ -818,8 +810,8 @@ function SajuResult() {
         )}
 
         <ButtonGroup>
-          <Button primary onClick={handleSaveResult}>
-            결과 저장하기
+          <Button $primary onClick={handleSaveResult} disabled={saving}>
+            {saving ? "저장 중..." : "결과 저장하기"}
           </Button>
           <Button onClick={handleNewReading}>새로운 사주 보기</Button>
         </ButtonGroup>
