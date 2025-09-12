@@ -226,17 +226,6 @@ const TimeSelect = styled.select`
   }
 `
 
-const CityInput = styled.input`
-  color: gray;
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
-  border-radius: 16px;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 100%;
-  padding: 1.25rem 2rem;
-  box-sizing: border-box;
-`
 
 function SajuInput() {
   const navigate = useNavigate()

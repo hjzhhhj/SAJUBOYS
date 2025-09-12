@@ -107,35 +107,35 @@ const Header = styled.div`
   width: 100%;
   padding: 20px 0;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
   margin-bottom: 2rem;
 `;
 
 const Title = styled.h1`
   color: white;
-  font-size: 32px;
-  font-weight: 700;
+  font-size: 4rem;
+  font-weight: 900;
+  margin-bottom: 2rem;
+  font-family: 'Cinzel Decorative', cursive;
   text-align: center;
-  flex: 1;
-`;
+`
 
 const BackButton = styled.button`
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border: none;
+  background-color: transparent;
   color: white;
-  padding: 12px 24px;
-  border-radius: 12px;
+  border: 1px solid #ffffff;
+  border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 600;
+  padding: 0.5rem 1.5rem;
   transition: all 0.3s ease;
   position: absolute;
-  right: 0;
+  top: 40px;
+  right: 40px;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    background: #ffffff30;
   }
 `;
 
@@ -353,11 +353,11 @@ const SavedSaju = () => {
       <GradientCircle1 />
       <GradientCircle2 />
       <ContentWrapper>
+        <BackButton onClick={() => navigate("/saju-input")}>
+          새로운 사주 계산
+        </BackButton>
         <Header>
-          <Title>저장된 사주</Title>
-          <BackButton onClick={() => navigate("/saju-input")}>
-            새로운 사주 계산
-          </BackButton>
+          <Title>Saved SAJU</Title>
         </Header>
 
         {savedResults.length === 0 ? (
