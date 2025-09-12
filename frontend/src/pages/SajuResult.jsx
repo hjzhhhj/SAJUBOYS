@@ -434,33 +434,9 @@ function SajuResult() {
         isTimeUnknown: data.isTimeUnknown,
       });
     } else {
-      // 더미 데이터
-      setResultData({
-        name: "홍길동",
-        gender: "남성",
-        birthDate: "1990년 1월 1일",
-        birthTime: "오시 (11:00 - 13:00)",
-        calendarType: "양력",
-        city: "서울",
-        fourPillars: {
-          year: { heaven: "경", earth: "오" },
-          month: { heaven: "정", earth: "축" },
-          day: { heaven: "갑", earth: "자" },
-          time: { heaven: "경", earth: "오" },
-        },
-        interpretation: {
-          personality:
-            "당신은 리더십이 강하고 창의적인 성격을 가지고 있습니다. 타고난 카리스마로 주변 사람들을 이끄는 능력이 있으며, 새로운 아이디어를 실현하는 데 탁월한 재능을 보입니다.",
-          career:
-            "경영, 기획, 창업 분야에서 큰 성공을 거둘 수 있습니다. 특히 혁신적인 아이디어가 필요한 분야에서 두각을 나타낼 것입니다.",
-          relationship:
-            "열정적이고 헌신적인 연애를 하는 타입입니다. 파트너와의 소통을 중요시하며, 서로를 존중하는 관계를 추구합니다.",
-          fortune:
-            "올해는 새로운 기회가 많이 찾아올 시기입니다. 과감한 도전이 좋은 결과를 가져올 수 있으니, 망설이지 말고 행동하세요.",
-        },
-      });
+      navigate("/saju-input");
     }
-  }, [location.state]);
+  }, [location.state, navigate]);
 
   const handleNewReading = () => {
     navigate("/saju-input");
