@@ -51,7 +51,7 @@ export const SajuProvider = ({ children }) => {
 
 export const useSaju = () => {
   const context = useContext(SajuContext)
-  if (!context) throw new Error('useSaju must be used within a SajuProvider')
+  if (!context) throw new Error('useSaju는 SajuProvider 내에서 사용되어야 합니다')
   return context
 }
 

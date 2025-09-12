@@ -385,11 +385,14 @@ function SajuResult() {
   const { user } = useAuth();
   const [resultData, setResultData] = useState(null);
   const [saving, setSaving] = useState(false);
+  const [isFromSaved, setIsFromSaved] = useState(false);
 
   useEffect(() => {
     // location.state에서 데이터 받기
     if (location.state) {
       const data = location.state.resultData || location.state;
+      // 저장된 결과에서 온 것인지 확인
+      setIsFromSaved(location.state.isFromSaved || false);
 
       // 날짜 형식 변환
       let formattedDate = data.birthDate;
@@ -786,10 +789,20 @@ function SajuResult() {
         )}
 
         <ButtonGroup>
-          <Button $primary onClick={handleSaveResult} disabled={saving}>
-            {saving ? "저장 중..." : "결과 저장하기"}
-          </Button>
-          <Button onClick={handleNewReading}>새로운 사주 보기</Button>
+          {isFromSaved ? (
+            // 저장된 결과를 볼 때는 뒤로가기 버튼만 표시
+            <Button onClick={() => navigate("/saved-saju")}>
+              저장된 목록으로 돌아가기
+            </Button>
+          ) : (
+            // 새로운 결과를 볼 때는 저장하기와 새로운 사주 버튼 표시
+            <>
+              <Button $primary onClick={handleSaveResult} disabled={saving}>
+                {saving ? "저장 중..." : "결과 저장하기"}
+              </Button>
+              <Button onClick={handleNewReading}>새로운 사주 보기</Button>
+            </>
+          )}
         </ButtonGroup>
       </ContentWrapper>
     </Container>

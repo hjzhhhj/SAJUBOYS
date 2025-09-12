@@ -1,67 +1,165 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { sajuAPI } from "../services/api";
 
+const float1 = keyframes`
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(-300px) translateY(100px);
+  }
+  50% {
+    transform: translateX(-150px) translateY(-100px);
+  }
+  75% {
+    transform: translateX(-250px) translateY(50px);
+  }
+`;
+
+const float2 = keyframes`
+  0%, 100% {
+    transform: translateX(0) translateY(0);
+  }
+  25% {
+    transform: translateX(250px) translateY(-80px);
+  }
+  50% {
+    transform: translateX(300px) translateY(100px);
+  }
+  75% {
+    transform: translateX(150px) translateY(-50px);
+  }
+`;
+
 const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: black;
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  position: relative;
+  overflow-x: hidden;
+  padding: 2rem 1rem;
+  width: 100%;
+`;
+
+const GradientCircle1 = styled.div`
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(98, 0, 255, 0.31) 50%,
+    #0e0025 100%
+  );
+  top: -200px;
+  right: -100px;
+  animation: ${float1} 15s ease-in-out infinite;
+  filter: blur(40px);
+  pointer-events: none;
+
+  @media (min-width: 768px) {
+    width: 800px;
+    height: 800px;
+    top: -300px;
+    right: -200px;
+  }
+`;
+
+const GradientCircle2 = styled.div`
+  position: fixed;
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(98, 0, 255, 0.31) 50%,
+    #0e0025 100%
+  );
+  bottom: -150px;
+  left: 100px;
+  animation: ${float2} 18s ease-in-out infinite;
+  filter: blur(40px);
+  pointer-events: none;
+
+  @media (min-width: 768px) {
+    width: 800px;
+    height: 800px;
+    bottom: -200px;
+    left: 300px;
+  }
+`;
+
+const ContentWrapper = styled.div`
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
 `;
 
 const Header = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
   padding: 20px 0;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 2rem;
 `;
 
 const Title = styled.h1`
   color: white;
-  font-size: 28px;
-  font-weight: 600;
+  font-size: 32px;
+  font-weight: 700;
+  text-align: center;
+  flex: 1;
 `;
 
 const BackButton = styled.button`
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
   color: white;
-  padding: 10px 20px;
-  border-radius: 8px;
+  padding: 12px 24px;
+  border-radius: 12px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  font-weight: 600;
   transition: all 0.3s ease;
+  position: absolute;
+  right: 0;
 
   &:hover {
-    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
   }
-`;
-
-const Content = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
 `;
 
 const SavedList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 24px;
   margin-top: 30px;
 `;
 
 const SavedCard = styled.div`
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 24px;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
   &:hover {
     transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(102, 126, 234, 0.3);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 `;
 
@@ -73,29 +171,31 @@ const CardHeader = styled.div`
 `;
 
 const CardName = styled.h3`
-  color: #333;
-  font-size: 18px;
+  color: white;
+  font-size: 20px;
   font-weight: 600;
 `;
 
 const CardInfo = styled.div`
-  color: #666;
-  font-size: 14px;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 15px;
+  line-height: 1.8;
 `;
 
 const InfoRow = styled.div`
   display: flex;
   justify-content: space-between;
-  margin: 5px 0;
+  margin: 8px 0;
 `;
 
 const InfoLabel = styled.span`
   font-weight: 500;
+  color: rgba(255, 255, 255, 0.6);
 `;
 
 const InfoValue = styled.span`
-  color: #764ba2;
+  color: #a78bfa;
+  font-weight: 500;
 `;
 
 const EmptyMessage = styled.div`
@@ -115,11 +215,11 @@ const EmptyDescription = styled.p`
 `;
 
 const CalculateButton = styled.button`
-  background: white;
-  color: #764ba2;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
+  padding: 14px 28px;
+  border-radius: 12px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -128,7 +228,7 @@ const CalculateButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
   }
 `;
 
@@ -140,17 +240,19 @@ const LoadingMessage = styled.div`
 `;
 
 const DeleteButton = styled.button`
-  background: #ff5252;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  border-radius: 4px;
-  font-size: 12px;
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    background: #ff1744;
+    background: rgba(239, 68, 68, 0.3);
+    border-color: rgba(239, 68, 68, 0.5);
   }
 `;
 
@@ -182,7 +284,12 @@ const SavedSaju = () => {
       const response = await sajuAPI.getSajuById(sajuId);
       if (response.success) {
         // 결과 페이지로 이동하면서 데이터 전달
-        navigate("/saju-result", { state: { resultData: response.data } });
+        navigate("/saju-result", {
+          state: {
+            resultData: response.data,
+            isFromSaved: true,
+          },
+        });
       } else {
         alert("사주 결과를 불러오는데 실패했습니다");
       }
@@ -243,14 +350,16 @@ const SavedSaju = () => {
 
   return (
     <Container>
-      <Header>
-        <Title>저장된 사주</Title>
-        <BackButton onClick={() => navigate("/saju-input")}>
-          새로운 사주 계산
-        </BackButton>
-      </Header>
+      <GradientCircle1 />
+      <GradientCircle2 />
+      <ContentWrapper>
+        <Header>
+          <Title>저장된 사주</Title>
+          <BackButton onClick={() => navigate("/saju-input")}>
+            새로운 사주 계산
+          </BackButton>
+        </Header>
 
-      <Content>
         {savedResults.length === 0 ? (
           <EmptyMessage>
             <EmptyTitle>저장된 사주가 없습니다</EmptyTitle>
@@ -296,7 +405,7 @@ const SavedSaju = () => {
             ))}
           </SavedList>
         )}
-      </Content>
+      </ContentWrapper>
     </Container>
   );
 };
