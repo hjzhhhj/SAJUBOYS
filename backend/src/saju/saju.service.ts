@@ -377,39 +377,48 @@ export class SajuService {
   }
 
   async searchAddress(query: string): Promise<AddressResult[]> {
-    // 한국 시·군·구 좌표 데이터 import
+    // 한국 시·군·구 좌표 데이터 가져오기
     const { KOREA_COORDINATES } = (await import('./korea-coordinates.js')) as {
       KOREA_COORDINATES: CityCoordinate[];
     };
 
     // 검색어가 비어있으면 빈 배열 반환
-    if (!query || query.trim() === '') {
+    if (!query?.trim()) {
       return [];
     }
 
-    // 검색어를 소문자로 변환하고 공백 제거
+    // 검색어 정규화
     const searchQuery = query.toLowerCase().replace(/\s+/g, '');
 
-    // 좌표 데이터에서 검색
-    const results = KOREA_COORDINATES.filter((coord) => {
+    // 좌표 데이터에서 검색 및 중복 제거
+    const uniqueResults = new Map<string, AddressResult>();
+
+    KOREA_COORDINATES.forEach((coord) => {
       const cityDistrict = (coord.city + coord.district)
         .toLowerCase()
         .replace(/\s+/g, '');
       const districtOnly = coord.district.toLowerCase().replace(/\s+/g, '');
-      return (
-        cityDistrict.includes(searchQuery) || districtOnly.includes(searchQuery)
-      );
-    })
-      .slice(0, 30) // 최대 30개 결과 반환
-      .map((coord) => ({
-        placeName:
-          coord.district === '세종시' ? '세종특별자치시' : `${coord.district}`,
-        address: `${coord.city} ${coord.district}`,
-        roadAddress: `${coord.city} ${coord.district}`,
-        x: coord.longitude.toString(),
-        y: coord.latitude.toString(),
-      }));
 
-    return results;
+      if (
+        cityDistrict.includes(searchQuery) ||
+        districtOnly.includes(searchQuery)
+      ) {
+        const key = `${coord.city} ${coord.district}`;
+        if (!uniqueResults.has(key)) {
+          const fullAddress = `${coord.city} ${coord.district}`;
+          uniqueResults.set(key, {
+            placeName:
+              coord.district === '세종시' ? '세종특별자치시' : fullAddress,
+            address: fullAddress,
+            roadAddress: fullAddress,
+            x: coord.longitude.toString(),
+            y: coord.latitude.toString(),
+          });
+        }
+      }
+    });
+
+    // 최대 30개 결과 반환
+    return Array.from(uniqueResults.values()).slice(0, 30);
   }
 }

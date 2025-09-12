@@ -82,17 +82,6 @@ const PlaceName = styled.div`
   margin-bottom: 4px;
 `;
 
-const AddressMain = styled.div`
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 4px;
-`;
-
-const AddressRoad = styled.div`
-  font-size: 12px;
-  color: #666;
-`;
-
 const NoResults = styled.div`
   padding: 20px;
   text-align: center;
@@ -210,13 +199,7 @@ const AddressSearch = ({
                 key={index}
                 onClick={() => handleSelectAddress(address)}
               >
-                {address.placeName && (
-                  <PlaceName>{address.placeName}</PlaceName>
-                )}
-                <AddressMain>{address.address}</AddressMain>
-                {address.roadAddress && (
-                  <AddressRoad>{address.roadAddress}</AddressRoad>
-                )}
+                <PlaceName>{address.placeName}</PlaceName>
               </ResultItem>
             ))
           ) : query.length >= 2 ? (
