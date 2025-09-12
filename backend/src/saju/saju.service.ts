@@ -6,6 +6,7 @@ import { CalculateSajuDto } from './dto/saju.dto';
 import { SajuCalculator } from './utils/saju-calculator';
 import { SajuInterpreter } from './utils/saju-interpreter';
 import { SajuAdvancedInterpreter } from './utils/saju-advanced-interpreter';
+import type { CityCoordinate } from './korea-coordinates';
 
 // 타입 정의
 interface Pillar {
@@ -18,6 +19,22 @@ interface FourPillars {
   month: Pillar;
   day: Pillar;
   time: Pillar | null;
+}
+
+interface AdvancedInterpretation {
+  zodiacSign: any;
+  daeunAnalysis: string;
+  tenGodsAnalysis: string;
+  specialPattern: string;
+  dominantElement: string;
+}
+
+interface TimelyFortune {
+  overall: string;
+  advice: string;
+  love: string;
+  wealth: string;
+  health: string;
 }
 
 export interface AddressResult {
@@ -231,7 +248,9 @@ export class SajuService {
 
     // 기본 성격 해석
     const personalityInfo =
-      SajuInterpreter.PERSONALITY_BY_DAY_STEM[dayHeavenly];
+      SajuInterpreter.PERSONALITY_BY_DAY_STEM[
+        dayHeavenly as keyof typeof SajuInterpreter.PERSONALITY_BY_DAY_STEM
+      ];
     const personality = personalityInfo
       ? `${personalityInfo.basic}\n강점: ${personalityInfo.strength}\n약점: ${personalityInfo.weakness}`
       : '균형잡힌 성격으로 다양한 상황에 잘 적응합니다.';
@@ -243,20 +262,21 @@ export class SajuService {
     const yinYangBalance = this.interpretYinYangBalance(yinYang);
 
     // 고급 해석 추가
-    const advancedInterpretation =
+    const advancedInterpretation: AdvancedInterpretation =
       SajuAdvancedInterpreter.generateAdvancedInterpretation(
         fourPillars,
         elements,
         yinYang,
         birthDateTime,
         gender,
-      );
+      ) as AdvancedInterpretation;
 
     // 시기별 운세
-    const timelyFortune = SajuAdvancedInterpreter.generateTimelyFortune(
-      fourPillars,
-      currentYear,
-    );
+    const timelyFortune: TimelyFortune =
+      SajuAdvancedInterpreter.generateTimelyFortune(
+        fourPillars,
+        currentYear,
+      ) as TimelyFortune;
 
     // 직업 적성
     const career = SajuInterpreter.interpretCareer(dayHeavenly, elements);
@@ -292,7 +312,7 @@ export class SajuService {
         daeunAnalysis: advancedInterpretation.daeunAnalysis,
         specialPattern: advancedInterpretation.specialPattern,
         tenGodsAnalysis: advancedInterpretation.tenGodsAnalysis,
-        timelyFortune,
+        timelyFortune: timelyFortune,
       },
     };
   }
@@ -358,7 +378,9 @@ export class SajuService {
 
   async searchAddress(query: string): Promise<AddressResult[]> {
     // 한국 시·군·구 좌표 데이터 import
-    const { KOREA_COORDINATES } = await import('./korea-coordinates.js');
+    const { KOREA_COORDINATES } = (await import('./korea-coordinates.js')) as {
+      KOREA_COORDINATES: CityCoordinate[];
+    };
 
     // 검색어가 비어있으면 빈 배열 반환
     if (!query || query.trim() === '') {

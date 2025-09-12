@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcryptjs';
 import { User, UserDocument } from './schemas/user.schema';
 import { SignupDto, LoginDto } from './dto/auth.dto';
+import { JwtPayload, UserPayload } from '../common/interfaces/jwt.interface';
 
 @Injectable()
 export class AuthService {
@@ -40,7 +41,8 @@ export class AuthService {
     await user.save();
 
     // 비밀번호 제외하고 반환
-    const { password: _, ...userWithoutPassword } = user.toObject();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _pwd, ...userWithoutPassword } = user.toObject();
     return userWithoutPassword;
   }
 
@@ -64,7 +66,8 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
 
     // 비밀번호 제외하고 반환
-    const { password: _, ...userWithoutPassword } = user.toObject();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _pwd2, ...userWithoutPassword } = user.toObject();
 
     return {
       user: userWithoutPassword,
@@ -72,11 +75,15 @@ export class AuthService {
     };
   }
 
-  async validateUser(payload: any): Promise<any> {
+  async validateUser(payload: JwtPayload): Promise<UserPayload | null> {
     const user = await this.userModel.findById(payload.sub).select('-password');
 
     if (user) {
-      return user.toObject();
+      return {
+        _id: user.id as string,
+        email: user.email,
+        name: user.name,
+      };
     }
 
     return null;
