@@ -102,7 +102,7 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 900px;
+  max-width: 1000px;
   padding: 0 1rem;
   z-index: 1;
   margin-top: 3rem;
@@ -113,25 +113,34 @@ const ContentWrapper = styled.div`
 `;
 
 const Title = styled.h1`
-  color: white;
-  font-size: 2.5rem;
-  font-weight: 700;
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-size: 4rem;
+  font-weight: 900;
   margin-bottom: 3rem;
-  text-align: center;
   font-family: "Cinzel Decorative", cursive;
+  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+  position: relative;
 
-  @media (min-width: 768px) {
-    font-size: 3.5rem;
-  }
-
-  @media (min-width: 1024px) {
-    font-size: 4rem;
+  &::after {
+    content: "SAJUBOYS";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    z-index: -1;
+    background: none;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
   }
 `;
 
 const ResultCard = styled.div`
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   padding: 2rem;
   width: 100%;
@@ -139,12 +148,13 @@ const ResultCard = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  color: #150137;
+  color: white;
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  letter-spacing: 0.5px;
 `;
 
 const InfoGrid = styled.div`
@@ -159,11 +169,11 @@ const InfoGrid = styled.div`
 `;
 
 const InfoItem = styled.div`
-  color: #333;
+  color: white;
   font-size: 1rem;
 
   span {
-    color: #666;
+    color: rgba(255, 255, 255, 0.7);
     margin-right: 0.5rem;
     font-weight: 600;
   }
@@ -181,34 +191,34 @@ const PillarGrid = styled.div`
 `;
 
 const Pillar = styled.div`
-  background: #f8f8f8;
-  border: 1px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
   padding: 1.5rem;
   text-align: center;
 `;
 
 const PillarTitle = styled.h3`
-  color: #150137;
+  color: white;
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 1rem;
 `;
 
 const PillarContent = styled.div`
-  color: #333;
+  color: white;
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
 `;
 
 const PillarSub = styled.div`
-  color: #666;
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
 `;
 
 const Description = styled.p`
-  color: #333;
+  color: white;
   line-height: 1.8;
   margin: 1rem 0;
   font-size: 1rem;
@@ -232,25 +242,57 @@ const FiveElementsGrid = styled.div`
 
 const ElementItem = styled.div`
   background: ${(props) => {
-    switch (props.element) {
-      case "목":
-        return "#2ecc71";
-      case "화":
-        return "#e74c3c";
-      case "토":
-        return "#f39c12";
-      case "금":
-        return "#95a5a6";
-      case "수":
-        return "#3498db";
-      default:
-        return "#95a5a6";
-    }
+    const colors = {
+      목: "rgba(46, 204, 113, 0.3)",
+      화: "rgba(231, 76, 60, 0.3)",
+      토: "rgba(243, 156, 18, 0.3)",
+      금: "rgba(149, 165, 166, 0.3)",
+      수: "rgba(52, 152, 219, 0.3)",
+    };
+    return colors[props.element] || "rgba(149, 165, 166, 0.3)";
   }};
+  backdrop-filter: blur(10px);
+  border: 1px solid
+    ${(props) => {
+      const colors = {
+        목: "rgba(46, 204, 113, 0.5)",
+        화: "rgba(231, 76, 60, 0.5)",
+        토: "rgba(243, 156, 18, 0.5)",
+        금: "rgba(149, 165, 166, 0.5)",
+        수: "rgba(52, 152, 219, 0.5)",
+      };
+      return colors[props.element] || "rgba(149, 165, 166, 0.5)";
+    }};
   color: white;
   padding: 1rem;
   border-radius: 12px;
   text-align: center;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: ${(props) => {
+      const colors = {
+        목: "rgba(46, 204, 113, 0.4)",
+        화: "rgba(231, 76, 60, 0.4)",
+        토: "rgba(243, 156, 18, 0.4)",
+        금: "rgba(149, 165, 166, 0.4)",
+        수: "rgba(52, 152, 219, 0.4)",
+      };
+      return colors[props.element] || "rgba(149, 165, 166, 0.4)";
+    }};
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px
+      ${(props) => {
+        const colors = {
+          목: "rgba(46, 204, 113, 0.3)",
+          화: "rgba(231, 76, 60, 0.3)",
+          토: "rgba(243, 156, 18, 0.3)",
+          금: "rgba(149, 165, 166, 0.3)",
+          수: "rgba(52, 152, 219, 0.3)",
+        };
+        return colors[props.element] || "rgba(149, 165, 166, 0.3)";
+      }};
+  }
 
   .element-name {
     font-size: 1.2rem;
@@ -276,62 +318,62 @@ const DaeunGrid = styled.div`
 `;
 
 const DaeunItem = styled.div`
-  background: #f8f8f8;
-  border: 1px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 12px;
   padding: 1rem;
   text-align: center;
 
   .age {
-    color: #666;
+    color: rgba(255, 255, 255, 0.8);
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
   }
 
   .pillar {
-    color: #333;
+    color: white;
     font-size: 1.2rem;
     font-weight: bold;
   }
 `;
 
 const AdvancedCard = styled.div`
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   padding: 2rem;
-  color: #333;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 1.5rem;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const AdvancedTitle = styled.h3`
-  color: #333;
+  color: white;
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 `;
 
 const AdvancedContent = styled.div`
-  color: #666;
+  color: white;
   line-height: 1.8;
   font-size: 1rem;
   padding-top: 1rem;
 `;
 
 const ZodiacCard = styled.div`
-  background: white;
-  border: 1px solid #e0e0e0;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   padding: 2.5rem;
-  color: #333;
+  color: white;
   margin-bottom: 1.5rem;
   text-align: center;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 `;
 
 const ZodiacAnimal = styled.div`
@@ -354,27 +396,39 @@ const ButtonGroup = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: ${(props) => (props.$primary ? "#ffffff20" : "transparent")};
+  background: ${(props) =>
+    props.$primary
+      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4))"
+      : "linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2))"};
+  backdrop-filter: blur(10px);
   color: white;
-  border: 1px solid #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 100px;
   font-size: 1.1rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0 1.5rem;
+  padding: 0 2rem;
   height: 3.5rem;
-  min-width: 180px;
+  min-width: 200px;
   transition: all 0.3s ease;
+  letter-spacing: 0.5px;
   width: 100%;
 
   &:hover {
-    background: #ffffff30;
+    background: ${(props) =>
+      props.$primary
+        ? "linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5))"
+        : "linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3))"};
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   @media (min-width: 768px) {
-    font-size: 1.25rem;
-    padding: 0 2rem;
-    height: 3.75rem;
-    min-width: 200px;
     width: auto;
   }
 `;
@@ -476,7 +530,10 @@ function SajuResult() {
     return (
       <Container>
         <ContentWrapper>
-          <Title>데이터를 불러오는 중...</Title>
+          <Title>SAJUBOYS</Title>
+          <p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "1.2rem" }}>
+            데이터를 불러오는 중...
+          </p>
         </ContentWrapper>
       </Container>
     );
@@ -487,6 +544,7 @@ function SajuResult() {
       <GradientCircle1 />
       <GradientCircle2 />
       <ContentWrapper>
+        <Title>Result</Title>
         <ResultCard>
           <SectionTitle>기본 정보</SectionTitle>
           <InfoGrid>
@@ -653,7 +711,7 @@ function SajuResult() {
                 fontSize: "1.5rem",
                 marginBottom: "1rem",
                 fontWeight: "700",
-                color: "#333",
+                color: "white",
               }}
             >
               {resultData.interpretation.advancedAnalysis.zodiac.animal}띠의
@@ -664,14 +722,14 @@ function SajuResult() {
                 lineHeight: "1.8",
                 fontSize: "1rem",
                 marginBottom: "1.5rem",
-                color: "#666",
+                color: "white",
               }}
             >
               {resultData.interpretation.advancedAnalysis.zodiac.personality}
             </p>
             <div
               style={{
-                borderTop: "1px solid #e0e0e0",
+                borderTop: "1px solid rgba(255, 255, 255, 0.2)",
                 paddingTop: "1.5rem",
                 marginTop: "1.5rem",
               }}
@@ -681,7 +739,7 @@ function SajuResult() {
                   fontSize: "1.1rem",
                   marginBottom: "1rem",
                   fontWeight: "600",
-                  color: "#333",
+                  color: "white",
                 }}
               >
                 {resultData.interpretation.advancedAnalysis.zodiac.animal}띠
@@ -692,7 +750,7 @@ function SajuResult() {
                   textAlign: "left",
                   fontSize: "1rem",
                   lineHeight: "1.8",
-                  color: "#666",
+                  color: "white",
                 }}
               >
                 <div style={{ marginBottom: "1rem" }}>

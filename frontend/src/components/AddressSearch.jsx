@@ -17,21 +17,25 @@ const InputContainer = styled.div`
 const Input = styled.input`
   width: 100%;
   padding: 1.25rem 3rem 1.25rem 2rem;
-  border: 1px solid #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   font-size: 1rem;
-  background-color: #ffffff;
-  color: gray;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  color: white;
   cursor: pointer;
   box-sizing: border-box;
+  transition: all 0.3s ease;
 
   &:focus {
     outline: none;
-    border-color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
   }
 
   &::placeholder {
-    color: #999;
+    color: rgba(255, 255, 255, 0.5);
   }
 `;
 
@@ -40,7 +44,7 @@ const SearchIcon = styled.svg`
   right: 12px;
   width: 20px;
   height: 20px;
-  fill: #666;
+  fill: rgba(255, 255, 255, 0.5);
   pointer-events: none;
 `;
 
@@ -49,12 +53,13 @@ const ResultsList = styled.ul`
   top: 100%;
   left: 0;
   right: 0;
-  margin-top: 4px;
+  margin-top: 8px;
   padding: 0;
-  background: white;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
   max-height: 300px;
   overflow-y: auto;
   z-index: 1000;
@@ -62,37 +67,37 @@ const ResultsList = styled.ul`
 `;
 
 const ResultItem = styled.li`
-  padding: 12px;
+  padding: 14px 16px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 
   &:hover {
-    background-color: #f5f5f5;
+    background: rgba(102, 126, 234, 0.2);
   }
 
   &:not(:last-child) {
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   }
 `;
 
 const PlaceName = styled.div`
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 4px;
 `;
 
 const NoResults = styled.div`
   padding: 20px;
   text-align: center;
-  color: #999;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 14px;
 `;
 
 const LoadingSpinner = styled.div`
   padding: 20px;
   text-align: center;
-  color: #666;
+  color: rgba(255, 255, 255, 0.6);
   font-size: 14px;
 `;
 

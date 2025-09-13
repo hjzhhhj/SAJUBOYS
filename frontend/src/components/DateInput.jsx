@@ -2,23 +2,27 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 const Input = styled.input`
-  color: gray;
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   font-size: 1rem;
   cursor: pointer;
   width: 100%;
-  padding: 1.25rem 2rem;
+  padding: 1.15rem 2rem;
   box-sizing: border-box;
+  transition: all 0.3s ease;
   
   &:focus {
     outline: none;
-    border-color: #6200ff;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
   }
   
   &::placeholder {
-    color: #999;
+    color: rgba(255, 255, 255, 0.5);
   }
 `;
 
