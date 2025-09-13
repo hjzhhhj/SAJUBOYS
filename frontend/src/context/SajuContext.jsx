@@ -6,7 +6,7 @@ const SajuContext = createContext();
 const sajuReducer = (state, action) => {
   switch (action.type) {
     case "SET_RESULT_DATA":
-      return { ...state, resultData: action.payload, loading: false };
+      return { ...state, resultData: action.payload }; // loading을 false로 바꾸지 않음
     case "SET_LOADING":
       return { ...state, loading: action.payload };
     case "SET_ERROR":
@@ -32,7 +32,7 @@ export const SajuProvider = ({ children }) => {
       // 최소 로딩 시간 보장
       const [response] = await Promise.all([
         sajuAPI.calculate(inputData),
-        new Promise((resolve) => setTimeout(resolve, 1500)),
+        new Promise((resolve) => setTimeout(resolve, 3000)),
       ]);
 
       if (response.success) {
@@ -50,8 +50,12 @@ export const SajuProvider = ({ children }) => {
     }
   };
 
+  const setLoading = (loading) => {
+    dispatch({ type: "SET_LOADING", payload: loading });
+  };
+
   return (
-    <SajuContext.Provider value={{ ...state, calculateSaju }}>
+    <SajuContext.Provider value={{ ...state, calculateSaju, setLoading }}>
       {children}
     </SajuContext.Provider>
   );

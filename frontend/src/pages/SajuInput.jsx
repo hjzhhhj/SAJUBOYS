@@ -239,7 +239,7 @@ const TimeSelect = styled.select`
 
 function SajuInput() {
   const navigate = useNavigate();
-  const { calculateSaju, loading } = useSaju();
+  const { calculateSaju, loading, setLoading } = useSaju();
   const { user } = useAuth();
   const [name, setName] = useState(user?.name || "");
   const [gender, setGender] = useState("male");
@@ -247,6 +247,7 @@ function SajuInput() {
   const [birthDate, setBirthDate] = useState(null);
   const [birthTime, setBirthTime] = useState("");
   const [city, setCity] = useState("");
+  const [resultData, setResultData] = useState(null);
 
   const handleSajuAnalysis = async () => {
     // 입력값 검증
@@ -311,7 +312,8 @@ function SajuInput() {
       const result = await calculateSaju(formData);
 
       if (result.success) {
-        navigate("/saju-result", { state: result.data });
+        setResultData(result.data);
+        // 버튼 클릭으로 이동
       } else {
         alert(result.error || "사주 계산에 실패했습니다");
       }
@@ -430,8 +432,12 @@ function SajuInput() {
 
       {loading && (
         <LoadingSpinner
-          message="사주 팔자 계산 중..."
-          subMessage="당신의 운명을 분석하고 있습니다"
+          message={resultData ? "사주 팔자 계산 완료!" : "사주 팔자 계산 중..."}
+          subMessage={resultData ? "결과를 확인해보세요" : "당신의 운명을 분석하고 있습니다"}
+          onSkip={resultData ? () => {
+            setLoading(false); // 버튼 클릭 시 로딩 상태 해제
+            navigate("/saju-result", { state: resultData });
+          } : null}
         />
       )}
     </Container>

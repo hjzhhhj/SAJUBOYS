@@ -110,7 +110,33 @@ const SubText = styled.div`
   line-height: 1.5;
 `;
 
-const LoadingSpinner = ({ message = "사주 결과 분석 중...", subMessage = "잠시만 기다려주세요" }) => {
+const SkipButton = styled.button`
+  margin-top: 30px;
+  padding: 12px 32px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50px;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: ${fadeIn} 0.3s ease;
+  animation-delay: 0.2s;
+  animation-fill-mode: both;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+  }
+`;
+
+const LoadingSpinner = ({ 
+  message = "사주 결과 분석 중...", 
+  subMessage = "잠시만 기다려주세요",
+  onSkip = null 
+}) => {
   return (
     <LoadingOverlay>
       <SpinnerContainer>
@@ -120,6 +146,11 @@ const LoadingSpinner = ({ message = "사주 결과 분석 중...", subMessage = 
       </SpinnerContainer>
       <LoadingText>{message}</LoadingText>
       <SubText>{subMessage}</SubText>
+      {onSkip && (
+        <SkipButton onClick={onSkip}>
+          결과 확인하기
+        </SkipButton>
+      )}
     </LoadingOverlay>
   );
 };
