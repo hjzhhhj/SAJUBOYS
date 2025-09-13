@@ -117,15 +117,15 @@ const Title = styled.h1`
   font-size: 4rem;
   font-weight: 900;
   margin-bottom: 2rem;
-  font-family: 'Cinzel Decorative', cursive;
+  font-family: "Cinzel Decorative", cursive;
   text-align: center;
-`
+`;
 
 const BackButton = styled.button`
   background-color: transparent;
   color: white;
   border: 1px solid #ffffff;
-  border-radius: 8px;
+  border-radius: 16px;
   font-size: 1rem;
   cursor: pointer;
   padding: 0.5rem 1.5rem;
@@ -282,6 +282,7 @@ const SavedSaju = () => {
   const handleCardClick = async (sajuId) => {
     try {
       const response = await sajuAPI.getSajuById(sajuId);
+      
       if (response.success) {
         // 결과 페이지로 이동하면서 데이터 전달
         navigate("/saju-result", {
