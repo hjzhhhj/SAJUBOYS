@@ -282,6 +282,7 @@ const SavedSaju = () => {
   const handleCardClick = async (sajuId) => {
     try {
       const response = await sajuAPI.getSajuById(sajuId);
+      
       if (response.success) {
         // 결과 페이지로 이동하면서 데이터 전달
         navigate("/saju-result", {
