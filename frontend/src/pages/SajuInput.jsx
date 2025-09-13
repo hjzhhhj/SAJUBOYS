@@ -43,11 +43,13 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: black;
-  height: 97vh;
-  position: relative;
+  min-height: 100vh;
+  height: 100vh;
+  width: 100vw;
+  position: fixed;
   overflow: hidden;
-  padding: 0 0 40px 0;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
 `;
 
 const ContentWrapper = styled.div`
@@ -55,9 +57,9 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
   z-index: 1;
-  margin-top: 3rem;
+  width: 100%;
+  margin-top: 1rem;
 `;
 
 const GradientCircle1 = styled.div`
@@ -95,24 +97,41 @@ const GradientCircle2 = styled.div`
 `;
 
 const Title = styled.h1`
-  color: white;
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 4rem;
   font-weight: 900;
   margin-bottom: 2rem;
   font-family: "Cinzel Decorative", cursive;
+  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+  position: relative;
+
+  &::after {
+    content: "SAJUBOYS";
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: none;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
+  }
 `;
 
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.5rem;
-  width: 840px;
+  margin-bottom: 1.8rem;
+  width: 800px;
 `;
 
 const Input = styled.input`
-  color: gray;
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   font-size: 1rem;
   cursor: pointer;
@@ -120,87 +139,149 @@ const Input = styled.input`
   width: 100%;
   padding: 1.25rem 2rem;
   box-sizing: border-box;
+  transition: all 0.3s ease;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+  }
+
+  &:focus {
+    outline: none;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+  }
 `;
 
 const Label = styled.label`
-  color: white;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  margin-bottom: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 `;
 
 const Button = styled.button`
-  background-color: transparent;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
+  );
+  backdrop-filter: blur(10px);
   color: white;
-  border: 1px solid #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 100px;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 500;
   cursor: pointer;
-  margin-top: 1rem;
-  width: 840px;
-  height: 3.75rem;
+  margin-top: 0.8rem;
+  width: 800px;
+  height: 3.5rem;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 
   &#btn1 {
-    background-color: #ffffff20;
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.4),
+      rgba(118, 75, 162, 0.4)
+    );
+    border-color: rgba(102, 126, 234, 0.3);
   }
 
   &#btn1:hover {
-    background: #ffffff30;
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.5),
+      rgba(118, 75, 162, 0.5)
+    );
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
   }
 
   &:hover {
-    background: #ffffff30;
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.3),
+      rgba(118, 75, 162, 0.3)
+    );
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 `;
 
 const ToggleWrapper = styled.div`
   display: flex;
   gap: 0;
-  background-color: white;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
   border-radius: 16px;
   width: 100%;
-  border: 1px solid #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-sizing: border-box;
+  padding: 4px;
 `;
 
 const ToggleButton = styled.button`
   flex: 1;
   padding: 1rem 1.5rem;
-  background-color: ${(props) => (props.$active ? "#150137" : "transparent")};
-  color: ${(props) => (props.$active ? "white" : "#a7a7a7")};
+  background: ${(props) =>
+    props.$active
+      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4))"
+      : "transparent"};
+  color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.5)")};
   border: none;
-  border-radius: 16px;
+  border-radius: 12px;
   font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-weight: ${(props) => (props.$active ? "500" : "400")};
 
   &:hover {
-    background-color: ${(props) => (props.$active ? "#150137" : "#ffffff")};
+    background: ${(props) =>
+      props.$active
+        ? "linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5))"
+        : "rgba(255, 255, 255, 0.05)"};
+    color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.7)")};
   }
 `;
 
 const DateToggleWrapper = styled.div`
   display: flex;
   gap: 0;
-  background-color: white;
-  border: 1px solid #ffffff;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  width: 200px;
+  width: 180px;
   box-sizing: border-box;
+  padding: 4px;
 `;
 
 const DateToggleButton = styled.button`
   flex: 1;
-  padding: 1.25rem 1rem;
-  background-color: ${(props) => (props.$active ? "#150137" : "transparent")};
-  color: ${(props) => (props.$active ? "white" : "#a7a7a7")};
+  padding: 1.1rem 0.8rem;
+  background: ${(props) =>
+    props.$active
+      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4))"
+      : "transparent"};
+  color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.5)")};
   border: none;
-  border-radius: 16px;
-  font-size: 1rem;
+  border-radius: 12px;
+  font-size: 0.95rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  font-weight: ${(props) => (props.$active ? "500" : "400")};
 
   &:hover {
-    background-color: ${(props) => (props.$active ? "#150137" : "#f0f0f0")};
+    background: ${(props) =>
+      props.$active
+        ? "linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5))"
+        : "rgba(255, 255, 255, 0.05)"};
+    color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.7)")};
   }
 `;
 
@@ -216,20 +297,29 @@ const DateInputWrapper = styled.div`
 `;
 
 const TimeSelect = styled.select`
-  color: gray;
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   font-size: 1rem;
   cursor: pointer;
-  width: 250px;
-  padding: 1.25rem 1.5rem;
+  width: 240px;
+  padding: 1.15rem 1.5rem;
   box-sizing: border-box;
   appearance: none;
-  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
   background-repeat: no-repeat;
   background-position: right 1.5rem center;
   background-size: 20px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.12);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+  }
 
   option {
     background-color: #1a1a1a;
@@ -433,11 +523,19 @@ function SajuInput() {
       {loading && (
         <LoadingSpinner
           message={resultData ? "사주 팔자 계산 완료!" : "사주 팔자 계산 중..."}
-          subMessage={resultData ? "결과를 확인해보세요" : "당신의 운명을 분석하고 있습니다"}
-          onSkip={resultData ? () => {
-            setLoading(false); // 버튼 클릭 시 로딩 상태 해제
-            navigate("/saju-result", { state: resultData });
-          } : null}
+          subMessage={
+            resultData
+              ? "결과를 확인해보세요"
+              : "당신의 운명을 분석하고 있습니다"
+          }
+          onSkip={
+            resultData
+              ? () => {
+                  setLoading(false); // 버튼 클릭 시 로딩 상태 해제
+                  navigate("/saju-result", { state: resultData });
+                }
+              : null
+          }
         />
       )}
     </Container>
