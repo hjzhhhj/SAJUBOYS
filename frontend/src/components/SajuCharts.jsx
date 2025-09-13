@@ -25,18 +25,24 @@ const ChartsContainer = styled.div`
 `;
 
 const ChartCard = styled.div`
-  background: white;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 16px;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: rgba(255, 255, 255, 0.5);
+  }
 `;
 
 const ChartTitle = styled.h3`
-  color: #150137;
+  color: white;
   font-size: 1.2rem;
   font-weight: 600;
   margin-bottom: 1rem;
   text-align: center;
+  letter-spacing: 0.5px;
 `;
 
 const ChartWrapper = styled.div`
@@ -52,7 +58,7 @@ const COLORS = {
   수: "#3498db",
 };
 
-const YIN_YANG_COLORS = ["#FF6B6B", "#4ECDC4"];
+const YIN_YANG_COLORS = ["#ef4444", "#3b82f6"]; // 빨간색(양), 파란색(음)
 
 export function SajuCharts({ elements, yinYang }) {
   // 오행 데이터 준비
@@ -82,9 +88,38 @@ export function SajuCharts({ elements, yinYang }) {
       }))
     : [];
 
-  // 커스텀 라벨 렌더링
-  const renderCustomLabel = (entry) => {
-    return `${entry.name} (${entry.value})`;
+  // 커스텀 툴팁 스타일
+  const customTooltipStyle = {
+    backgroundColor: "rgba(0, 0, 0, 0.8)",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    borderRadius: "8px",
+    padding: "10px",
+    color: "white",
+  };
+
+  // 커스텀 라벨 렌더링 함수
+  const renderCustomLabelWithStyle = (props) => {
+    const { cx, cy, midAngle, innerRadius, outerRadius, name, value } = props;
+
+    // 값이 0이면 라벨을 표시하지 않음
+    if (value === 0) return null;
+
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos((-midAngle * Math.PI) / 180);
+    const y = cy + radius * Math.sin((-midAngle * Math.PI) / 180);
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+        fontSize="14"
+      >
+        {`${name} (${value})`}
+      </text>
+    );
   };
 
   return (
@@ -100,7 +135,7 @@ export function SajuCharts({ elements, yinYang }) {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={renderCustomLabel}
+                label={renderCustomLabelWithStyle}
                 outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
@@ -109,7 +144,7 @@ export function SajuCharts({ elements, yinYang }) {
                   <Cell key={`cell-${index}`} fill={entry.fill} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip contentStyle={customTooltipStyle} />
             </PieChart>
           </ResponsiveContainer>
         </ChartWrapper>
@@ -126,7 +161,7 @@ export function SajuCharts({ elements, yinYang }) {
                 cx="50%"
                 cy="50%"
                 labelLine={false}
-                label={renderCustomLabel}
+                label={renderCustomLabelWithStyle}
                 outerRadius={100}
                 fill="#8884d8"
                 dataKey="value"
@@ -135,7 +170,7 @@ export function SajuCharts({ elements, yinYang }) {
                   <Cell key={`cell-${index}`} fill={YIN_YANG_COLORS[index]} />
                 ))}
               </Pie>
-              <Tooltip />
+              <Tooltip contentStyle={customTooltipStyle} />
             </PieChart>
           </ResponsiveContainer>
         </ChartWrapper>
@@ -147,9 +182,13 @@ export function SajuCharts({ elements, yinYang }) {
         <ChartWrapper>
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData}>
-              <PolarGrid />
-              <PolarAngleAxis dataKey="subject" />
-              <PolarRadiusAxis angle={90} domain={[0, "dataMax"]} />
+              <PolarGrid stroke="rgba(255, 255, 255, 0.3)" />
+              <PolarAngleAxis dataKey="subject" tick={{ fill: "white" }} />
+              <PolarRadiusAxis
+                angle={90}
+                domain={[0, "dataMax"]}
+                tick={{ fill: "white" }}
+              />
               <Radar
                 name="오행"
                 dataKey="value"
@@ -157,7 +196,7 @@ export function SajuCharts({ elements, yinYang }) {
                 fill="#6200ff"
                 fillOpacity={0.6}
               />
-              <Tooltip />
+              <Tooltip contentStyle={customTooltipStyle} />
             </RadarChart>
           </ResponsiveContainer>
         </ChartWrapper>
@@ -169,10 +208,20 @@ export function SajuCharts({ elements, yinYang }) {
         <ChartWrapper>
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={elementsData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
+              <CartesianGrid
+                strokeDasharray="3 3"
+                stroke="rgba(255, 255, 255, 0.2)"
+              />
+              <XAxis
+                dataKey="name"
+                tick={{ fill: "white" }}
+                stroke="rgba(255, 255, 255, 0.3)"
+              />
+              <YAxis
+                tick={{ fill: "white" }}
+                stroke="rgba(255, 255, 255, 0.3)"
+              />
+              <Tooltip contentStyle={customTooltipStyle} />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                 {elementsData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.fill} />

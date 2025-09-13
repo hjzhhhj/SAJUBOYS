@@ -39,13 +39,9 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: black;
-  min-height: 100vh;
   height: 100vh;
-  width: 100vw;
-  position: fixed;
+  position: relative;
   overflow: hidden;
-  padding: 0;
-  margin: 0;
 `;
 
 const GradientCircle1 = styled.div`
@@ -87,62 +83,43 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
   z-index: 1;
-  width: 100%;
-  margin-top: 1rem;
+  margin-top: 3rem;
 `;
 
 const LoginForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 800px;
+  width: 840px;
 `;
 
 const Title = styled.h1`
-  background: linear-gradient(135deg, #bfa8ff, #9d7bff, #e2c8ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: white;
   font-size: 4rem;
   font-weight: 900;
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   font-family: "Cinzel Decorative", cursive;
-  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
-  position: relative;
-
-  &::after {
-    content: "Login";
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: none;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
-  }
 `;
 
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.5rem;
   width: 100%;
 `;
 
 const Label = styled.label`
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 0.95rem;
-  margin-bottom: 0.7rem;
-  font-weight: 500;
-  letter-spacing: 0.5px;
+  color: white;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
 `;
 
 const Input = styled.input`
-  color: white;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: gray;
+  background-color: #ffffff;
+  border: 1px solid #ffffff;
   border-radius: 16px;
   font-size: 1rem;
   cursor: pointer;
@@ -150,46 +127,31 @@ const Input = styled.input`
   width: 100%;
   padding: 1.25rem 2rem;
   box-sizing: border-box;
-  transition: all 0.3s ease;
 
   &::placeholder {
-    color: rgba(255, 255, 255, 0.5);
+    color: #a7a7a7;
   }
 
   &:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(102, 126, 234, 0.5);
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+    background-color: white;
   }
 `;
 
 const Button = styled.button`
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.4),
-    rgba(118, 75, 162, 0.4)
-  );
-  backdrop-filter: blur(10px);
+  background-color: #ffffff20;
   color: white;
-  border: 1px solid rgba(102, 126, 234, 0.3);
+  border: 1px solid #ffffff;
   border-radius: 100px;
-  font-size: 1.1rem;
-  font-weight: 500;
+  font-size: 1.25rem;
   cursor: pointer;
-  margin-top: 0.8rem;
+  margin-top: 1rem;
   width: 100%;
-  height: 3.5rem;
+  height: 3.75rem;
   transition: all 0.3s ease;
-  letter-spacing: 0.5px;
 
   &:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.5),
-      rgba(118, 75, 162, 0.5)
-    );
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    background: #ffffff30;
   }
 
   &:disabled {
@@ -199,18 +161,16 @@ const Button = styled.button`
 `;
 
 const LinkText = styled.p`
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.8);
   margin-top: 1.5rem;
   font-size: 0.9rem;
 
   a {
-    color: rgba(102, 126, 234, 0.9);
+    color: #8b5cf6;
     text-decoration: none;
-    font-weight: 500;
-    transition: all 0.2s ease;
+    font-weight: 600;
 
     &:hover {
-      color: rgba(102, 126, 234, 1);
       text-decoration: underline;
     }
   }

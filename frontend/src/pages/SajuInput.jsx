@@ -97,7 +97,7 @@ const GradientCircle2 = styled.div`
 `;
 
 const Title = styled.h1`
-  background: linear-gradient(135deg, #bfa8ff, #9d7bff, #e2c8ff);
+  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -195,6 +195,7 @@ const Button = styled.button`
       rgba(102, 126, 234, 0.5),
       rgba(118, 75, 162, 0.5)
     );
+    transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
   }
 
@@ -204,6 +205,7 @@ const Button = styled.button`
       rgba(102, 126, 234, 0.3),
       rgba(118, 75, 162, 0.3)
     );
+    transform: translateY(-2px);
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 

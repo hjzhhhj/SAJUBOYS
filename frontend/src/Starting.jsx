@@ -37,13 +37,9 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: black;
-  min-height: 100vh;
   height: 100vh;
-  width: 100vw;
-  position: fixed;
+  position: relative;
   overflow: hidden;
-  padding: 0;
-  margin: 0;
 `;
 
 const ContentWrapper = styled.div`
@@ -51,9 +47,9 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  position: relative;
   z-index: 1;
-  width: 100%;
-  margin-top: 1rem;
+  margin-top: 3rem;
 `;
 
 const GradientCircle1 = styled.div`
@@ -91,63 +87,32 @@ const GradientCircle2 = styled.div`
 `;
 
 const SubTitle = styled.h1`
-  color: #e2c8ff;
-  font-size: 1.2rem;
+  color: white;
+  font-size: 1.25rem;
   font-weight: 400;
-  margin-bottom: 1.25rem;
-  letter-spacing: 1px;
+  margin-bottom: 1rem;
 `;
 
 const Title = styled.h1`
-  background: linear-gradient(135deg, #bfa8ff, #9d7bff, #e2c8ff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-size: 6rem;
+  color: white;
+  font-size: 6.5rem;
   font-weight: 900;
   font-family: "Cinzel Decorative", cursive;
-  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
-  position: relative;
-  margin-bottom: 1rem;
-
-  &::after {
-    content: "SAJUBOYS";
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: none;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
-  }
 `;
 
 const Button = styled.button`
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.3),
-    rgba(118, 75, 162, 0.3)
-  );
-  backdrop-filter: blur(10px);
+  background-color: #ffffff10;
   color: white;
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  border: 1px solid #ffffff;
   border-radius: 100px;
-  font-size: 1.2rem;
-  font-weight: 500;
+  font-size: 1.25rem;
   cursor: pointer;
-  margin-top: 5rem;
-  width: 450px;
+  margin-top: 7rem;
+  width: 28rem;
   height: 4rem;
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
 
   &:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.4),
-      rgba(118, 75, 162, 0.4)
-    );
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    background: #ffffff20;
   }
 `;
 
