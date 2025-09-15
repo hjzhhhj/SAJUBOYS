@@ -97,7 +97,7 @@ const GradientCircle2 = styled.div`
 `;
 
 const Title = styled.h1`
-  background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+  background: linear-gradient(135deg, #cec2ff, #dab6ff, #f9cbfe);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

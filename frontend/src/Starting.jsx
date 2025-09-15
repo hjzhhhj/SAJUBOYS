@@ -47,9 +47,9 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
   z-index: 1;
-  margin-top: 3rem;
+  width: 100%;
+  margin-top: 1rem;
 `;
 
 const GradientCircle1 = styled.div`
@@ -87,32 +87,63 @@ const GradientCircle2 = styled.div`
 `;
 
 const SubTitle = styled.h1`
-  color: white;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 1.25rem;
   font-weight: 400;
   margin-bottom: 1rem;
+  letter-spacing: 0.5px;
 `;
 
 const Title = styled.h1`
-  color: white;
+  background: linear-gradient(135deg, #cec2ff, #dab6ff, #f9cbfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 6.5rem;
   font-weight: 900;
   font-family: "Cinzel Decorative", cursive;
+  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+  position: relative;
+
+  &::after {
+    content: "SAJUBOYS";
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: none;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
+  }
 `;
 
 const Button = styled.button`
-  background-color: #ffffff10;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.4),
+    rgba(118, 75, 162, 0.4)
+  );
+  backdrop-filter: blur(10px);
   color: white;
-  border: 1px solid #ffffff;
+  border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
   font-size: 1.25rem;
+  font-weight: 500;
   cursor: pointer;
   margin-top: 7rem;
   width: 28rem;
   height: 4rem;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 
   &:hover {
-    background: #ffffff20;
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.5),
+      rgba(118, 75, 162, 0.5)
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
   }
 `;
 
