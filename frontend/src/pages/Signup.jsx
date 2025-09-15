@@ -83,43 +83,62 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  position: relative;
   z-index: 1;
-  margin-top: 3rem;
+  width: 100%;
+  margin-top: 1rem;
 `;
 
 const SignupForm = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 840px;
+  width: 800px;
 `;
 
 const Title = styled.h1`
-  color: white;
+  background: linear-gradient(135deg, #cec2ff, #dab6ff, #f9cbfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 4rem;
   font-weight: 900;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   font-family: "Cinzel Decorative", cursive;
+  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+  position: relative;
+
+  &::after {
+    content: "Sign up";
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    background: none;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
+  }
 `;
 
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.8rem;
   width: 100%;
 `;
 
 const Label = styled.label`
-  color: white;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.95rem;
+  margin-bottom: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.5px;
 `;
 
 const Input = styled.input`
-  color: gray;
-  background-color: #ffffff;
-  border: 1px solid #ffffff;
+  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   font-size: 1rem;
   cursor: pointer;
@@ -127,31 +146,47 @@ const Input = styled.input`
   width: 100%;
   padding: 1.25rem 2rem;
   box-sizing: border-box;
+  transition: all 0.3s ease;
 
   &::placeholder {
-    color: #a7a7a7;
+    color: rgba(255, 255, 255, 0.5);
   }
 
   &:focus {
     outline: none;
-    background-color: white;
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(102, 126, 234, 0.5);
+    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
   }
 `;
 
 const Button = styled.button`
-  background-color: #ffffff20;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.4),
+    rgba(118, 75, 162, 0.4)
+  );
+  backdrop-filter: blur(10px);
   color: white;
-  border: 1px solid #ffffff;
+  border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1.25rem;
+  font-size: 1.1rem;
+  font-weight: 500;
   cursor: pointer;
-  margin-top: 1rem;
+  margin-top: 0.8rem;
   width: 100%;
-  height: 3.75rem;
+  height: 3.5rem;
   transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 
   &:hover {
-    background: #ffffff30;
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.5),
+      rgba(118, 75, 162, 0.5)
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
   }
 
   &:disabled {

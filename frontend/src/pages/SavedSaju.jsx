@@ -113,29 +113,59 @@ const Header = styled.div`
 `;
 
 const Title = styled.h1`
-  color: white;
+  background: linear-gradient(135deg, #cec2ff, #dab6ff, #f9cbfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   font-size: 4rem;
   font-weight: 900;
   margin-bottom: 2rem;
   font-family: "Cinzel Decorative", cursive;
+  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
   text-align: center;
+  position: relative;
+
+  &::after {
+    content: "Saved SAJU";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 0;
+    z-index: -1;
+    background: none;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
+  }
 `;
 
 const BackButton = styled.button`
-  background-color: transparent;
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
+  );
+  backdrop-filter: blur(10px);
   color: white;
-  border: 1px solid #ffffff;
-  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 0.5rem 1.5rem;
+  padding: 0.75rem 2rem;
   transition: all 0.3s ease;
   position: absolute;
   top: 40px;
   right: 40px;
+  letter-spacing: 0.5px;
 
   &:hover {
-    background: #ffffff30;
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.3),
+      rgba(118, 75, 162, 0.3)
+    );
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 `;
 
@@ -147,17 +177,17 @@ const SavedList = styled.div`
 `;
 
 const SavedCard = styled.div`
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
   padding: 24px;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    transform: translateY(-5px);
-    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+    background: rgba(255, 255, 255, 0.12);
     border-color: rgba(102, 126, 234, 0.3);
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
@@ -190,11 +220,11 @@ const InfoRow = styled.div`
 
 const InfoLabel = styled.span`
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.7);
 `;
 
 const InfoValue = styled.span`
-  color: #a78bfa;
+  color: white;
   font-weight: 500;
 `;
 
@@ -207,28 +237,40 @@ const EmptyMessage = styled.div`
 const EmptyTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 10px;
+  color: white;
 `;
 
 const EmptyDescription = styled.p`
   font-size: 16px;
-  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.8);
 `;
 
 const CalculateButton = styled.button`
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.4),
+    rgba(118, 75, 162, 0.4)
+  );
+  backdrop-filter: blur(10px);
   color: white;
-  border: none;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
   padding: 14px 28px;
-  border-radius: 12px;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   margin-top: 20px;
   transition: all 0.3s ease;
+  letter-spacing: 0.5px;
 
   &:hover {
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.5),
+      rgba(118, 75, 162, 0.5)
+    );
     transform: translateY(-2px);
-    box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
   }
 `;
 
@@ -237,6 +279,7 @@ const LoadingMessage = styled.div`
   color: white;
   font-size: 18px;
   padding: 40px;
+  margin-top: 100px;
 `;
 
 const DeleteButton = styled.button`
@@ -282,7 +325,7 @@ const SavedSaju = () => {
   const handleCardClick = async (sajuId) => {
     try {
       const response = await sajuAPI.getSajuById(sajuId);
-      
+
       if (response.success) {
         // 결과 페이지로 이동하면서 데이터 전달
         navigate("/saju-result", {
@@ -358,7 +401,7 @@ const SavedSaju = () => {
           새로운 사주 계산
         </BackButton>
         <Header>
-          <Title>Saved SAJU</Title>
+          <Title>SAVED</Title>
         </Header>
 
         {savedResults.length === 0 ? (
