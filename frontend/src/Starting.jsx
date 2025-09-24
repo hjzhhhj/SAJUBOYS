@@ -49,7 +49,7 @@ const ContentWrapper = styled.div`
   justify-content: center;
   z-index: 1;
   width: 100%;
-  margin-top: 1rem;
+  margin-top: 5rem;
 `;
 
 const GradientCircle1 = styled.div`
@@ -124,7 +124,7 @@ const Button = styled.button`
     rgba(118, 75, 162, 0.4)
   );
   backdrop-filter: blur(10px);
-  color: white;
+  color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
   font-size: 1.25rem;
@@ -142,8 +142,8 @@ const Button = styled.button`
       rgba(102, 126, 234, 0.5),
       rgba(118, 75, 162, 0.5)
     );
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 `;
 
