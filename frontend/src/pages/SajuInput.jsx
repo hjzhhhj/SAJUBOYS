@@ -103,7 +103,7 @@ const Title = styled.h1`
   background-clip: text;
   font-size: 4rem;
   font-weight: 900;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-family: "Cinzel Decorative", cursive;
   text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
   position: relative;
@@ -168,15 +168,15 @@ const Button = styled.button`
     rgba(118, 75, 162, 0.2)
   );
   backdrop-filter: blur(10px);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   cursor: pointer;
-  margin-top: 0.8rem;
+  margin-top: 1rem;
   width: 800px;
-  height: 3.5rem;
+  height: 3.75rem;
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
 
@@ -195,8 +195,8 @@ const Button = styled.button`
       rgba(102, 126, 234, 0.5),
       rgba(118, 75, 162, 0.5)
     );
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 
   &:hover {
@@ -205,7 +205,7 @@ const Button = styled.button`
       rgba(102, 126, 234, 0.3),
       rgba(118, 75, 162, 0.3)
     );
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 

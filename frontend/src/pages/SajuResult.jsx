@@ -119,8 +119,8 @@ const Title = styled.h1`
   background-clip: text;
   font-size: 4rem;
   font-weight: 900;
-  margin-bottom: 3rem;
-  font-family: "Cinzel Decorative", cursive;
+  margin-bottom: 1.5rem;
+  font-family: "Cinzel", cursive;
   text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
   position: relative;
 
@@ -148,7 +148,7 @@ const ResultCard = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1.5rem;
@@ -169,7 +169,7 @@ const InfoGrid = styled.div`
 `;
 
 const InfoItem = styled.div`
-  color: white;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 1rem;
 
   span {
@@ -199,14 +199,14 @@ const Pillar = styled.div`
 `;
 
 const PillarTitle = styled.h3`
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 1rem;
 `;
 
 const PillarContent = styled.div`
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
@@ -218,7 +218,7 @@ const PillarSub = styled.div`
 `;
 
 const Description = styled.p`
-  color: white;
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.8;
   margin: 1rem 0;
   font-size: 1rem;
@@ -263,7 +263,7 @@ const ElementItem = styled.div`
       };
       return colors[props.element] || "rgba(149, 165, 166, 0.5)";
     }};
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   padding: 1rem;
   border-radius: 12px;
   text-align: center;
@@ -280,7 +280,7 @@ const ElementItem = styled.div`
       };
       return colors[props.element] || "rgba(149, 165, 166, 0.4)";
     }};
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: 0 4px 12px
       ${(props) => {
         const colors = {
@@ -331,7 +331,7 @@ const DaeunItem = styled.div`
   }
 
   .pillar {
-    color: white;
+    color: rgba(255, 255, 255, 0.9);
     font-size: 1.2rem;
     font-weight: bold;
   }
@@ -349,7 +349,7 @@ const AdvancedCard = styled.div`
 `;
 
 const AdvancedTitle = styled.h3`
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 1.3rem;
   font-weight: 600;
   margin-bottom: 1rem;
@@ -358,7 +358,7 @@ const AdvancedTitle = styled.h3`
 `;
 
 const AdvancedContent = styled.div`
-  color: white;
+  color: rgba(255, 255, 255, 0.8);
   line-height: 1.8;
   font-size: 1rem;
   padding-top: 1rem;
@@ -370,7 +370,7 @@ const ZodiacCard = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   padding: 2.5rem;
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   margin-bottom: 1.5rem;
   text-align: center;
   width: 100%;
@@ -401,14 +401,14 @@ const Button = styled.button`
       ? "linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4))"
       : "linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2))"};
   backdrop-filter: blur(10px);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   cursor: pointer;
   padding: 0 2rem;
-  height: 3.5rem;
+  height: 3.75rem;
   min-width: 200px;
   transition: all 0.3s ease;
   letter-spacing: 0.5px;
@@ -419,8 +419,8 @@ const Button = styled.button`
       props.$primary
         ? "linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5))"
         : "linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3))"};
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 
   &:disabled {

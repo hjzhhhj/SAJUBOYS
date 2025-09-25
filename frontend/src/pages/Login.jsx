@@ -100,9 +100,9 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 4.5rem;
+  font-size: 4rem;
   font-weight: 900;
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
   font-family: "Cinzel", cursive;
   text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
   position: relative;

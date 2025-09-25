@@ -119,14 +119,14 @@ const Title = styled.h1`
   background-clip: text;
   font-size: 4rem;
   font-weight: 900;
-  margin-bottom: 2rem;
-  font-family: "Cinzel Decorative", cursive;
+  margin-bottom: 1.5rem;
+  font-family: "Cinzel", cursive;
   text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
   text-align: center;
   position: relative;
 
   &::after {
-    content: "Saved SAJU";
+    content: "SAVED SAJU";
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -145,10 +145,10 @@ const BackButton = styled.button`
     rgba(118, 75, 162, 0.2)
   );
   backdrop-filter: blur(10px);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   cursor: pointer;
   padding: 0.75rem 2rem;
@@ -164,7 +164,7 @@ const BackButton = styled.button`
       rgba(102, 126, 234, 0.3),
       rgba(118, 75, 162, 0.3)
     );
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 `;
@@ -186,7 +186,7 @@ const SavedCard = styled.div`
   transition: all 0.3s ease;
 
   &:hover {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     background: rgba(255, 255, 255, 0.12);
     border-color: rgba(102, 126, 234, 0.3);
     box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
@@ -201,7 +201,7 @@ const CardHeader = styled.div`
 `;
 
 const CardName = styled.h3`
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   font-size: 20px;
   font-weight: 600;
 `;
@@ -224,20 +224,20 @@ const InfoLabel = styled.span`
 `;
 
 const InfoValue = styled.span`
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
 `;
 
 const EmptyMessage = styled.div`
   text-align: center;
   padding: 60px 20px;
-  color: white;
+  color: rgba(255, 255, 255, 0.8);
 `;
 
 const EmptyTitle = styled.h2`
   font-size: 24px;
   margin-bottom: 10px;
-  color: white;
+  color: rgba(255, 255, 255, 0.9);
 `;
 
 const EmptyDescription = styled.p`
@@ -252,11 +252,11 @@ const CalculateButton = styled.button`
     rgba(118, 75, 162, 0.4)
   );
   backdrop-filter: blur(10px);
-  color: white;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
   padding: 14px 28px;
-  font-size: 16px;
+  font-size: 1.25rem;
   font-weight: 500;
   cursor: pointer;
   margin-top: 20px;
@@ -269,14 +269,14 @@ const CalculateButton = styled.button`
       rgba(102, 126, 234, 0.5),
       rgba(118, 75, 162, 0.5)
     );
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 `;
 
 const LoadingMessage = styled.div`
   text-align: center;
-  color: white;
+  color: rgba(255, 255, 255, 0.8);
   font-size: 18px;
   padding: 40px;
   margin-top: 100px;
