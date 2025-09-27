@@ -238,7 +238,7 @@ const ResultCard = styled.div`
 const SectionTitle = styled.h2`
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -664,7 +664,7 @@ function SajuResult() {
 
             {/* 기본 정보 - 안 바뀌는 부분 */}
             <ResultCard $variant="immutable">
-              <SectionTitle>기본 정보</SectionTitle>
+              <SectionTitle>📖 기본 정보</SectionTitle>
               <InfoGrid>
                 <InfoItem>
                   <span>이름:</span> {resultData.name}
@@ -694,7 +694,7 @@ function SajuResult() {
             </ResultCard>
 
             <ResultCard $variant="immutable">
-              <SectionTitle>사주 팔자</SectionTitle>
+              <SectionTitle>🎴 사주 팔자</SectionTitle>
               <PillarGrid>
                 <Pillar>
                   <PillarTitle>년주</PillarTitle>
@@ -738,7 +738,7 @@ function SajuResult() {
               resultData.yinYang ||
               resultData.fourPillars) && (
               <ResultCard $variant="immutable">
-                <SectionTitle>사주 분석 차트</SectionTitle>
+                <SectionTitle>📊 사주 분석 차트</SectionTitle>
                 <SajuCharts
                   elements={resultData.elements}
                   yinYang={resultData.yinYang}
@@ -749,7 +749,7 @@ function SajuResult() {
 
             {resultData.elements && (
               <ResultCard $variant="immutable">
-                <SectionTitle>오행 분석</SectionTitle>
+                <SectionTitle>⚖️ 오행 분석</SectionTitle>
                 <FiveElementsGrid>
                   {Object.entries(resultData.elements).map(
                     ([element, count]) => (
@@ -778,7 +778,7 @@ function SajuResult() {
             {/* 대운 섹션 - 불변 */}
             {resultData.daeun && resultData.daeun.length > 0 && (
               <ResultCard $variant="immutable">
-                <SectionTitle>대운</SectionTitle>
+                <SectionTitle>🌊 대운</SectionTitle>
                 <DaeunGrid>
                   {resultData.daeun.slice(0, 8).map((item, index) => (
                     <DaeunItem key={index}>
@@ -806,7 +806,7 @@ function SajuResult() {
             {/* 해석 결과 - 바뀌는 부분 */}
             {resultData.saeun && (
               <ResultCard $variant="mutable">
-                <SectionTitle>2025년 세운</SectionTitle>
+                <SectionTitle>🔮 2025년 세운</SectionTitle>
                 <Description>
                   올해의 세운: {resultData.saeun.heaven}
                   {resultData.saeun.earth}
@@ -815,22 +815,22 @@ function SajuResult() {
             )}
 
             <ResultCard $variant="mutable">
-              <SectionTitle>총운</SectionTitle>
+              <SectionTitle>🌟 총운</SectionTitle>
               <Description>{resultData.interpretation.fortune}</Description>
             </ResultCard>
 
             <ResultCard $variant="mutable">
-              <SectionTitle>성격 분석</SectionTitle>
+              <SectionTitle>✨ 성격 분석</SectionTitle>
               <Description>{resultData.interpretation.personality}</Description>
             </ResultCard>
 
             <ResultCard $variant="mutable">
-              <SectionTitle>직업 운</SectionTitle>
+              <SectionTitle>💼 직업 운</SectionTitle>
               <Description>{resultData.interpretation.career}</Description>
             </ResultCard>
 
             <ResultCard $variant="mutable">
-              <SectionTitle>연애 운</SectionTitle>
+              <SectionTitle>💕 연애 운</SectionTitle>
               <Description>
                 {resultData.interpretation.relationship}
               </Description>
@@ -838,14 +838,14 @@ function SajuResult() {
 
             {resultData.interpretation.wealth && (
               <ResultCard $variant="mutable">
-                <SectionTitle>재물운</SectionTitle>
+                <SectionTitle>💰 재물운</SectionTitle>
                 <Description>{resultData.interpretation.wealth}</Description>
               </ResultCard>
             )}
 
             {resultData.interpretation.health && (
               <ResultCard $variant="mutable">
-                <SectionTitle>건강운</SectionTitle>
+                <SectionTitle>🍃 건강운</SectionTitle>
                 <Description>{resultData.interpretation.health}</Description>
               </ResultCard>
             )}
@@ -955,7 +955,7 @@ function SajuResult() {
                 {/* 심화 해석 섹션 */}
                 {resultData.interpretation.advancedAnalysis.specialPattern && (
                   <AdvancedCard $variant="mutable">
-                    <AdvancedTitle>특별한 격국</AdvancedTitle>
+                    <AdvancedTitle>🔯 특별한 격국</AdvancedTitle>
                     <AdvancedContent>
                       {
                         resultData.interpretation.advancedAnalysis
@@ -967,7 +967,7 @@ function SajuResult() {
 
                 {resultData.interpretation.advancedAnalysis.daeunAnalysis && (
                   <AdvancedCard $variant="mutable">
-                    <AdvancedTitle>현재 대운 분석</AdvancedTitle>
+                    <AdvancedTitle>🌊 현재 대운 분석</AdvancedTitle>
                     <AdvancedContent>
                       {resultData.interpretation.advancedAnalysis.daeunAnalysis}
                     </AdvancedContent>
