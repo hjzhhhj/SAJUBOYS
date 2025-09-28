@@ -536,7 +536,13 @@ export class SajuAdvancedInterpreter {
   }
 
   // 시기별 상세 운세
-  static generateTimelyFortune(fourPillars: any, currentYear: number): any {
+  static async generateTimelyFortune(
+    fourPillars: any,
+    currentYear: number,
+    elements?: any,
+    yinYang?: any,
+    gender?: string,
+  ): Promise<any> {
     const yearlyFortune = {
       overall: '',
       love: '',
@@ -600,86 +606,515 @@ export class SajuAdvancedInterpreter {
     yearlyFortune.health = '규칙적인 생활습관과 운동이 중요합니다.';
 
     // 개인의 일간과 올해 천간의 관계를 고려해 맞춤형 조언!
-    const personalAdvice = this.getPersonalizedAdvice(
+    const personalAdvice = await this.getPersonalizedAdvice(
       dayMaster,
       thisYearStem,
       thisYearBranch,
+      elements,
+      yinYang,
+      fourPillars,
+      currentYear,
+      gender,
     );
     yearlyFortune.advice = personalAdvice;
 
     return yearlyFortune;
   }
 
-  // 개인화된 맞춤형 조언 생성
-  static getPersonalizedAdvice(
+  // 개인화된 맞춤형 조언 생성 (AI 기반으로 완전히 변경)
+  static async getPersonalizedAdvice(
     dayMaster: string,
     yearStem: string,
     yearBranch: string,
-  ): string {
-    // 일간과 년간의 오행 관계 분석
+    elements?: any,
+    yinYang?: any,
+    fourPillars?: any,
+    currentYear?: number,
+    gender?: string,
+  ): Promise<string> {
     const dayElement = this.getElementFromStem(dayMaster);
     const yearElement = this.getElementFromStem(yearStem);
-
-    // 상생/상극 관계 판단
     const relationship = this.getFiveElementsRelationship(
       dayElement,
       yearElement,
     );
 
-    let advice = `${yearStem}${yearBranch}년은 `;
+    // AI 기반 조언이 가능한 경우
+    if (fourPillars && currentYear && gender && elements && yinYang) {
+      try {
+        const apiKey = process.env.GEMINI_API_KEY || '';
 
-    if (relationship === 'supportive') {
-      advice += `당신의 ${dayElement} 기운을 강화시켜주는 ${yearElement}의 해입니다. `;
-      switch (dayElement) {
-        case '목':
-          advice +=
-            '성장과 발전에 집중하여 새로운 도전을 시도하기 좋은 해입니다.';
-          break;
-        case '화':
-          advice += '열정과 창의력을 발휘하여 큰 성과를 이룰 수 있는 해입니다.';
-          break;
-        case '토':
-          advice += '안정된 기반 위에서 꾸준한 성과를 쌓아가기 좋은 해입니다.';
-          break;
-        case '금':
-          advice += '결단력과 추진력으로 목표를 달성하기 좋은 해입니다.';
-          break;
-        case '수':
-          advice +=
-            '지혜와 유연성을 바탕으로 변화에 적응하며 발전하기 좋은 해입니다.';
-          break;
+        const yearIndex = (currentYear - 4) % 60;
+        const heavenlyIndex = yearIndex % 10;
+        const earthlyIndex = yearIndex % 12;
+
+        const heavenlyStems = [
+          '갑',
+          '을',
+          '병',
+          '정',
+          '무',
+          '기',
+          '경',
+          '신',
+          '임',
+          '계',
+        ];
+        const earthlyBranches = [
+          '자',
+          '축',
+          '인',
+          '묘',
+          '진',
+          '사',
+          '오',
+          '미',
+          '신',
+          '유',
+          '술',
+          '해',
+        ];
+
+        const thisYearStem = heavenlyStems[heavenlyIndex];
+        const thisYearBranch = earthlyBranches[earthlyIndex];
+
+        let relationshipDesc = '';
+        if (relationship === 'supportive') {
+          relationshipDesc = '상생 관계 (도움을 주는 좋은 관계)';
+        } else if (relationship === 'conflicting') {
+          relationshipDesc = '상극 관계 (충돌하는 어려운 관계)';
+        } else {
+          relationshipDesc = '중립 관계 (특별한 영향이 없는 평범한 관계)';
+        }
+
+        const prompt = `당신은 30년 경력의 전문 사주 명리 상담가입니다. 아래 개인 정보를 바탕으로 ${currentYear}년 한 해 동안 사용자가 바로 실천할 수 있는 "행동 가이드"를 간결하게 작성하세요.
+
+## 개인 정보
+- 일주(본인): ${fourPillars.day.heaven}${fourPillars.day.earth} (${dayElement})
+- 년주: ${fourPillars.year.heaven}${fourPillars.year.earth}
+- 월주: ${fourPillars.month.heaven}${fourPillars.month.earth}
+${fourPillars.time ? `- 시주: ${fourPillars.time.heaven}${fourPillars.time.earth}` : '- 시주: 미상'}
+- 오행 분포: 목(${elements.목}) 화(${elements.화}) 토(${elements.토}) 금(${elements.금}) 수(${elements.수})
+- 음양 분포: 음(${yinYang.yin}) 양(${yinYang.yang})
+- 성별: ${gender}
+- 올해: ${currentYear}년 ${thisYearStem}${thisYearBranch}년
+- 일주와 올해의 관계: ${relationshipDesc}
+
+## 작성 규칙
+- 일주 오행(${dayElement})과 올해 오행(${yearElement})의 관계(${relationshipDesc})를 반영하여 조언을 작성하세요.
+- ${relationship === 'supportive' ? '상생 관계이므로 적극적으로 도전하고 기회를 잡는 것이 좋습니다.' : relationship === 'conflicting' ? '상극 관계이므로 신중하게 행동하고 무리하지 않는 것이 중요합니다.' : '중립 관계이므로 기본을 탄탄히 하고 균형을 유지하는 것이 중요합니다.'}
+- 각 항목은 1~2문장, 모두 **명령형("~하세요/피하세요")**으로 작성.
+- 일반인이 바로 실행 가능한 구체적 행동으로만 작성.
+- 아래 용어 **절대 사용 금지**: 전문용어(천간, 지지, 합충, 상생, 상극 등)와 그 유사 표현.
+- 오행 분포에서 과하거나 부족한 요소를 고려해 **맞춤형으로** 작성.
+- 총 5개 항목 고정: "좋은 것 3개 + 조심할 것 2개".
+- **반드시 JSON 형식으로만 출력**하세요. 다른 설명, 머리말/꼬리말, 마크다운 코드블록 금지.
+
+## 출력 형식(이 JSON 형식을 그대로 사용)
+{
+  "good": [
+    "구체적인 행동 1",
+    "구체적인 행동 2",
+    "구체적인 행동 3"
+  ],
+  "caution": [
+    "주의사항 1",
+    "주의사항 2"
+  ]
+}`;
+
+        // Gemini REST API 직접 호출
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: prompt
+              }]
+            }]
+          })
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error('Gemini API 오류 응답:', errorText);
+          throw new Error(`Gemini API Error: ${response.status} ${response.statusText} - ${errorText}`);
+        }
+
+        const data = await response.json();
+        console.log('Gemini API 응답:', JSON.stringify(data, null, 2));
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || JSON.stringify(data);
+
+        // JSON 추출 (마크다운 코드블록 제거)
+        let jsonText = text.trim();
+        if (jsonText.startsWith('```json')) {
+          jsonText = jsonText.replace(/```json\s*/, '').replace(/```\s*$/, '');
+        } else if (jsonText.startsWith('```')) {
+          jsonText = jsonText.replace(/```\s*/, '').replace(/```\s*$/, '');
+        }
+
+        const aiResult = JSON.parse(jsonText);
+
+        let advice = '**✅ 이렇게 하면 좋습니다:**\n';
+        advice += (aiResult.good || [])
+          .map((item: string, i: number) => `${i + 1}. ${item}`)
+          .join('\n');
+        advice += '\n\n**⚠️ 이런 것은 조심하세요:**\n';
+        advice += (aiResult.caution || [])
+          .map((item: string, i: number) => `${i + 1}. ${item}`)
+          .join('\n');
+
+        return advice;
+      } catch (error) {
+        console.error('AI 조언 생성 실패, 기본 조언으로 폴백:', error);
       }
-    } else if (relationship === 'conflicting') {
-      advice += `당신의 ${dayElement} 기운과 상극인 ${yearElement}의 해입니다. `;
-      advice += '신중하게 행동하되 이 시기를 통해 더욱 성숙해질 수 있습니다. ';
-      switch (dayElement) {
-        case '목':
-          advice +=
-            '인내심을 갖고 꾸준히 노력하면 오히려 더 큰 성장을 이룰 수 있습니다.';
-          break;
-        case '화':
-          advice +=
-            '차분함을 유지하며 계획적으로 행동하면 좋은 결과를 얻을 수 있습니다.';
-          break;
-        case '토':
-          advice +=
-            '유연성을 기르고 변화에 적응하려 노력하면 새로운 기회를 얻을 수 있습니다.';
-          break;
-        case '금':
-          advice +=
-            '온화함과 포용력을 기르면 대인관계에서 큰 도움이 될 것입니다.';
-          break;
-        case '수':
-          advice +=
-            '적극성과 행동력을 기르면 정체된 상황을 돌파할 수 있습니다.';
-          break;
-      }
-    } else {
-      advice += `당신의 ${dayElement} 기운과 조화로운 ${yearElement}의 해입니다. `;
-      advice += '균형을 유지하며 다방면으로 발전할 수 있는 좋은 시기입니다.';
     }
 
-    return advice;
+    // AI 실패 시 또는 파라미터 부족 시 에러 메시지
+    return '맞춤형 행동 가이드를 생성할 수 없습니다. 나중에 다시 시도해주세요.';
+  }
+
+  // 상생 관계일 때의 조언
+  static getSupportiveAdvice(
+    dayElement: string,
+    yearElement: string,
+  ): { good: string[]; caution: string[] } {
+    const adviceMap: {
+      [key: string]: { [key: string]: { good: string[]; caution: string[] } };
+    } = {
+      목: {
+        수: {
+          good: [
+            '새로운 프로젝트나 학습을 시작하세요. 성장의 에너지가 강한 시기입니다.',
+            '인맥 관리에 집중하세요. 좋은 사람들과의 만남이 큰 도움이 됩니다.',
+            '창의적인 아이디어를 실행에 옮기세요. 상상이 현실이 되는 해입니다.',
+          ],
+          caution: [
+            '너무 많은 일을 동시에 벌이지 마세요. 우선순위를 정해 집중하세요.',
+            '급한 마음에 서두르지 마세요. 차근차근 진행하는 것이 중요합니다.',
+          ],
+        },
+      },
+      화: {
+        목: {
+          good: [
+            '사회활동과 네트워킹을 활발히 하세요. 인정받을 기회가 많습니다.',
+            '표현력을 발휘할 수 있는 일에 도전하세요. 당신의 열정이 빛을 발합니다.',
+            '새로운 취미나 관심사를 개발하세요. 삶에 활력이 더해집니다.',
+          ],
+          caution: [
+            '감정적인 결정을 피하세요. 중요한 일은 충분히 생각한 후 결정하세요.',
+            '체력 관리를 소홀히 하지 마세요. 너무 많은 활동은 건강을 해칠 수 있습니다.',
+          ],
+        },
+      },
+      토: {
+        화: {
+          good: [
+            '장기적인 계획을 세우고 차근차근 실행하세요. 안정된 성과를 기대할 수 있습니다.',
+            '부동산이나 저축 등 자산 관리에 신경 쓰세요. 재산 형성의 좋은 시기입니다.',
+            '주변 사람들과의 관계를 돈독히 하세요. 신뢰가 큰 자산이 됩니다.',
+          ],
+          caution: [
+            '변화를 두려워하지 마세요. 지나친 안정 추구는 기회를 놓칠 수 있습니다.',
+            '고집을 부리지 마세요. 다른 의견에도 귀 기울이세요.',
+          ],
+        },
+      },
+      금: {
+        토: {
+          good: [
+            '전문성을 키우는 데 투자하세요. 자격증이나 교육이 큰 도움이 됩니다.',
+            '명확한 목표를 세우고 실행하세요. 결단력있는 행동이 성공을 부릅니다.',
+            '규칙적인 생활 습관을 유지하세요. 건강과 성과 모두를 얻을 수 있습니다.',
+          ],
+          caution: [
+            '지나치게 엄격하지 마세요. 융통성도 필요합니다.',
+            '완벽주의를 조심하세요. 80%의 완성도로도 충분할 때가 많습니다.',
+          ],
+        },
+      },
+      수: {
+        금: {
+          good: [
+            '새로운 지식과 정보를 습득하세요. 학습이 큰 기회로 연결됩니다.',
+            '유연하게 상황에 대처하세요. 변화를 두려워하지 말고 받아들이세요.',
+            '직관을 믿으세요. 당신의 판단력이 빛을 발하는 시기입니다.',
+          ],
+          caution: [
+            '우유부단하지 마세요. 결정이 필요할 때는 과감히 선택하세요.',
+            '지나친 걱정을 피하세요. 긍정적인 마인드를 유지하세요.',
+          ],
+        },
+      },
+    };
+
+    return adviceMap[dayElement]?.[yearElement] || this.getDefaultAdvice();
+  }
+
+  // 상극 관계일 때의 조언
+  static getConflictingAdvice(
+    dayElement: string,
+    yearElement: string,
+  ): { good: string[]; caution: string[] } {
+    const adviceMap: {
+      [key: string]: { [key: string]: { good: string[]; caution: string[] } };
+    } = {
+      목: {
+        금: {
+          good: [
+            '인내심을 가지고 꾸준히 노력하세요. 시련을 극복하면 더 강해집니다.',
+            '자기 계발에 투자하세요. 내실을 다지는 시기로 활용하세요.',
+            '신뢰할 수 있는 사람들과 협력하세요. 혼자보다 함께가 힘이 됩니다.',
+          ],
+          caution: [
+            '충동적인 결정을 피하세요. 중요한 일은 신중히 판단하세요.',
+            '건강 관리에 특히 신경 쓰세요. 스트레스 관리가 중요합니다.',
+          ],
+        },
+      },
+      화: {
+        수: {
+          good: [
+            '차분하게 계획을 세우고 실행하세요. 서두르지 말고 단계적으로 진행하세요.',
+            '감정 조절에 신경 쓰세요. 명상이나 운동으로 마음의 평화를 유지하세요.',
+            '작은 목표부터 달성하세요. 성취감이 동기부여가 됩니다.',
+          ],
+          caution: [
+            '감정적 소비를 조심하세요. 충동구매보다는 계획적인 소비를 하세요.',
+            '타인과의 갈등을 피하세요. 말을 신중히 선택하세요.',
+          ],
+        },
+      },
+      토: {
+        목: {
+          good: [
+            '변화에 유연하게 대처하세요. 새로운 시도를 두려워하지 마세요.',
+            '운동이나 스트레칭으로 몸을 유연하게 유지하세요. 건강이 중요합니다.',
+            '다양한 의견을 경청하세요. 열린 마음이 기회를 가져옵니다.',
+          ],
+          caution: [
+            '고집을 버리세요. 때로는 타협도 필요합니다.',
+            '지나친 걱정을 피하세요. 일어나지 않은 일에 에너지를 소비하지 마세요.',
+          ],
+        },
+      },
+      금: {
+        화: {
+          good: [
+            '온화한 태도를 유지하세요. 부드러운 접근이 더 큰 효과를 냅니다.',
+            '휴식과 재충전의 시간을 가지세요. 무리하지 말고 여유를 찾으세요.',
+            '예술이나 문화 활동을 즐기세요. 감성을 채우는 시간이 필요합니다.',
+          ],
+          caution: [
+            '지나치게 완벽을 추구하지 마세요. 적당한 선에서 만족하세요.',
+            '비판적인 태도를 조심하세요. 긍정적인 시각을 유지하세요.',
+          ],
+        },
+      },
+      수: {
+        토: {
+          good: [
+            '적극적으로 행동하세요. 망설임보다는 실행이 중요합니다.',
+            '규칙적인 생활 패턴을 만드세요. 안정된 루틴이 도움이 됩니다.',
+            '목표를 구체화하세요. 명확한 방향성이 성과를 만듭니다.',
+          ],
+          caution: [
+            '우유부단함을 경계하세요. 결정할 때는 과감하게 하세요.',
+            '지나친 사고를 피하세요. 때로는 직관을 따르는 것도 필요합니다.',
+          ],
+        },
+      },
+    };
+
+    return adviceMap[dayElement]?.[yearElement] || this.getDefaultAdvice();
+  }
+
+  // 중립 관계일 때의 조언 - AI 기반
+  static async getNeutralAdvice(
+    dayElement: string,
+    yearElement: string,
+    fourPillars: any,
+    elements: any,
+    yinYang: any,
+    currentYear: number,
+    gender: string,
+  ): Promise<{ good: string[]; caution: string[] }> {
+    try {
+      const apiKey = process.env.GEMINI_API_KEY || '';
+
+      const yearIndex = (currentYear - 4) % 60;
+      const heavenlyIndex = yearIndex % 10;
+      const earthlyIndex = yearIndex % 12;
+
+      const heavenlyStems = [
+        '갑',
+        '을',
+        '병',
+        '정',
+        '무',
+        '기',
+        '경',
+        '신',
+        '임',
+        '계',
+      ];
+      const earthlyBranches = [
+        '자',
+        '축',
+        '인',
+        '묘',
+        '진',
+        '사',
+        '오',
+        '미',
+        '신',
+        '유',
+        '술',
+        '해',
+      ];
+
+      const thisYearStem = heavenlyStems[heavenlyIndex];
+      const thisYearBranch = earthlyBranches[earthlyIndex];
+
+      const prompt = `당신은 30년 경력의 전문 사주 명리 상담가입니다. 아래 개인 정보를 바탕으로 ${currentYear}년 한 해 동안 사용자가 바로 실천할 수 있는 "행동 가이드"를 간결하게 작성하세요.
+
+## 개인 정보
+- 일주(본인): ${fourPillars.day.heaven}${fourPillars.day.earth} (${dayElement})
+- 년주: ${fourPillars.year.heaven}${fourPillars.year.earth}
+- 월주: ${fourPillars.month.heaven}${fourPillars.month.earth}
+${fourPillars.time ? `- 시주: ${fourPillars.time.heaven}${fourPillars.time.earth}` : '- 시주: 미상'}
+- 오행 분포: 목(${elements.목}) 화(${elements.화}) 토(${elements.토}) 금(${elements.금}) 수(${elements.수})
+- 음양 분포: 음(${yinYang.yin}) 양(${yinYang.yang})
+- 성별: ${gender}
+- 올해: ${currentYear}년 ${thisYearStem}${thisYearBranch}년 (일주 오행과 중립 관계)
+
+## 작성 규칙
+- 일주 오행(${dayElement})과 올해 오행(${yearElement})이 중립 관계이므로, 안정적이지만 특별한 운이 없는 평범한 해입니다.
+- 이런 해에는 기본을 탄탄히 하고, 부족한 오행을 보완하며, 과한 오행을 조절하는 것이 중요합니다.
+- 각 항목은 1~2문장, 모두 **명령형("~하세요/피하세요")**으로 작성.
+- 일반인이 바로 실행 가능한 구체적 행동으로만 작성.
+- 아래 용어 **절대 사용 금지**: 전문용어(천간, 지지, 합충, 상생, 상극 등)와 그 유사 표현.
+- 오행 분포에서 과하거나 부족한 요소를 고려해 **맞춤형으로** 작성.
+- 총 5개 항목 고정: "좋은 것 3개 + 조심할 것 2개".
+- **반드시 JSON 형식으로만 출력**하세요. 다른 설명, 머리말/꼬리말, 마크다운 코드블록 금지.
+
+## 출력 형식(이 JSON 형식을 그대로 사용)
+{
+  "good": [
+    "구체적인 행동 1",
+    "구체적인 행동 2",
+    "구체적인 행동 3"
+  ],
+  "caution": [
+    "주의사항 1",
+    "주의사항 2"
+  ]
+}`;
+
+      // Gemini REST API 직접 호출
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: prompt
+            }]
+          }]
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Gemini API Error: ${response.status} ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const text = data.candidates[0].content.parts[0].text;
+
+      // JSON 추출 (마크다운 코드블록 제거)
+      let jsonText = text.trim();
+      if (jsonText.startsWith('```json')) {
+        jsonText = jsonText.replace(/```json\s*/, '').replace(/```\s*$/, '');
+      } else if (jsonText.startsWith('```')) {
+        jsonText = jsonText.replace(/```\s*/, '').replace(/```\s*$/, '');
+      }
+
+      const aiResult = JSON.parse(jsonText);
+
+      return {
+        good: aiResult.good || [],
+        caution: aiResult.caution || [],
+      };
+    } catch (error) {
+      console.error('AI 조언 생성 실패:', error);
+      return this.getDefaultAdvice();
+    }
+  }
+
+  // 기본 조언 (AI 실패 시 사용 - 빈 배열 반환)
+  static getDefaultAdvice(): { good: string[]; caution: string[] } {
+    return {
+      good: [],
+      caution: [],
+    };
+  }
+
+  // 오행 균형에 따른 추가 조언
+  static getElementBalanceAdvice(elements: any): string {
+    const total = Object.values(elements).reduce(
+      (sum: number, val: any) => sum + val,
+      0,
+    ) as number;
+
+    // 가장 부족한 오행 찾기
+    const minElement = Object.entries(elements).reduce(
+      (min, [elem, count]) =>
+        (count as number) < min.count
+          ? { element: elem, count: count as number }
+          : min,
+      { element: '', count: 10 },
+    );
+
+    // 가장 강한 오행 찾기
+    const maxElement = Object.entries(elements).reduce(
+      (max, [elem, count]) =>
+        (count as number) > max.count
+          ? { element: elem, count: count as number }
+          : max,
+      { element: '', count: 0 },
+    );
+
+    const elementAdviceMap: { [key: string]: string } = {
+      목: '녹색 계열 옷이나 소품을 활용하고, 식물을 키우거나 산책을 즐기세요.',
+      화: '밝은 색상의 옷을 입고, 사람들과의 만남을 즐기며 활동적으로 지내세요.',
+      토: '황색이나 갈색 계열을 활용하고, 안정된 환경에서 꾸준히 노력하세요.',
+      금: '흰색이나 금색 계열을 활용하고, 규칙적이고 체계적인 생활을 하세요.',
+      수: '검은색이나 파란색 계열을 활용하고, 충분한 휴식과 수분 섭취를 하세요.',
+    };
+
+    if (minElement.count === 0) {
+      return `${minElement.element}의 기운이 부족합니다. ${elementAdviceMap[minElement.element]}`;
+    } else if (maxElement.count / total > 0.4) {
+      // 한 오행이 40% 이상이면 과다
+      const oppositeAdvice: { [key: string]: string } = {
+        목: '지나친 성급함을 조심하세요. 차분하게 생각하고 행동하세요.',
+        화: '과도한 활동을 자제하세요. 휴식과 재충전의 시간을 가지세요.',
+        토: '지나친 안정만 추구하지 마세요. 때로는 변화도 필요합니다.',
+        금: '너무 엄격하지 마세요. 여유와 융통성을 가지세요.',
+        수: '지나친 사고를 줄이세요. 행동으로 옮기는 실행력을 키우세요.',
+      };
+      return oppositeAdvice[maxElement.element] || '';
+    }
+
+    return '';
   }
 
   // 천간에서 오행 추출
@@ -736,4 +1171,5 @@ export class SajuAdvancedInterpreter {
       return 'neutral';
     }
   }
+
 }

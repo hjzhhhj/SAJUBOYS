@@ -116,7 +116,7 @@ export class SajuService {
     const saeun = SajuCalculator.calculateSaeun(currentYear);
 
     // 사주 해석
-    const interpretation = this.generateInterpretation(
+    const interpretation = await this.generateInterpretation(
       gender,
       fourPillars,
       elements,
@@ -235,7 +235,7 @@ export class SajuService {
     return { yin, yang };
   }
 
-  private generateInterpretation(
+  private async generateInterpretation(
     gender: string,
     fourPillars: FourPillars,
     elements: { [key: string]: number },
@@ -273,10 +273,13 @@ export class SajuService {
 
     // 시기별 운세
     const timelyFortune: TimelyFortune =
-      SajuAdvancedInterpreter.generateTimelyFortune(
+      (await SajuAdvancedInterpreter.generateTimelyFortune(
         fourPillars,
         currentYear,
-      ) as TimelyFortune;
+        elements,
+        yinYang,
+        gender,
+      )) as TimelyFortune;
 
     // 직업 적성
     const career = SajuInterpreter.interpretCareer(dayHeavenly, elements);
@@ -296,8 +299,8 @@ export class SajuService {
     // 건강운
     const health = SajuInterpreter.interpretHealth(elements);
 
-    // 올해 운세
-    const fortune = `${timelyFortune.overall}\n${timelyFortune.advice}`;
+    // 올해 운세 (AI 조언은 timelyFortune.advice에 이미 포함됨)
+    const fortune = `${timelyFortune.overall}\n\n💡 올해 행동 가이드:\n${timelyFortune.advice}`;
 
     return {
       personality: `${personality}\n\n${yinYangBalance}`,
