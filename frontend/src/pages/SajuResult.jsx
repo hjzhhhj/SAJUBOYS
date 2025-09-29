@@ -770,6 +770,43 @@ function SajuResult() {
                           {line}
                         </span>
                       ))}
+                    <div
+                      style={{
+                        textAlign: "center",
+                        margin: "2rem 0",
+                        padding: "1.5rem",
+                        background: "rgba(255, 255, 255, 0.03)",
+                        borderRadius: "12px",
+                      }}
+                    >
+                      <img
+                        src="/src/assets/saju.png"
+                        alt="오행 상생상극 다이어그램"
+                        style={{
+                          maxWidth: "100%",
+                          height: "auto",
+                          maxHeight: "300px",
+                          margin: "0 auto",
+                          display: "block",
+                        }}
+                      />
+                      <p
+                        style={{
+                          marginTop: "1rem",
+                          color: "rgba(255, 255, 255, 0.7)",
+                          fontSize: "0.9rem",
+                          lineHeight: "1.6",
+                        }}
+                      >
+                        <strong style={{ color: "rgba(255, 255, 255, 0.9)" }}>
+                          오행 상생상극의 원리
+                        </strong>
+                        <br />
+                        상생(실선): 목→화→토→금→수→목 순환으로 서로 도움
+                        <br />
+                        상극(점선): 목↔토, 화↔금, 수↔화 관계로 서로 견제
+                      </p>
+                    </div>
                   </Description>
                 )}
               </ResultCard>

@@ -221,13 +221,6 @@ export class SajuInterpreter {
         '장점: 건강한 체질, 다양한 분야 능력 발휘, 원만한 인간관계.\n\n';
     }
 
-    // 오행 순환 관계 설명 추가
-    interpretation += '\n오행 상생상극의 원리\n';
-    interpretation += '상생: 목→화→토→금→수→목 순환으로 서로 도움.\n';
-    interpretation += '상극: 목↔토, 화↔금, 수↔화 관계로 서로 견제.\n';
-    interpretation +=
-      '균형: 어느 하나가 과하거나 부족하면 전체 불균형 발생.\n\n';
-
     return interpretation;
   }
 
