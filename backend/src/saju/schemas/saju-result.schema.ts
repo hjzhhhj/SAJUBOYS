@@ -30,18 +30,6 @@ class FourPillars {
 @Schema({ _id: false })
 class AdvancedAnalysis {
   @Prop({ type: Object })
-  zodiac: any;
-
-  @Prop()
-  daeunAnalysis: string;
-
-  @Prop()
-  specialPattern: string;
-
-  @Prop()
-  tenGodsAnalysis: string;
-
-  @Prop({ type: Object })
   timelyFortune: any;
 }
 

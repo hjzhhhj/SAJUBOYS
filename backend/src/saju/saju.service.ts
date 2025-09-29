@@ -21,14 +21,6 @@ interface FourPillars {
   time: Pillar | null;
 }
 
-interface AdvancedInterpretation {
-  zodiacSign: any;
-  daeunAnalysis: string;
-  tenGodsAnalysis: string;
-  specialPattern: string;
-  dominantElement: string;
-}
-
 interface TimelyFortune {
   overall: string;
   advice: string;
@@ -240,11 +232,10 @@ export class SajuService {
     fourPillars: FourPillars,
     elements: { [key: string]: number },
     yinYang: { yin: number; yang: number },
-    birthYear: number,
+    _birthYear: number,
     currentYear: number,
   ) {
     const dayHeavenly = fourPillars.day.heaven;
-    const birthDateTime = new Date(`${birthYear}-01-01`);
 
     // 기본 성격 해석
     const personalityInfo =
@@ -260,16 +251,6 @@ export class SajuService {
 
     // 음양 균형 해석
     const yinYangBalance = this.interpretYinYangBalance(yinYang);
-
-    // 고급 해석 추가
-    const advancedInterpretation: AdvancedInterpretation =
-      SajuAdvancedInterpreter.generateAdvancedInterpretation(
-        fourPillars,
-        elements,
-        yinYang,
-        birthDateTime,
-        gender,
-      ) as AdvancedInterpretation;
 
     // 시기별 운세
     const timelyFortune: TimelyFortune =
@@ -299,8 +280,8 @@ export class SajuService {
     // 건강운
     const health = SajuInterpreter.interpretHealth(elements);
 
-    // 올해 운세 (AI 조언은 timelyFortune.advice에 이미 포함됨)
-    const fortune = `${timelyFortune.overall}\n\n💡 올해 행동 가이드:\n${timelyFortune.advice}`;
+    // 올해 운세
+    const fortune = timelyFortune.overall;
 
     return {
       personality: `${personality}\n\n${yinYangBalance}`,
@@ -312,9 +293,6 @@ export class SajuService {
       elementBalance,
       yinYangBalance,
       advancedAnalysis: {
-        daeunAnalysis: advancedInterpretation.daeunAnalysis,
-        specialPattern: advancedInterpretation.specialPattern,
-        tenGodsAnalysis: advancedInterpretation.tenGodsAnalysis,
         timelyFortune: timelyFortune,
       },
     };
