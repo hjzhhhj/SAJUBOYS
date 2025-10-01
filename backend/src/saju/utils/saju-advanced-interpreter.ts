@@ -64,7 +64,10 @@ export class SajuAdvancedInterpreter {
   static getYearlyOverallFortune(dayMaster: string, yearStem: string): string {
     const dayElement = this.getElementFromStem(dayMaster);
     const yearElement = this.getElementFromStem(yearStem);
-    const relationship = this.getFiveElementsRelationship(dayElement, yearElement);
+    const relationship = this.getFiveElementsRelationship(
+      dayElement,
+      yearElement,
+    );
 
     if (relationship === 'supportive') {
       return '올해는 유리한 기운이 흐르는 해입니다. 하던 일이 순조롭게 풀리고 새로운 기회가 찾아올 수 있습니다.';
@@ -240,7 +243,9 @@ export class SajuAdvancedInterpreter {
 
         // 2. 텍스트 내에서 JSON 객체 찾기
         if (!jsonText.startsWith('{')) {
-          const jsonMatch = jsonText.match(/\{[\s\S]*"keywords"[\s\S]*"shouldDo"[\s\S]*"shouldAvoid"[\s\S]*\}/);
+          const jsonMatch = jsonText.match(
+            /\{[\s\S]*"keywords"[\s\S]*"shouldDo"[\s\S]*"shouldAvoid"[\s\S]*\}/,
+          );
           if (jsonMatch) {
             jsonText = jsonMatch[0];
           }
@@ -326,5 +331,4 @@ export class SajuAdvancedInterpreter {
       return 'neutral';
     }
   }
-
 }
