@@ -280,6 +280,10 @@ export class SajuService {
     // 건강운
     const health = SajuInterpreter.interpretHealth(elements);
 
+    // 대인관계 운
+    const socialRelationship =
+      SajuInterpreter.interpretSocialRelationship(dayHeavenly);
+
     // 올해 운세
     const fortune = `${timelyFortune.overall}`;
 
@@ -290,6 +294,7 @@ export class SajuService {
       wealth: `${wealth}\n\n${timelyFortune.wealth}`,
       health: `${health.trim()}\n\n${timelyFortune.health}`,
       fortune,
+      socialRelationship,
       elementBalance,
       yinYangBalance,
       advancedAnalysis: {

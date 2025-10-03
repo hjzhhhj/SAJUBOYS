@@ -872,6 +872,13 @@ function SajuResult() {
               </ResultCard>
             )}
 
+            {resultData.interpretation?.socialRelationship && (
+              <ResultCard $variant="immutable">
+                <SectionTitle>🤝 대인관계 & 인간관계 운</SectionTitle>
+                <Description>{resultData.interpretation.socialRelationship}</Description>
+              </ResultCard>
+            )}
+
             {resultData.saeun && (
               <ResultCard $variant="mutable">
                 <SectionTitle>🔮 2025년 세운</SectionTitle>

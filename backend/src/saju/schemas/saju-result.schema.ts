@@ -59,6 +59,9 @@ class Interpretation {
   @Prop()
   yinYangBalance: string;
 
+  @Prop()
+  socialRelationship: string;
+
   @Prop({ type: AdvancedAnalysis })
   advancedAnalysis: AdvancedAnalysis;
 }
