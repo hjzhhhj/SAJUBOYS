@@ -102,7 +102,7 @@ const ContentWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   width: 100%;
-  max-width: 1000px;
+  max-width: 1400px;
   padding: 0 1rem;
   z-index: 1;
   margin-top: 3rem;
@@ -112,35 +112,123 @@ const ContentWrapper = styled.div`
   }
 `;
 
+const SectionWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+`;
+
+const Column = styled.div`
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  @media (min-width: 1024px) {
+    max-width: ${(props) => (props.$sticky ? "45%" : "55%")};
+  }
+`;
+
+const StickyColumn = styled(Column)`
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 2rem;
+    align-self: flex-start;
+  }
+`;
+
+const SectionHeader = styled.div`
+  width: 100%;
+  padding: 1.5rem 2rem;
+  background: ${(props) =>
+    props.$variant === "immutable"
+      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(102, 126, 234, 0.08))"
+      : "linear-gradient(135deg, rgba(156, 102, 234, 0.15), rgba(156, 102, 234, 0.08))"};
+  border: 1px solid
+    ${(props) =>
+      props.$variant === "immutable"
+        ? "rgba(102, 126, 234, 0.3)"
+        : "rgba(156, 102, 234, 0.3)"};
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #cec2ff, #dab6ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 0;
+    letter-spacing: 0.5px;
+  }
+
+  p {
+    margin: 0.5rem 0 0 0;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.6);
+  }
+`;
+
+const Divider = styled.div`
+  width: 1px;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.15) 20%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.15) 80%,
+    rgba(255, 255, 255, 0.05) 100%
+  );
+  align-self: stretch;
+  margin: 0 1.5rem;
+  display: none;
+
+  @media (min-width: 1024px) {
+    display: block;
+  }
+`;
+
 const Title = styled.h1`
   background: linear-gradient(135deg, #cec2ff, #dab6ff, #f9cbfe);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 4rem;
-  font-weight: 900;
-  margin-bottom: 1.5rem;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 2.5rem;
   font-family: "Cinzel", cursive;
-  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+  letter-spacing: 2px;
   position: relative;
 
-  &::after {
-    content: "SAJUBOYS";
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    top: 0;
-    z-index: -1;
-    background: none;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
+  @media (min-width: 768px) {
+    font-size: 3.5rem;
   }
 `;
 
 const ResultCard = styled.div`
-  background: rgba(255, 255, 255, 0.08);
+  background: ${(props) =>
+    props.$variant === "immutable"
+      ? "rgba(102, 126, 234, 0.08)"
+      : props.$variant === "mutable"
+      ? "rgba(156, 102, 234, 0.08)"
+      : "rgba(255, 255, 255, 0.08)"};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid
+    ${(props) =>
+      props.$variant === "immutable"
+        ? "rgba(102, 126, 234, 0.3)"
+        : props.$variant === "mutable"
+        ? "rgba(156, 102, 234, 0.3)"
+        : "rgba(255, 255, 255, 0.2)"};
   border-radius: 16px;
   padding: 2rem;
   width: 100%;
@@ -150,7 +238,7 @@ const ResultCard = styled.div`
 const SectionTitle = styled.h2`
   color: rgba(255, 255, 255, 0.9);
   font-size: 1.5rem;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 1.5rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -338,9 +426,20 @@ const DaeunItem = styled.div`
 `;
 
 const AdvancedCard = styled.div`
-  background: rgba(255, 255, 255, 0.08);
+  background: ${(props) =>
+    props.$variant === "immutable"
+      ? "rgba(102, 126, 234, 0.08)"
+      : props.$variant === "mutable"
+      ? "rgba(156, 102, 234, 0.08)"
+      : "rgba(255, 255, 255, 0.08)"};
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid
+    ${(props) =>
+      props.$variant === "immutable"
+        ? "rgba(102, 126, 234, 0.3)"
+        : props.$variant === "mutable"
+        ? "rgba(156, 102, 234, 0.3)"
+        : "rgba(255, 255, 255, 0.2)"};
   border-radius: 16px;
   padding: 2rem;
   color: rgba(255, 255, 255, 0.9);
@@ -385,47 +484,56 @@ const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin-top: 3rem;
+  margin-top: 2rem;
   justify-content: center;
   width: 100%;
+  padding: 0 1rem;
 
   @media (min-width: 768px) {
     flex-direction: row;
     width: auto;
+    padding: 0;
   }
 `;
 
 const Button = styled.button`
-  background: ${(props) =>
-    props.$primary
-      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4))"
-      : "linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2))"};
+  background: linear-gradient(
+    135deg,
+    rgba(102, 126, 234, 0.12),
+    rgba(118, 75, 162, 0.12)
+  );
   backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(102, 126, 234, 0.3);
-  border-radius: 100px;
-  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(102, 126, 234, 0.25);
+  border-radius: 50px;
+  font-size: 1.1rem;
   font-weight: 500;
   cursor: pointer;
-  padding: 0 2rem;
-  height: 3.75rem;
-  min-width: 200px;
-  transition: all 0.3s ease;
-  letter-spacing: 0.5px;
+  padding: 1.1rem 3rem;
+  min-width: 180px;
+  transition: all 0.25s ease;
+  letter-spacing: 0.3px;
   width: 100%;
 
   &:hover {
-    background: ${(props) =>
-      props.$primary
-        ? "linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5))"
-        : "linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3))"};
+    background: linear-gradient(
+      135deg,
+      rgba(102, 126, 234, 0.2),
+      rgba(118, 75, 162, 0.2)
+    );
+    border-color: rgba(102, 126, 234, 0.4);
+    color: rgba(255, 255, 255, 0.95);
     transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.4;
     cursor: not-allowed;
+    transform: none;
   }
 
   @media (min-width: 768px) {
@@ -544,306 +652,340 @@ function SajuResult() {
       <GradientCircle1 />
       <GradientCircle2 />
       <ContentWrapper>
-        <Title>Result</Title>
-        <ResultCard>
-          <SectionTitle>기본 정보</SectionTitle>
-          <InfoGrid>
-            <InfoItem>
-              <span>이름:</span> {resultData.name}
-            </InfoItem>
-            <InfoItem>
-              <span>성별:</span> {resultData.gender}
-            </InfoItem>
-            <InfoItem>
-              <span>생년월일:</span> {resultData.birthDate} (
-              {resultData.calendarType})
-            </InfoItem>
-            {resultData.birthTime && (
-              <InfoItem>
-                <span>태어난 시간:</span> {resultData.birthTime}
-              </InfoItem>
-            )}
-            <InfoItem>
-              <span>출생지:</span> {resultData.city}
-            </InfoItem>
-            {resultData.interpretation?.advancedAnalysis?.zodiac && (
-              <InfoItem>
-                <span>띠:</span>{" "}
-                {resultData.interpretation.advancedAnalysis.zodiac.animal}띠
-              </InfoItem>
-            )}
-          </InfoGrid>
-        </ResultCard>
+        <Title>RESULT</Title>
 
-        <ResultCard>
-          <SectionTitle>사주 팔자</SectionTitle>
-          <PillarGrid>
-            <Pillar>
-              <PillarTitle>년주</PillarTitle>
-              <PillarContent>
-                {resultData.fourPillars.year.heaven}
-                {resultData.fourPillars.year.earth}
-              </PillarContent>
-              <PillarSub>년간 년지</PillarSub>
-            </Pillar>
-            <Pillar>
-              <PillarTitle>월주</PillarTitle>
-              <PillarContent>
-                {resultData.fourPillars.month.heaven}
-                {resultData.fourPillars.month.earth}
-              </PillarContent>
-              <PillarSub>월간 월지</PillarSub>
-            </Pillar>
-            <Pillar>
-              <PillarTitle>일주</PillarTitle>
-              <PillarContent>
-                {resultData.fourPillars.day.heaven}
-                {resultData.fourPillars.day.earth}
-              </PillarContent>
-              <PillarSub>일간 일지</PillarSub>
-            </Pillar>
-            {!resultData.isTimeUnknown && resultData.fourPillars.time && (
-              <Pillar>
-                <PillarTitle>시주</PillarTitle>
-                <PillarContent>
-                  {resultData.fourPillars.time.heaven}
-                  {resultData.fourPillars.time.earth}
-                </PillarContent>
-                <PillarSub>시간 시지</PillarSub>
-              </Pillar>
+        <SectionWrapper>
+          {/* 왼쪽: 불변 정보 */}
+          <StickyColumn $sticky>
+            <SectionHeader $variant="immutable">
+              <h2>💫 타고난 사주의 설계도</h2>
+              <p>평생 변하지 않는 타고난 명식</p>
+            </SectionHeader>
+
+            {/* 기본 정보 - 안 바뀌는 부분 */}
+            <ResultCard $variant="immutable">
+              <SectionTitle>📖 기본 정보</SectionTitle>
+              <InfoGrid>
+                <InfoItem>
+                  <span>이름:</span> {resultData.name}
+                </InfoItem>
+                <InfoItem>
+                  <span>성별:</span> {resultData.gender}
+                </InfoItem>
+                <InfoItem>
+                  <span>생년월일:</span> {resultData.birthDate} (
+                  {resultData.calendarType})
+                </InfoItem>
+                {resultData.birthTime && (
+                  <InfoItem>
+                    <span>태어난 시간:</span> {resultData.birthTime}
+                  </InfoItem>
+                )}
+                <InfoItem>
+                  <span>출생지:</span> {resultData.city}
+                </InfoItem>
+                {resultData.interpretation?.advancedAnalysis?.zodiac && (
+                  <InfoItem>
+                    <span>띠:</span>{" "}
+                    {resultData.interpretation.advancedAnalysis.zodiac.animal}띠
+                  </InfoItem>
+                )}
+              </InfoGrid>
+            </ResultCard>
+
+            <ResultCard $variant="immutable">
+              <SectionTitle>🎴 사주 팔자</SectionTitle>
+              <PillarGrid>
+                <Pillar>
+                  <PillarTitle>년주</PillarTitle>
+                  <PillarContent>
+                    {resultData.fourPillars.year.heaven}
+                    {resultData.fourPillars.year.earth}
+                  </PillarContent>
+                  <PillarSub>년간 년지</PillarSub>
+                </Pillar>
+                <Pillar>
+                  <PillarTitle>월주</PillarTitle>
+                  <PillarContent>
+                    {resultData.fourPillars.month.heaven}
+                    {resultData.fourPillars.month.earth}
+                  </PillarContent>
+                  <PillarSub>월간 월지</PillarSub>
+                </Pillar>
+                <Pillar>
+                  <PillarTitle>일주</PillarTitle>
+                  <PillarContent>
+                    {resultData.fourPillars.day.heaven}
+                    {resultData.fourPillars.day.earth}
+                  </PillarContent>
+                  <PillarSub>일간 일지</PillarSub>
+                </Pillar>
+                {!resultData.isTimeUnknown && resultData.fourPillars.time && (
+                  <Pillar>
+                    <PillarTitle>시주</PillarTitle>
+                    <PillarContent>
+                      {resultData.fourPillars.time.heaven}
+                      {resultData.fourPillars.time.earth}
+                    </PillarContent>
+                    <PillarSub>시간 시지</PillarSub>
+                  </Pillar>
+                )}
+              </PillarGrid>
+            </ResultCard>
+
+            {/* 불변 분석 */}
+            {(resultData.elements ||
+              resultData.yinYang ||
+              resultData.fourPillars) && (
+              <ResultCard $variant="immutable">
+                <SectionTitle>📊 사주 분석 차트</SectionTitle>
+                <SajuCharts
+                  elements={resultData.elements}
+                  yinYang={resultData.yinYang}
+                  fourPillars={resultData.fourPillars}
+                />
+              </ResultCard>
             )}
-          </PillarGrid>
-        </ResultCard>
 
-        {(resultData.elements ||
-          resultData.yinYang ||
-          resultData.fourPillars) && (
-          <ResultCard>
-            <SectionTitle>사주 분석 차트</SectionTitle>
-            <SajuCharts
-              elements={resultData.elements}
-              yinYang={resultData.yinYang}
-              fourPillars={resultData.fourPillars}
-            />
-          </ResultCard>
-        )}
+            {resultData.elements && (
+              <ResultCard $variant="immutable">
+                <SectionTitle>⚖️ 오행 분석</SectionTitle>
+                <FiveElementsGrid>
+                  {Object.entries(resultData.elements).map(
+                    ([element, count]) => (
+                      <ElementItem key={element} element={element}>
+                        <div className="element-name">{element}</div>
+                        <div className="element-count">{count}</div>
+                      </ElementItem>
+                    )
+                  )}
+                </FiveElementsGrid>
+                {resultData.interpretation?.elementBalance && (
+                  <Description>
+                    {resultData.interpretation.elementBalance
+                      .split("\n")
+                      .map((line, index) => (
+                        <span key={index}>
+                          <br />
+                          {line}
+                        </span>
+                      ))}
+                  </Description>
+                )}
+              </ResultCard>
+            )}
 
-        {resultData.elements && (
-          <ResultCard>
-            <SectionTitle>오행 분석</SectionTitle>
-            <FiveElementsGrid>
-              {Object.entries(resultData.elements).map(([element, count]) => (
-                <ElementItem key={element} element={element}>
-                  <div className="element-name">{element}</div>
-                  <div className="element-count">{count}</div>
-                </ElementItem>
-              ))}
-            </FiveElementsGrid>
-            {resultData.interpretation?.elementBalance && (
-              <Description>
-                {resultData.interpretation.elementBalance
-                  .split("\n")
-                  .map((line, index) => (
-                    <span key={index}>
-                      <br />
-                      {line}
-                    </span>
+            {/* 대운 섹션 - 불변 */}
+            {resultData.daeun && resultData.daeun.length > 0 && (
+              <ResultCard $variant="immutable">
+                <SectionTitle>🌊 대운</SectionTitle>
+                <DaeunGrid>
+                  {resultData.daeun.slice(0, 8).map((item, index) => (
+                    <DaeunItem key={index}>
+                      <div className="age">{item.age}세부터</div>
+                      <div className="pillar">
+                        {item.pillar.heaven}
+                        {item.pillar.earth}
+                      </div>
+                    </DaeunItem>
                   ))}
-              </Description>
+                </DaeunGrid>
+              </ResultCard>
             )}
-          </ResultCard>
-        )}
+          </StickyColumn>
 
-        {resultData.saeun && (
-          <ResultCard>
-            <SectionTitle>2025년 세운</SectionTitle>
-            <Description>
-              올해의 세운: {resultData.saeun.heaven}
-              {resultData.saeun.earth}
-            </Description>
-          </ResultCard>
-        )}
+          <Divider />
 
-        <ResultCard>
-          <SectionTitle>총운</SectionTitle>
-          <Description>{resultData.interpretation.fortune}</Description>
-        </ResultCard>
+          {/* 오른쪽: 변동 정보 */}
+          <Column>
+            <SectionHeader $variant="mutable">
+              <h2>시운의 흐름 💫</h2>
+              <p>시간과 상황에 따라 변화하는 해석</p>
+            </SectionHeader>
 
-        <ResultCard>
-          <SectionTitle>성격 분석</SectionTitle>
-          <Description>{resultData.interpretation.personality}</Description>
-        </ResultCard>
-
-        <ResultCard>
-          <SectionTitle>직업 운</SectionTitle>
-          <Description>{resultData.interpretation.career}</Description>
-        </ResultCard>
-
-        <ResultCard>
-          <SectionTitle>연애 운</SectionTitle>
-          <Description>{resultData.interpretation.relationship}</Description>
-        </ResultCard>
-
-        {resultData.interpretation.wealth && (
-          <ResultCard>
-            <SectionTitle>재물운</SectionTitle>
-            <Description>{resultData.interpretation.wealth}</Description>
-          </ResultCard>
-        )}
-
-        {resultData.interpretation.health && (
-          <ResultCard>
-            <SectionTitle>건강운</SectionTitle>
-            <Description>{resultData.interpretation.health}</Description>
-          </ResultCard>
-        )}
-
-        {/* 띠 카드 섹션 */}
-        {resultData.interpretation?.advancedAnalysis?.zodiac && (
-          <ZodiacCard>
-            <ZodiacAnimal>
-              {getZodiacEmoji(
-                resultData.interpretation.advancedAnalysis.zodiac.animal
-              )}
-            </ZodiacAnimal>
-            <h3
-              style={{
-                fontSize: "1.5rem",
-                marginBottom: "1rem",
-                fontWeight: "700",
-                color: "white",
-              }}
-            >
-              {resultData.interpretation.advancedAnalysis.zodiac.animal}띠의
-              특성
-            </h3>
-            <p
-              style={{
-                lineHeight: "1.8",
-                fontSize: "1rem",
-                marginBottom: "1.5rem",
-                color: "white",
-              }}
-            >
-              {resultData.interpretation.advancedAnalysis.zodiac.personality}
-            </p>
-            <div
-              style={{
-                borderTop: "1px solid rgba(255, 255, 255, 0.2)",
-                paddingTop: "1.5rem",
-                marginTop: "1.5rem",
-              }}
-            >
-              <h4
-                style={{
-                  fontSize: "1.1rem",
-                  marginBottom: "1rem",
-                  fontWeight: "600",
-                  color: "white",
-                }}
-              >
-                {resultData.interpretation.advancedAnalysis.zodiac.animal}띠
-                상세 분석
-              </h4>
-              <div
-                style={{
-                  textAlign: "left",
-                  fontSize: "1rem",
-                  lineHeight: "1.8",
-                  color: "white",
-                }}
-              >
-                <div style={{ marginBottom: "1rem" }}>
-                  <strong>성격적 특징:</strong>{" "}
-                  {
-                    getZodiacDetails(
-                      resultData.interpretation.advancedAnalysis.zodiac.animal
-                    ).personality
-                  }
-                </div>
-                <div style={{ marginBottom: "1rem" }}>
-                  <strong>장점:</strong>{" "}
-                  {
-                    getZodiacDetails(
-                      resultData.interpretation.advancedAnalysis.zodiac.animal
-                    ).strengths
-                  }
-                </div>
-                <div style={{ marginBottom: "1rem" }}>
-                  <strong>주의할 점:</strong>{" "}
-                  {
-                    getZodiacDetails(
-                      resultData.interpretation.advancedAnalysis.zodiac.animal
-                    ).weaknesses
-                  }
-                </div>
-                <div>
-                  <strong>행운의 방향:</strong>{" "}
-                  {
-                    getZodiacDetails(
-                      resultData.interpretation.advancedAnalysis.zodiac.animal
-                    ).lucky
-                  }
-                </div>
-              </div>
-            </div>
-          </ZodiacCard>
-        )}
-
-        {/* 대운 섹션 */}
-        {resultData.daeun && resultData.daeun.length > 0 && (
-          <ResultCard>
-            <SectionTitle>대운</SectionTitle>
-            <DaeunGrid>
-              {resultData.daeun.slice(0, 8).map((item, index) => (
-                <DaeunItem key={index}>
-                  <div className="age">{item.age}세부터</div>
-                  <div className="pillar">
-                    {item.pillar.heaven}
-                    {item.pillar.earth}
-                  </div>
-                </DaeunItem>
-              ))}
-            </DaeunGrid>
-          </ResultCard>
-        )}
-
-        {/* 고급 해석 섹션 */}
-        {resultData.interpretation?.advancedAnalysis && (
-          <>
-            {/* 심화 해석 섹션 */}
-            {resultData.interpretation.advancedAnalysis.specialPattern && (
-              <AdvancedCard>
-                <AdvancedTitle>특별한 격국</AdvancedTitle>
-                <AdvancedContent>
-                  {resultData.interpretation.advancedAnalysis.specialPattern}
-                </AdvancedContent>
-              </AdvancedCard>
-            )}
-
-            {resultData.interpretation.advancedAnalysis.daeunAnalysis && (
-              <AdvancedCard>
-                <AdvancedTitle>현재 대운 분석</AdvancedTitle>
-                <AdvancedContent>
-                  {resultData.interpretation.advancedAnalysis.daeunAnalysis}
-                </AdvancedContent>
-              </AdvancedCard>
-            )}
-
-            {/* 조언 섹션 */}
-            {resultData.interpretation.advancedAnalysis.timelyFortune
-              ?.advice && (
-              <ResultCard>
-                <SectionTitle>올해 행동 가이드</SectionTitle>
+            {/* 해석 결과 - 바뀌는 부분 */}
+            {resultData.saeun && (
+              <ResultCard $variant="mutable">
+                <SectionTitle>🔮 2025년 세운</SectionTitle>
                 <Description>
-                  {
-                    resultData.interpretation.advancedAnalysis.timelyFortune
-                      .advice
-                  }
+                  올해의 세운: {resultData.saeun.heaven}
+                  {resultData.saeun.earth}
                 </Description>
               </ResultCard>
             )}
-          </>
+
+            <ResultCard $variant="mutable">
+              <SectionTitle>🌟 총운</SectionTitle>
+              <Description>{resultData.interpretation.fortune}</Description>
+            </ResultCard>
+
+            <ResultCard $variant="mutable">
+              <SectionTitle>✨ 성격 분석</SectionTitle>
+              <Description>{resultData.interpretation.personality}</Description>
+            </ResultCard>
+
+            <ResultCard $variant="mutable">
+              <SectionTitle>💼 직업 운</SectionTitle>
+              <Description>{resultData.interpretation.career}</Description>
+            </ResultCard>
+
+            <ResultCard $variant="mutable">
+              <SectionTitle>💕 연애 운</SectionTitle>
+              <Description>
+                {resultData.interpretation.relationship}
+              </Description>
+            </ResultCard>
+
+            {resultData.interpretation.wealth && (
+              <ResultCard $variant="mutable">
+                <SectionTitle>💰 재물운</SectionTitle>
+                <Description>{resultData.interpretation.wealth}</Description>
+              </ResultCard>
+            )}
+
+            {resultData.interpretation.health && (
+              <ResultCard $variant="mutable">
+                <SectionTitle>🍃 건강운</SectionTitle>
+                <Description>{resultData.interpretation.health}</Description>
+              </ResultCard>
+            )}
+
+            {/* 띠 카드 섹션 */}
+            {resultData.interpretation?.advancedAnalysis?.zodiac && (
+              <ZodiacCard>
+                <ZodiacAnimal>
+                  {getZodiacEmoji(
+                    resultData.interpretation.advancedAnalysis.zodiac.animal
+                  )}
+                </ZodiacAnimal>
+                <h3
+                  style={{
+                    fontSize: "1.5rem",
+                    marginBottom: "1rem",
+                    fontWeight: "700",
+                    color: "white",
+                  }}
+                >
+                  {resultData.interpretation.advancedAnalysis.zodiac.animal}띠의
+                  특성
+                </h3>
+                <p
+                  style={{
+                    lineHeight: "1.8",
+                    fontSize: "1rem",
+                    marginBottom: "1.5rem",
+                    color: "white",
+                  }}
+                >
+                  {
+                    resultData.interpretation.advancedAnalysis.zodiac
+                      .personality
+                  }
+                </p>
+                <div
+                  style={{
+                    borderTop: "1px solid rgba(255, 255, 255, 0.2)",
+                    paddingTop: "1.5rem",
+                    marginTop: "1.5rem",
+                  }}
+                >
+                  <h4
+                    style={{
+                      fontSize: "1.1rem",
+                      marginBottom: "1rem",
+                      fontWeight: "600",
+                      color: "white",
+                    }}
+                  >
+                    {resultData.interpretation.advancedAnalysis.zodiac.animal}띠
+                    상세 분석
+                  </h4>
+                  <div
+                    style={{
+                      textAlign: "left",
+                      fontSize: "1rem",
+                      lineHeight: "1.8",
+                      color: "white",
+                    }}
+                  >
+                    <div style={{ marginBottom: "1rem" }}>
+                      <strong>성격적 특징:</strong>{" "}
+                      {
+                        getZodiacDetails(
+                          resultData.interpretation.advancedAnalysis.zodiac
+                            .animal
+                        ).personality
+                      }
+                    </div>
+                    <div style={{ marginBottom: "1rem" }}>
+                      <strong>장점:</strong>{" "}
+                      {
+                        getZodiacDetails(
+                          resultData.interpretation.advancedAnalysis.zodiac
+                            .animal
+                        ).strengths
+                      }
+                    </div>
+                    <div style={{ marginBottom: "1rem" }}>
+                      <strong>주의할 점:</strong>{" "}
+                      {
+                        getZodiacDetails(
+                          resultData.interpretation.advancedAnalysis.zodiac
+                            .animal
+                        ).weaknesses
+                      }
+                    </div>
+                    <div>
+                      <strong>행운의 방향:</strong>{" "}
+                      {
+                        getZodiacDetails(
+                          resultData.interpretation.advancedAnalysis.zodiac
+                            .animal
+                        ).lucky
+                      }
+                    </div>
+                  </div>
+                </div>
+              </ZodiacCard>
+            )}
+
+            {/* 고급 해석 섹션 - 변동 */}
+            {resultData.interpretation?.advancedAnalysis && (
+              <>
+                {/* 심화 해석 섹션 */}
+                {resultData.interpretation.advancedAnalysis.specialPattern && (
+                  <AdvancedCard $variant="mutable">
+                    <AdvancedTitle>🔯 특별한 격국</AdvancedTitle>
+                    <AdvancedContent>
+                      {
+                        resultData.interpretation.advancedAnalysis
+                          .specialPattern
+                      }
+                    </AdvancedContent>
+                  </AdvancedCard>
+                )}
+
+                {resultData.interpretation.advancedAnalysis.daeunAnalysis && (
+                  <AdvancedCard $variant="mutable">
+                    <AdvancedTitle>🌊 현재 대운 분석</AdvancedTitle>
+                    <AdvancedContent>
+                      {resultData.interpretation.advancedAnalysis.daeunAnalysis}
+                    </AdvancedContent>
+                  </AdvancedCard>
+                )}
+              </>
+            )}
+          </Column>
+        </SectionWrapper>
+
+        {/* 조언 섹션 - 공통 */}
+        {resultData.interpretation?.advancedAnalysis?.timelyFortune?.advice && (
+          <ResultCard style={{ marginTop: "2rem" }}>
+            <SectionTitle>💡 올해 행동 가이드</SectionTitle>
+            <Description>
+              {resultData.interpretation.advancedAnalysis.timelyFortune.advice}
+            </Description>
+          </ResultCard>
         )}
 
         <ButtonGroup>
