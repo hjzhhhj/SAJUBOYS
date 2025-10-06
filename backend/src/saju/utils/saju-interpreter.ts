@@ -92,122 +92,149 @@ export class SajuInterpreter {
     const balance = Object.entries(elements).map(([element, count]) => ({
       element,
       percentage: (count / total) * 100,
+      count,
     }));
 
     let interpretation = '오행 분석:\n';
 
-    // 가장 많은 오행
-    const dominant = balance.reduce((max, curr) =>
-      curr.percentage > max.percentage ? curr : max,
-    );
+    // 과다한 오행들 (40% 이상)
+    const dominantElements = balance.filter((item) => item.percentage > 40);
 
-    // 가장 적은 오행
-    const lacking = balance.reduce((min, curr) =>
-      curr.percentage < min.percentage ? curr : min,
-    );
+    // 부족한 오행들 (0개 또는 10% 미만)
+    const lackingElements = balance.filter((item) => item.percentage < 10);
 
-    if (dominant.percentage > 40) {
-      interpretation += `${dominant.element}(${
-        dominant.element === '목'
-          ? '木'
-          : dominant.element === '화'
-            ? '火'
-            : dominant.element === '토'
-              ? '土'
-              : dominant.element === '금'
-                ? '金'
-                : '水'
-      })의 기운이 강하여 `;
+    // 과다한 오행들 처리
+    if (dominantElements.length > 0) {
+      dominantElements.forEach((dominant) => {
+        const elementKorean =
+          dominant.element === '목'
+            ? '木'
+            : dominant.element === '화'
+              ? '火'
+              : dominant.element === '토'
+                ? '土'
+                : dominant.element === '금'
+                  ? '金'
+                  : '水';
 
-      switch (dominant.element) {
-        case '목':
-          interpretation +=
-            '🌳 목(木) 기운이 강한 체질\n\n' +
-            '성격: 따뜻하고 성장 지향적이며, 발전과 배움을 추구함.\n' +
-            '능력 분야: 교육, 문화예술, 창작 활동 등에 적합.\n' +
-            '건강: 간담, 신경계 주의. 스트레스 조절과 숙면 필요.\n' +
-            '주의: 목이 지나치면 질투·우유부단·신경질적 성향이 생길 수 있음. 화(火)로 균형 보완.\n';
-          break;
-        case '화':
-          interpretation +=
-            '🔥 화(火) 기운이 강한 체질\n\n' +
-            '성격: 밝고 활발하며 열정적임. 표현력이 뛰어나고 사교적.\n' +
-            '능력 분야: 방송, 연예, 광고, 미용 등에 적합.\n' +
-            '건강: 심장, 혈관, 소장 주의. 충분한 휴식과 스트레스 관리 필요.\n' +
-            '주의: 화가 지나치면 성급함, 변덕이 생길 수 있음. 토(土)로 균형 보완.\n';
-          break;
-        case '토':
-          interpretation +=
-            '🏔️ 토(土) 기운이 강한 체질\n\n' +
-            '성격: 성실하고 포용력이 있음. 중재와 조정 능력이 뛰어남.\n' +
-            '능력 분야: 부동산, 건설, 금융, 중개업 등에 적합.\n' +
-            '건강: 소화기계통(위, 비장, 췌장) 주의. 규칙적 식사와 운동 필요.\n' +
-            '주의: 토가 지나치면 고집과 변화 거부감이 생김. 금(金)으로 균형 보완.\n';
-          break;
-        case '금':
-          interpretation +=
-            '⚔️ 금(金) 기운이 강한 체질\n\n' +
-            '성격: 의리와 명예를 중시하며 결단력이 있음. 체계적이고 논리적.\n' +
-            '능력 분야: 금융, 법률, 의료, 기계공학 등에 적합.\n' +
-            '건강: 폐, 기관지, 대장, 피부 주의. 공기 좋은 환경에서 운동 필요.\n' +
-            '주의: 금이 지나치면 엄격하고 냉정해짐. 수(水)로 균형 보완.\n';
-          break;
-        case '수':
-          interpretation +=
-            '💧 수(水) 기운이 강한 체질\n\n' +
-            '성격: 지혜롭고 유연하며 적응력이 뛰어남. 직관력과 철학적 사고 발달.\n' +
-            '능력 분야: 학술, 연구, 의료, 무역업 등에 적합.\n' +
-            '건강: 신장, 방광, 생식기 주의. 충분한 수분 섭취와 하체 운동 필요.\n' +
-            '주의: 수가 지나치면 음울하고 의심 많아짐. 목(木)으로 균형 보완.\n';
-          break;
-      }
+        const emoji =
+          dominant.element === '목'
+            ? '🌳'
+            : dominant.element === '화'
+              ? '🔥'
+              : dominant.element === '토'
+                ? '⛰️'
+                : dominant.element === '금'
+                  ? '⚔️'
+                  : '💧';
+
+        interpretation += `${emoji} ${dominant.element}(${elementKorean}) 기운이 강한 체질\n\n`;
+
+        switch (dominant.element) {
+          case '목':
+            interpretation +=
+              '성격: 따뜻하고 성장 지향적이며, 발전과 배움을 추구함.\n' +
+              '능력 분야: 교육, 문화예술, 창작 활동 등에 적합.\n' +
+              '건강: 간담, 신경계 주의. 스트레스 조절과 숙면 필요.\n' +
+              '주의: 목이 지나치면 질투·우유부단·신경질적 성향이 생길 수 있음. 화(火)로 균형 보완.\n';
+            break;
+          case '화':
+            interpretation +=
+              '성격: 밝고 활발하며 열정적임. 표현력이 뛰어나고 사교적.\n' +
+              '능력 분야: 방송, 연예, 광고, 미용 등에 적합.\n' +
+              '건강: 심장, 혈관, 소장 주의. 충분한 휴식과 스트레스 관리 필요.\n' +
+              '주의: 화가 지나치면 성급함, 변덕이 생길 수 있음. 토(土)로 균형 보완.\n';
+            break;
+          case '토':
+            interpretation +=
+              '성격: 성실하고 포용력이 있음. 중재와 조정 능력이 뛰어남.\n' +
+              '능력 분야: 부동산, 건설, 금융, 중개업 등에 적합.\n' +
+              '건강: 소화기계통(위, 비장, 췌장) 주의. 규칙적 식사와 운동 필요.\n' +
+              '주의: 토가 지나치면 고집과 변화 거부감이 생김. 금(金)으로 균형 보완.\n';
+            break;
+          case '금':
+            interpretation +=
+              '성격: 의리와 명예를 중시하며 결단력이 있음. 체계적이고 논리적.\n' +
+              '능력 분야: 금융, 법률, 의료, 기계공학 등에 적합.\n' +
+              '건강: 폐, 기관지, 대장, 피부 주의. 공기 좋은 환경에서 운동 필요.\n' +
+              '주의: 금이 지나치면 엄격하고 냉정해짐. 수(Water)로 균형 보완.\n';
+            break;
+          case '수':
+            interpretation +=
+              '성격: 지혜롭고 유연하며 적응력이 뛰어남. 직관력과 철학적 사고 발달.\n' +
+              '능력 분야: 학술, 연구, 의료, 무역업 등에 적합.\n' +
+              '건강: 신장, 방광, 생식기 주의. 충분한 수분 섭취와 하체 운동 필요.\n' +
+              '주의: 수가 지나치면 음울하고 의심 많아짐. 목(木)으로 균형 보완.\n';
+            break;
+        }
+      });
     }
 
-    if (lacking.percentage < 10) {
-      interpretation += `${lacking.element}의 기운이 부족하여 `;
+    // 부족한 오행들 처리
+    if (lackingElements.length > 0) {
+      lackingElements.forEach((lacking) => {
+        const elementKorean =
+          lacking.element === '목'
+            ? '木'
+            : lacking.element === '화'
+              ? '火'
+              : lacking.element === '토'
+                ? '土'
+                : lacking.element === '금'
+                  ? '金'
+                  : '水';
 
-      switch (lacking.element) {
-        case '목':
-          interpretation +=
-            '💧 목(木) 기운이 부족\n\n' +
-            '부족한 면: 성장력·창의력·유연성 부족.\n' +
-            '보완법: 독서·학습, 자연과 가까이하기, 새로운 취미 시도.\n' +
-            '개운법: 녹색 계열, 동쪽 배치, 나무 소재 활용.\n' +
-            '음식: 신맛 음식, 녹색 채소, 견과류.\n';
-          break;
-        case '화':
-          interpretation +=
-            '🔥 화(Fire) 기운이 부족\n\n' +
-            '부족한 면: 활력·열정·적극성·리더십 부족.\n' +
-            '보완법: 운동·취미활동, 사교 모임 적극 참여.\n' +
-            '개운법: 붉은색 계열, 남쪽 배치, 따뜻한 조명.\n' +
-            '음식: 쓴맛 음식, 붉은 색 음식, 따뜻한 성질 음식.\n';
-          break;
-        case '토':
-          interpretation +=
-            '🌍 토(Earth) 기운이 부족\n\n' +
-            '부족한 면: 안정감·끈기·인내력·신용 부족.\n' +
-            '보완법: 규칙적인 생활, 꾸준한 운동, 신뢰 관계 형성.\n' +
-            '개운법: 황색·갈색 계열, 중앙 배치, 도자기·흙 소재.\n' +
-            '음식: 단맛 음식, 곡물류, 뿌리채소류.\n';
-          break;
-        case '금':
-          interpretation +=
-            '⚔️ 금(Metal) 기운이 부족\n\n' +
-            '부족한 면: 결단력·추진력·의리·원칙의식 부족.\n' +
-            '보완법: 명상·기도, 규칙적인 생활, 체계적 관리.\n' +
-            '개운법: 흰색·은색 계열, 서쪽 배치, 금속 소재.\n' +
-            '음식: 매운맛 음식, 흰 색 음식, 견과류.\n';
-          break;
-        case '수':
-          interpretation +=
-            '🌊 수(Water) 기운이 부족\n\n' +
-            '부족한 면: 지혜·통찰력·융통성·적응력 부족.\n' +
-            '보완법: 독서·명상, 충분한 수분섭취, 휴식.\n' +
-            '개운법: 검은색·파란색 계열, 북쪽 배치, 물 관련 인테리어.\n' +
-            '음식: 짠맛 음식, 검은 색 음식, 생선류.\n';
-          break;
-      }
+        const emoji =
+          lacking.element === '목'
+            ? '🌳'
+            : lacking.element === '화'
+              ? '🔥'
+              : lacking.element === '토'
+                ? '⛰️'
+                : lacking.element === '금'
+                  ? '⚔️'
+                  : '💧';
+
+        interpretation += `\n${emoji} ${lacking.element}(${elementKorean}) 기운이 약한 체질\n\n`;
+
+        switch (lacking.element) {
+          case '목':
+            interpretation +=
+              '부족한 면: 성장력·창의력·유연성 부족.\n' +
+              '보완법: 독서·학습, 자연과 가까이하기, 새로운 취미 시도.\n' +
+              '개운법: 녹색 계열, 동쪽 배치, 나무 소재 활용.\n' +
+              '음식: 신맛 음식, 녹색 채소, 견과류.\n';
+            break;
+          case '화':
+            interpretation +=
+              '부족한 면: 활력·열정·적극성·리더십 부족.\n' +
+              '보완법: 운동·취미활동, 사교 모임 적극 참여.\n' +
+              '개운법: 붉은색 계열, 남쪽 배치, 따뜻한 조명.\n' +
+              '음식: 쓴맛 음식, 붉은 색 음식, 따뜻한 성질 음식.\n';
+            break;
+          case '토':
+            interpretation +=
+              '부족한 면: 안정감·끈기·인내력·신용 부족.\n' +
+              '보완법: 규칙적인 생활, 꾸준한 운동, 신뢰 관계 형성.\n' +
+              '개운법: 황색·갈색 계열, 중앙 배치, 도자기·흙 소재.\n' +
+              '음식: 단맛 음식, 곡물류, 뿌리채소류.\n';
+            break;
+          case '금':
+            interpretation +=
+              '부족한 면: 결단력·추진력·의리·원칙의식 부족.\n' +
+              '보완법: 명상·기도, 규칙적인 생활, 체계적 관리.\n' +
+              '개운법: 흰색·은색 계열, 서쪽 배치, 금속 소재.\n' +
+              '음식: 매운맛 음식, 흰 색 음식, 견과류.\n';
+            break;
+          case '수':
+            interpretation +=
+              '부족한 면: 지혜·통찰력·융통성·적응력 부족.\n' +
+              '보완법: 독서·명상, 충분한 수분섭취, 휴식.\n' +
+              '개운법: 검은색·파란색 계열, 북쪽 배치, 물 관련 인테리어.\n' +
+              '음식: 짠맛 음식, 검은 색 음식, 생선류.\n';
+            break;
+        }
+      });
     }
 
     // 오행이 균형 잡힌 경우
@@ -215,18 +242,11 @@ export class SajuInterpreter {
       (item) => item.percentage >= 15 && item.percentage <= 25,
     );
     if (isBalanced) {
-      interpretation += '\n🌟 오행의 균형이 이상적인 사주\n\n';
+      interpretation += '\n오행의 균형이 이상적인 사주\n\n';
       interpretation += '특징: 조화로운 성격, 뛰어난 적응력, 종합적 사고력.\n';
       interpretation +=
         '장점: 건강한 체질, 다양한 분야 능력 발휘, 원만한 인간관계.\n\n';
     }
-
-    // 오행 순환 관계 설명 추가
-    interpretation += '\n오행 상생상극의 원리\n';
-    interpretation += '상생: 목→화→토→금→수→목 순환으로 서로 도움.\n';
-    interpretation += '상극: 목↔토, 화↔금, 수↔화 관계로 서로 견제.\n';
-    interpretation +=
-      '균형: 어느 하나가 과하거나 부족하면 전체 불균형 발생.\n\n';
 
     return interpretation;
   }
@@ -576,7 +596,7 @@ export class SajuInterpreter {
             break;
           case '수':
             interpretation +=
-              '◆ 수(水) 부족: 신장 기능 저하 주의\n- 보충법: 충분한 수분 섭취, 검은콩, 검은깨 섭취';
+              '◆ 수(Water) 부족: 신장 기능 저하 주의\n- 보충법: 충분한 수분 섭취, 검은콩, 검은깨 섭취';
             break;
         }
       }

@@ -281,7 +281,7 @@ export class SajuService {
     const health = SajuInterpreter.interpretHealth(elements);
 
     // 올해 운세
-    const fortune = timelyFortune.overall;
+    const fortune = `${timelyFortune.overall}`;
 
     return {
       personality: `${personality}\n\n${yinYangBalance}`,
