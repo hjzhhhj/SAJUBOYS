@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
-import styled from "styled-components";
-import axios from "axios";
-import debounce from "lodash/debounce";
+import { useState, useMemo, useRef, useEffect } from 'react';
+import styled from 'styled-components';
+import axios from 'axios';
+import debounce from 'lodash/debounce';
 
 const Container = styled.div`
   position: relative;
@@ -104,52 +104,49 @@ const LoadingSpinner = styled.div`
 const AddressSearch = ({
   value,
   onChange,
-  placeholder = "주소를 입력하세요",
+  placeholder = '주소를 입력하세요',
 }) => {
-  const [query, setQuery] = useState(value || "");
+  const [query, setQuery] = useState(value || '');
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const containerRef = useRef(null);
 
-  // 검색 함수
-  const debouncedSearch = useCallback(
-    debounce(async (searchQuery) => {
-      if (!searchQuery || searchQuery.length < 2) {
-        setResults([]);
-        return;
-      }
+  const debouncedSearch = useMemo(
+    () =>
+      debounce(async (searchQuery) => {
+        if (!searchQuery || searchQuery.length < 2) {
+          setResults([]);
+          return;
+        }
 
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          "http://localhost:3001/api/saju/search-address",
-          {
-            params: { query: searchQuery },
-            timeout: 3000, // 3초 타임아웃 설정
-          }
-        );
-        setResults(response.data.data || []);
-        setShowResults(true);
-      } catch {
-        // API 실패 시 빈 결과 표시
-        setResults([]);
-        setShowResults(true);
-      } finally {
-        setIsLoading(false);
-      }
-    }, 300),
+        setIsLoading(true);
+        try {
+          const response = await axios.get(
+            'http://localhost:3001/api/saju/search-address',
+            {
+              params: { query: searchQuery },
+              timeout: 3000,
+            }
+          );
+          setResults(response.data.data || []);
+          setShowResults(true);
+        } catch {
+          setResults([]);
+          setShowResults(true);
+        } finally {
+          setIsLoading(false);
+        }
+      }, 300),
     []
   );
 
-  // 입력값 변경 처리
   const handleInputChange = (e) => {
     const newValue = e.target.value;
     setQuery(newValue);
     debouncedSearch(newValue);
   };
 
-  // 주소 선택 처리
   const handleSelectAddress = (address) => {
     const displayText = address.placeName || address.address;
     setQuery(displayText);
@@ -157,26 +154,19 @@ const AddressSearch = ({
     setShowResults(false);
   };
 
-  // 외부 클릭 감지
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        containerRef.current &&
-        !containerRef.current.contains(event.target)
-      ) {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
         setShowResults(false);
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // value prop 변경 시 query 업데이트
   useEffect(() => {
-    setQuery(value || "");
+    setQuery(value || '');
   }, [value]);
 
   return (

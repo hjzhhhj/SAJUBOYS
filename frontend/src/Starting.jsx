@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
+import { useNavigate } from 'react-router-dom';
+import styled, { keyframes } from 'styled-components';
 
 const float1 = keyframes`
   0%, 100% {
@@ -106,7 +106,7 @@ const Title = styled.h1`
   position: relative;
 
   &::after {
-    content: "SAJUBOYS";
+    content: 'SAJUBOYS';
     position: absolute;
     left: 0;
     top: 0;
@@ -150,10 +150,6 @@ const Button = styled.button`
 function Starting() {
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/login");
-  };
-
   return (
     <Container>
       <GradientCircle1 />
@@ -161,7 +157,7 @@ function Starting() {
       <ContentWrapper>
         <SubTitle>오늘 당신의 사주를 확인해보세요</SubTitle>
         <Title>SAJUBOYS</Title>
-        <Button onClick={handleClick}>사주팔자 보러가기</Button>
+        <Button onClick={() => navigate('/login')}>사주팔자 보러가기</Button>
       </ContentWrapper>
     </Container>
   );

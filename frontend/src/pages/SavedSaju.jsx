@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import styled, { keyframes } from "styled-components";
-import { sajuAPI } from "../services/api";
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled, { keyframes } from 'styled-components';
+import { sajuAPI } from '../services/api';
 
 const float1 = keyframes`
   0%, 100% {
@@ -120,13 +120,13 @@ const Title = styled.h1`
   font-size: 4rem;
   font-weight: 900;
   margin-bottom: 1.5rem;
-  font-family: "Cinzel", cursive;
+  font-family: 'Cinzel', cursive;
   text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
   text-align: center;
   position: relative;
 
   &::after {
-    content: "SAVED SAJU";
+    content: 'SAVED SAJU';
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
@@ -316,7 +316,7 @@ const SavedSaju = () => {
         setSavedResults(response.data);
       }
     } catch {
-      alert("저장된 결과를 불러오는데 실패했습니다");
+      alert('저장된 결과를 불러오는데 실패했습니다');
     } finally {
       setLoading(false);
     }
@@ -328,33 +328,33 @@ const SavedSaju = () => {
 
       if (response.success) {
         // 결과 페이지로 이동하면서 데이터 전달
-        navigate("/saju-result", {
+        navigate('/saju-result', {
           state: {
             resultData: response.data,
             isFromSaved: true,
           },
         });
       } else {
-        alert("사주 결과를 불러오는데 실패했습니다");
+        alert('사주 결과를 불러오는데 실패했습니다');
       }
     } catch {
-      alert("사주 결과를 불러오는데 실패했습니다");
+      alert('사주 결과를 불러오는데 실패했습니다');
     }
   };
 
   const handleDelete = async (e, sajuId) => {
     e.stopPropagation(); // 카드 클릭 이벤트 방지
 
-    if (!window.confirm("정말로 삭제하시겠습니까?")) {
+    if (!window.confirm('정말로 삭제하시겠습니까?')) {
       return;
     }
 
     try {
       const response = await fetch(`http://localhost:3001/api/saju/${sajuId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         headers: {
           Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("user"))?.accessToken
+            JSON.parse(localStorage.getItem('user'))?.accessToken
           }`,
         },
       });
@@ -363,24 +363,24 @@ const SavedSaju = () => {
         // 삭제 성공 시 목록 새로고침
         loadSavedResults();
       } else {
-        alert("삭제에 실패했습니다");
+        alert('삭제에 실패했습니다');
       }
     } catch {
-      alert("삭제에 실패했습니다");
+      alert('삭제에 실패했습니다');
     }
   };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString("ko-KR", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
+    return date.toLocaleDateString('ko-KR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   };
 
   const formatTime = (timeString) => {
-    if (!timeString || timeString === "00:00") return "시간 모름";
+    if (!timeString || timeString === '00:00') return '시간 모름';
     return timeString;
   };
 
@@ -397,7 +397,7 @@ const SavedSaju = () => {
       <GradientCircle1 />
       <GradientCircle2 />
       <ContentWrapper>
-        <BackButton onClick={() => navigate("/saju-input")}>
+        <BackButton onClick={() => navigate('/saju-input')}>
           새로운 사주 계산
         </BackButton>
         <Header>
@@ -410,7 +410,7 @@ const SavedSaju = () => {
             <EmptyDescription>
               새로운 사주를 계산하고 저장해보세요
             </EmptyDescription>
-            <CalculateButton onClick={() => navigate("/saju-input")}>
+            <CalculateButton onClick={() => navigate('/saju-input')}>
               사주 계산하기
             </CalculateButton>
           </EmptyMessage>
