@@ -60,7 +60,7 @@ export class SajuAdvancedInterpreter {
     return branches[year % 12];
   }
 
-  // 연간 전체 운세
+  // 연간 전체 운세 (십성 기반)
   static getYearlyOverallFortune(dayMaster: string, yearStem: string): string {
     const dayElement = this.getElementFromStem(dayMaster);
     const yearElement = this.getElementFromStem(yearStem);
@@ -69,28 +69,172 @@ export class SajuAdvancedInterpreter {
       yearElement,
     );
 
-    if (relationship === 'supportive') {
-      return '올해는 유리한 기운이 흐르는 해입니다. 하던 일이 순조롭게 풀리고 새로운 기회가 찾아올 수 있습니다.';
-    } else if (relationship === 'conflicting') {
-      return '올해는 도전적인 해입니다. 어려움이 있을 수 있지만 이를 극복하면 큰 성장의 기회가 됩니다.';
-    } else {
-      return '올해는 전반적으로 평온한 해입니다. 안정적으로 계획을 실행하기 좋은 시기입니다.';
+    // 십성(十星) 계산 - 일간과 세운 천간의 관계
+    const sipseong = this.getSipseong(dayMaster, yearStem);
+
+    let fortune = '';
+
+    // 십성에 따른 해석
+    switch (sipseong) {
+      case '비겁':
+        fortune =
+          '올해는 형제, 친구, 동료와의 인연이 강한 해입니다. 협력과 경쟁이 동시에 일어날 수 있으며, 독립심과 자립심이 강해집니다. 재물 관리에 주의가 필요하며, 과도한 지출을 자제하세요.';
+        break;
+      case '식상':
+        fortune =
+          '올해는 표현력과 창의력이 빛나는 해입니다. 새로운 아이디어가 샘솟고 자유로운 활동이 많아집니다. 학업, 창작, 사업 확장에 유리하나, 말조심과 감정 조절이 필요합니다.';
+        break;
+      case '재성':
+        fortune =
+          '올해는 재물운이 좋은 해입니다. 수입 증가의 기회가 있으며, 투자나 사업에서 성과를 거둘 수 있습니다. 다만 과욕을 부리지 말고, 아버지나 배우자 건강에도 신경 쓰세요.';
+        break;
+      case '관성':
+        fortune =
+          '올해는 명예와 지위가 상승하는 해입니다. 승진, 합격, 인정받을 기회가 많습니다. 책임감이 커지고 리더십을 발휘할 수 있으나, 스트레스와 압박감도 증가하니 건강 관리가 중요합니다.';
+        break;
+      case '인성':
+        fortune =
+          '올해는 학습과 성장에 좋은 해입니다. 스승이나 어른의 도움을 받을 수 있고, 지혜와 지식을 쌓기에 적합합니다. 안정적이고 평온한 시기이나, 지나친 의존은 피하세요.';
+        break;
+      default:
+        fortune =
+          '올해는 전반적으로 균형잡힌 해입니다. 무리하지 않고 꾸준히 노력하면 좋은 결과를 얻을 수 있습니다.';
     }
+
+    // 오행 관계 추가 해석
+    if (relationship === 'conflicting') {
+      fortune +=
+        ' 다만 올해는 도전적인 요소가 있어 신중한 판단과 인내심이 필요합니다.';
+    } else if (relationship === 'supportive') {
+      fortune += ' 흐름이 순조로워 계획한 일들이 잘 풀릴 것입니다.';
+    }
+
+    return fortune;
   }
 
-  // 연애운
-  static getLoveFortune(_dayMaster: string, yearBranch: string): string {
+  // 십성(十星) 계산
+  static getSipseong(dayMaster: string, targetStem: string): string {
+    const dayElement = this.getElementFromStem(dayMaster);
+    const targetElement = this.getElementFromStem(targetStem);
+    const dayYinYang = ['갑', '병', '무', '경', '임'].includes(dayMaster)
+      ? 'yang'
+      : 'yin';
+    const targetYinYang = ['갑', '병', '무', '경', '임'].includes(targetStem)
+      ? 'yang'
+      : 'yin';
+
+    // 같은 오행
+    if (dayElement === targetElement) {
+      return '비겁'; // 비견, 겁재
+    }
+
+    // 일간이 생하는 오행
+    const supportive = {
+      목: '화',
+      화: '토',
+      토: '금',
+      금: '수',
+      수: '목',
+    };
+    if (supportive[dayElement] === targetElement) {
+      return '식상'; // 식신, 상관
+    }
+
+    // 일간이 극하는 오행
+    const controlling = {
+      목: '토',
+      화: '금',
+      토: '수',
+      금: '목',
+      수: '화',
+    };
+    if (controlling[dayElement] === targetElement) {
+      return '재성'; // 편재, 정재
+    }
+
+    // 일간을 극하는 오행
+    const controlled = {
+      목: '금',
+      화: '수',
+      토: '목',
+      금: '화',
+      수: '토',
+    };
+    if (controlled[dayElement] === targetElement) {
+      return '관성'; // 편관, 정관
+    }
+
+    // 일간을 생하는 오행
+    const supported = {
+      목: '수',
+      화: '목',
+      토: '화',
+      금: '토',
+      수: '금',
+    };
+    if (supported[dayElement] === targetElement) {
+      return '인성'; // 편인, 정인
+    }
+
+    return '비겁';
+  }
+
+  // 연애운 (도화살, 합 등 고려)
+  static getLoveFortune(dayMaster: string, yearBranch: string): string {
     const loveStars = ['자', '오', '묘', '유']; // 도화살
+    const dayBranch = this.getDayBranchFromStem(dayMaster); // 일간에서 추정
+
+    let fortune = '💕 연애운: ';
+
+    // 도화살 확인
     if (loveStars.includes(yearBranch)) {
-      return '💕 연애운: 매력이 높아지는 시기입니다. 새로운 만남의 기회가 많고, 이성에게 좋은 인상을 줄 수 있습니다.';
+      fortune +=
+        '매력이 높아지는 시기입니다. 새로운 만남의 기회가 많고, 이성에게 좋은 인상을 줄 수 있습니다. 사교 활동이 활발해지며 인기가 상승합니다. ';
     }
-    return '💕 연애운: 안정적인 관계 유지에 좋은 시기입니다. 진지한 대화와 이해를 통해 관계가 깊어집니다.';
+
+    // 지지 육합 확인
+    const yukHap = {
+      자: '축',
+      축: '자',
+      인: '해',
+      해: '인',
+      묘: '술',
+      술: '묘',
+      진: '유',
+      유: '진',
+      사: '신',
+      신: '사',
+      오: '미',
+      미: '오',
+    };
+
+    if (dayBranch && yukHap[dayBranch] === yearBranch) {
+      fortune +=
+        '육합의 기운으로 인연이 깊어지는 해입니다. 좋은 만남이 있거나 기존 관계가 발전할 수 있습니다. ';
+    }
+
+    // 기본 메시지
+    if (fortune === '💕 연애운: ') {
+      fortune +=
+        '안정적인 관계 유지에 좋은 시기입니다. 진지한 대화와 이해를 통해 관계가 깊어집니다. 성급하게 서두르기보다는 꾸준히 마음을 나누세요.';
+    }
+
+    return fortune.trim();
   }
 
-  // 재물운
+  // 일간에서 일지 추정 (간략 버전)
+  static getDayBranchFromStem(_dayMaster: string): string | null {
+    // 실제로는 사주 전체에서 일지를 가져와야 하지만, 여기서는 null 반환
+    return null;
+  }
+
+  // 재물운 (십성 기반)
   static getWealthFortune(dayMaster: string, yearStem: string): string {
     const dayElement = this.getElementFromStem(dayMaster);
     const yearElement = this.getElementFromStem(yearStem);
+    const sipseong = this.getSipseong(dayMaster, yearStem);
+
+    let fortune = '💰 재물운: ';
 
     // 재성(剋하는 오행)인지 확인
     const controlling = {
@@ -101,10 +245,24 @@ export class SajuAdvancedInterpreter {
       수: '화',
     };
 
-    if (controlling[dayElement] === yearElement) {
-      return '💰 재물운: 재물을 얻을 기회가 많은 해입니다. 투자나 사업 확장을 고려해볼 만합니다.';
+    if (controlling[dayElement] === yearElement || sipseong === '재성') {
+      fortune +=
+        '재물을 얻을 기회가 많은 해입니다. 투자나 사업에서 성과를 거둘 수 있으며, 부동산이나 금융 상품에 관심을 가져보세요. 다만 과욕은 금물이며, 신중한 판단이 필요합니다.';
+    } else if (sipseong === '비겁') {
+      fortune +=
+        '재물 관리에 주의가 필요한 해입니다. 불필요한 지출을 줄이고, 타인에게 돈을 빌려주는 것을 자제하세요. 형제나 동업자와의 금전 문제에 신중해야 합니다.';
+    } else if (sipseong === '식상') {
+      fortune +=
+        '노력한 만큼 수입이 생기는 해입니다. 창의적인 아이디어나 재능을 활용하면 재물을 얻을 수 있습니다. 부업이나 새로운 수입원을 개척하기에 좋습니다.';
+    } else if (sipseong === '관성') {
+      fortune +=
+        '직장에서의 승진이나 안정적인 급여가 기대되는 해입니다. 정직하고 성실한 태도로 일하면 정당한 보상을 받을 수 있습니다.';
+    } else {
+      fortune +=
+        '안정적인 재정 관리가 필요한 해입니다. 꾸준한 저축과 계획적인 소비를 권장합니다. 큰 투자보다는 안전한 자산 관리에 집중하세요.';
     }
-    return '💰 재물운: 안정적인 재정 관리가 필요한 해입니다. 꾸준한 저축과 계획적인 소비를 권장합니다.';
+
+    return fortune;
   }
 
   // 건강운

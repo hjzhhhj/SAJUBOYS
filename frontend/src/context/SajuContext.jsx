@@ -29,11 +29,7 @@ export const SajuProvider = ({ children }) => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
 
-      // 최소 로딩 시간 보장
-      const [response] = await Promise.all([
-        sajuAPI.calculate(inputData),
-        new Promise((resolve) => setTimeout(resolve, 3000)),
-      ]);
+      const response = await sajuAPI.calculate(inputData);
 
       if (response.success) {
         dispatch({ type: "SET_RESULT_DATA", payload: response.data });
