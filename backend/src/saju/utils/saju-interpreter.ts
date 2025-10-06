@@ -1,6 +1,21 @@
+import { ELEMENT_EMOJI, ELEMENT_HANJA, FIVE_ELEMENTS } from './constants';
+
+interface PersonalityInfo {
+  basic: string;
+  strength: string;
+  weakness: string;
+  element: string;
+  yinyang: string;
+}
+
+interface ElementBalance {
+  element: string;
+  percentage: number;
+  count: number;
+}
+
 export class SajuInterpreter {
-  // 실제 사주명리학 기반 일간별 성격 특성
-  static PERSONALITY_BY_DAY_STEM = {
+  static readonly PERSONALITY_BY_DAY_STEM: Record<string, PersonalityInfo> = {
     갑: {
       basic:
         '갑목(甲木)은 큰 나무를 상징합니다. 정직하고 곧으며, 인의예지신을 중시합니다. 대의명분을 중요시하고 리더십이 강합니다. 양목(陽木)으로서 적극적이고 진취적인 기상을 가지고 있습니다.',
@@ -22,7 +37,7 @@ export class SajuInterpreter {
         '병화(丙火)는 태양을 상징합니다. 밝고 활발하며 열정적입니다. 양화(陽火)로서 모든 것을 밝히고 드러내는 성향이 있으며, 베푸는 것을 좋아합니다. 낙천적이고 대범합니다.',
       strength: '열정, 관대함, 낙천성, 활력, 명랑함',
       weakness: '성급함, 과시욕, 낭비벽, 인내심 부족',
-      element: '화(火)',
+      element: '화(Fire)',
       yinyang: '양(陽)',
     },
     정: {
@@ -83,180 +98,93 @@ export class SajuInterpreter {
     },
   };
 
-  //  실제 사주명리학 기반 오행 균형에 따른 해석
-  static interpretFiveElements(elements: { [key: string]: number }): string {
+  static interpretFiveElements(elements: Record<string, number>): string {
     const total = Object.values(elements).reduce(
       (sum, count) => sum + count,
       0,
     );
-    const balance = Object.entries(elements).map(([element, count]) => ({
-      element,
-      percentage: (count / total) * 100,
-      count,
-    }));
+    const balance = this.calculateElementBalance(elements, total);
 
     let interpretation = '오행 분석:\n';
 
-    // 과다한 오행들 (40% 이상)
     const dominantElements = balance.filter((item) => item.percentage > 40);
-
-    // 부족한 오행들 (0개 또는 10% 미만)
     const lackingElements = balance.filter((item) => item.percentage < 10);
 
-    // 과다한 오행들 처리
     if (dominantElements.length > 0) {
-      dominantElements.forEach((dominant) => {
-        const elementKorean =
-          dominant.element === '목'
-            ? '木'
-            : dominant.element === '화'
-              ? '火'
-              : dominant.element === '토'
-                ? '土'
-                : dominant.element === '금'
-                  ? '金'
-                  : '水';
-
-        const emoji =
-          dominant.element === '목'
-            ? '🌳'
-            : dominant.element === '화'
-              ? '🔥'
-              : dominant.element === '토'
-                ? '⛰️'
-                : dominant.element === '금'
-                  ? '⚔️'
-                  : '💧';
-
-        interpretation += `${emoji} ${dominant.element}(${elementKorean}) 기운이 강한 체질\n\n`;
-
-        switch (dominant.element) {
-          case '목':
-            interpretation +=
-              '성격: 따뜻하고 성장 지향적이며, 발전과 배움을 추구함.\n' +
-              '능력 분야: 교육, 문화예술, 창작 활동 등에 적합.\n' +
-              '건강: 간담, 신경계 주의. 스트레스 조절과 숙면 필요.\n' +
-              '주의: 목이 지나치면 질투·우유부단·신경질적 성향이 생길 수 있음. 화(火)로 균형 보완.\n';
-            break;
-          case '화':
-            interpretation +=
-              '성격: 밝고 활발하며 열정적임. 표현력이 뛰어나고 사교적.\n' +
-              '능력 분야: 방송, 연예, 광고, 미용 등에 적합.\n' +
-              '건강: 심장, 혈관, 소장 주의. 충분한 휴식과 스트레스 관리 필요.\n' +
-              '주의: 화가 지나치면 성급함, 변덕이 생길 수 있음. 토(土)로 균형 보완.\n';
-            break;
-          case '토':
-            interpretation +=
-              '성격: 성실하고 포용력이 있음. 중재와 조정 능력이 뛰어남.\n' +
-              '능력 분야: 부동산, 건설, 금융, 중개업 등에 적합.\n' +
-              '건강: 소화기계통(위, 비장, 췌장) 주의. 규칙적 식사와 운동 필요.\n' +
-              '주의: 토가 지나치면 고집과 변화 거부감이 생김. 금(金)으로 균형 보완.\n';
-            break;
-          case '금':
-            interpretation +=
-              '성격: 의리와 명예를 중시하며 결단력이 있음. 체계적이고 논리적.\n' +
-              '능력 분야: 금융, 법률, 의료, 기계공학 등에 적합.\n' +
-              '건강: 폐, 기관지, 대장, 피부 주의. 공기 좋은 환경에서 운동 필요.\n' +
-              '주의: 금이 지나치면 엄격하고 냉정해짐. 수(Water)로 균형 보완.\n';
-            break;
-          case '수':
-            interpretation +=
-              '성격: 지혜롭고 유연하며 적응력이 뛰어남. 직관력과 철학적 사고 발달.\n' +
-              '능력 분야: 학술, 연구, 의료, 무역업 등에 적합.\n' +
-              '건강: 신장, 방광, 생식기 주의. 충분한 수분 섭취와 하체 운동 필요.\n' +
-              '주의: 수가 지나치면 음울하고 의심 많아짐. 목(木)으로 균형 보완.\n';
-            break;
-        }
+      dominantElements.forEach((item) => {
+        interpretation += this.interpretDominantElement(item);
       });
     }
 
-    // 부족한 오행들 처리
     if (lackingElements.length > 0) {
-      lackingElements.forEach((lacking) => {
-        const elementKorean =
-          lacking.element === '목'
-            ? '木'
-            : lacking.element === '화'
-              ? '火'
-              : lacking.element === '토'
-                ? '土'
-                : lacking.element === '금'
-                  ? '金'
-                  : '水';
-
-        const emoji =
-          lacking.element === '목'
-            ? '🌳'
-            : lacking.element === '화'
-              ? '🔥'
-              : lacking.element === '토'
-                ? '⛰️'
-                : lacking.element === '금'
-                  ? '⚔️'
-                  : '💧';
-
-        interpretation += `\n${emoji} ${lacking.element}(${elementKorean}) 기운이 약한 체질\n\n`;
-
-        switch (lacking.element) {
-          case '목':
-            interpretation +=
-              '부족한 면: 성장력·창의력·유연성 부족.\n' +
-              '보완법: 독서·학습, 자연과 가까이하기, 새로운 취미 시도.\n' +
-              '개운법: 녹색 계열, 동쪽 배치, 나무 소재 활용.\n' +
-              '음식: 신맛 음식, 녹색 채소, 견과류.\n';
-            break;
-          case '화':
-            interpretation +=
-              '부족한 면: 활력·열정·적극성·리더십 부족.\n' +
-              '보완법: 운동·취미활동, 사교 모임 적극 참여.\n' +
-              '개운법: 붉은색 계열, 남쪽 배치, 따뜻한 조명.\n' +
-              '음식: 쓴맛 음식, 붉은 색 음식, 따뜻한 성질 음식.\n';
-            break;
-          case '토':
-            interpretation +=
-              '부족한 면: 안정감·끈기·인내력·신용 부족.\n' +
-              '보완법: 규칙적인 생활, 꾸준한 운동, 신뢰 관계 형성.\n' +
-              '개운법: 황색·갈색 계열, 중앙 배치, 도자기·흙 소재.\n' +
-              '음식: 단맛 음식, 곡물류, 뿌리채소류.\n';
-            break;
-          case '금':
-            interpretation +=
-              '부족한 면: 결단력·추진력·의리·원칙의식 부족.\n' +
-              '보완법: 명상·기도, 규칙적인 생활, 체계적 관리.\n' +
-              '개운법: 흰색·은색 계열, 서쪽 배치, 금속 소재.\n' +
-              '음식: 매운맛 음식, 흰 색 음식, 견과류.\n';
-            break;
-          case '수':
-            interpretation +=
-              '부족한 면: 지혜·통찰력·융통성·적응력 부족.\n' +
-              '보완법: 독서·명상, 충분한 수분섭취, 휴식.\n' +
-              '개운법: 검은색·파란색 계열, 북쪽 배치, 물 관련 인테리어.\n' +
-              '음식: 짠맛 음식, 검은 색 음식, 생선류.\n';
-            break;
-        }
+      lackingElements.forEach((item) => {
+        interpretation += this.interpretLackingElement(item);
       });
     }
 
-    // 오행이 균형 잡힌 경우
     const isBalanced = balance.every(
       (item) => item.percentage >= 15 && item.percentage <= 25,
     );
     if (isBalanced) {
-      interpretation += '\n오행의 균형이 이상적인 사주\n\n';
-      interpretation += '특징: 조화로운 성격, 뛰어난 적응력, 종합적 사고력.\n';
       interpretation +=
-        '장점: 건강한 체질, 다양한 분야 능력 발휘, 원만한 인간관계.\n\n';
+        '\n오행의 균형이 이상적인 사주\n\n특징: 조화로운 성격, 뛰어난 적응력, 종합적 사고력.\n장점: 건강한 체질, 다양한 분야 능력 발휘, 원만한 인간관계.\n\n';
     }
 
     return interpretation;
   }
 
-  // 실제 사주명리학 기반 직업 적성 해석
+  private static calculateElementBalance(
+    elements: Record<string, number>,
+    total: number,
+  ): ElementBalance[] {
+    return Object.entries(elements).map(([element, count]) => ({
+      element,
+      percentage: (count / total) * 100,
+      count,
+    }));
+  }
+
+  private static interpretDominantElement(item: ElementBalance): string {
+    const emoji = ELEMENT_EMOJI[item.element];
+    const hanja = ELEMENT_HANJA[item.element];
+
+    let result = `${emoji} ${item.element}(${hanja}) 기운이 강한 체질\n\n`;
+
+    const descriptions: Record<string, string> = {
+      목: '성격: 따뜻하고 성장 지향적이며, 발전과 배움을 추구함.\n능력 분야: 교육, 문화예술, 창작 활동 등에 적합.\n건강: 간담, 신경계 주의. 스트레스 조절과 숙면 필요.\n주의: 목이 지나치면 질투·우유부단·신경질적 성향이 생길 수 있음. 화(火)로 균형 보완.\n',
+      화: '성격: 밝고 활발하며 열정적임. 표현력이 뛰어나고 사교적.\n능력 분야: 방송, 연예, 광고, 미용 등에 적합.\n건강: 심장, 혈관, 소장 주의. 충분한 휴식과 스트레스 관리 필요.\n주의: 화가 지나치면 성급함, 변덕이 생길 수 있음. 토(土)로 균형 보완.\n',
+      토: '성격: 성실하고 포용력이 있음. 중재와 조정 능력이 뛰어남.\n능력 분야: 부동산, 건설, 금융, 중개업 등에 적합.\n건강: 소화기계통(위, 비장, 췌장) 주의. 규칙적 식사와 운동 필요.\n주의: 토가 지나치면 고집과 변화 거부감이 생김. 금(金)으로 균형 보완.\n',
+      금: '성격: 의리와 명예를 중시하며 결단력이 있음. 체계적이고 논리적.\n능력 분야: 금융, 법률, 의료, 기계공학 등에 적합.\n건강: 폐, 기관지, 대장, 피부 주의. 공기 좋은 환경에서 운동 필요.\n주의: 금이 지나치면 엄격하고 냉정해짐. 수(Water)로 균형 보완.\n',
+      수: '성격: 지혜롭고 유연하며 적응력이 뛰어남. 직관력과 철학적 사고 발달.\n능력 분야: 학술, 연구, 의료, 무역업 등에 적합.\n건강: 신장, 방광, 생식기 주의. 충분한 수분 섭취와 하체 운동 필요.\n주의: 수가 지나치면 음울하고 의심 많아짐. 목(木)으로 균형 보완.\n',
+    };
+
+    result += descriptions[item.element] || '';
+    return result;
+  }
+
+  private static interpretLackingElement(item: ElementBalance): string {
+    const emoji = ELEMENT_EMOJI[item.element];
+    const hanja = ELEMENT_HANJA[item.element];
+
+    let result = `\n${emoji} ${item.element}(${hanja}) 기운이 약한 체질\n\n`;
+
+    const descriptions: Record<string, string> = {
+      목: '부족한 면: 성장력·창의력·유연성 부족.\n보완법: 독서·학습, 자연과 가까이하기, 새로운 취미 시도.\n개운법: 녹색 계열, 동쪽 배치, 나무 소재 활용.\n음식: 신맛 음식, 녹색 채소, 견과류.\n',
+      화: '부족한 면: 활력·열정·적극성·리더십 부족.\n보완법: 운동·취미활동, 사교 모임 적극 참여.\n개운법: 붉은색 계열, 남쪽 배치, 따뜻한 조명.\n음식: 쓴맛 음식, 붉은 색 음식, 따뜻한 성질 음식.\n',
+      토: '부족한 면: 안정감·끈기·인내력·신용 부족.\n보완법: 규칙적인 생활, 꾸준한 운동, 신뢰 관계 형성.\n개운법: 황색·갈색 계열, 중앙 배치, 도자기·흙 소재.\n음식: 단맛 음식, 곡물류, 뿌리채소류.\n',
+      금: '부족한 면: 결단력·추진력·의리·원칙의식 부족.\n보완법: 명상·기도, 규칙적인 생활, 체계적 관리.\n개운법: 흰색·은색 계열, 서쪽 배치, 금속 소재.\n음식: 매운맛 음식, 흰 색 음식, 견과류.\n',
+      수: '부족한 면: 지혜·통찰력·융통성·적응력 부족.\n보완법: 독서·명상, 충분한 수분섭취, 휴식.\n개운법: 검은색·파란색 계열, 북쪽 배치, 물 관련 인테리어.\n음식: 짠맛 음식, 검은 색 음식, 생선류.\n',
+    };
+
+    result += descriptions[item.element] || '';
+    return result;
+  }
+
   static interpretCareer(
     dayHeavenly: string,
-    elements: { [key: string]: number },
+    elements: Record<string, number>,
   ): string {
-    const careerMap = {
+    const careerMap: Record<string, string[]> = {
       갑: [
         '대기업 임원',
         'CEO',
@@ -360,103 +288,85 @@ export class SajuInterpreter {
     };
 
     const careers = careerMap[dayHeavenly] || [];
-    const dayInfo =
-      this.PERSONALITY_BY_DAY_STEM[
-        dayHeavenly as keyof typeof this.PERSONALITY_BY_DAY_STEM
-      ];
+    const dayInfo = this.PERSONALITY_BY_DAY_STEM[dayHeavenly];
 
-    // 오행별 추가 직업 추천
     const dominantElement = Object.entries(elements).reduce(
       (max, [elem, count]) => (count > elements[max] ? elem : max),
       '목',
     );
 
-    let elementCareer = '';
-    switch (dominantElement) {
-      case '목':
-        elementCareer = '교육, 출판, 의료, 예술 분야';
-        break;
-      case '화':
-        elementCareer = '전자, IT, 미디어, 엔터테인먼트 분야';
-        break;
-      case '토':
-        elementCareer = '부동산, 건설, 농업, 중개업 분야';
-        break;
-      case '금':
-        elementCareer = '금융, 법률, 기계, 의료 분야';
-        break;
-      case '수':
-        elementCareer = '무역, 유통, 서비스, 컨설팅 분야';
-        break;
-    }
+    const elementCareerMap: Record<string, string> = {
+      목: '교육, 출판, 의료, 예술 분야',
+      화: '전자, IT, 미디어, 엔터테인먼트 분야',
+      토: '부동산, 건설, 농업, 중개업 분야',
+      금: '금융, 법률, 기계, 의료 분야',
+      수: '무역, 유통, 서비스, 컨설팅 분야',
+    };
 
     return (
       `◆ 일간 ${dayHeavenly}(${dayInfo.element})의 적성: ${careers.slice(0, 5).join(', ')}\n` +
-      `◆ 오행 ${dominantElement}이 강한 적성: ${elementCareer}\n` +
+      `◆ 오행 ${dominantElement}이 강한 적성: ${elementCareerMap[dominantElement]}\n` +
       `일간의 특성과 오행 균형을 고려할 때, 위 분야에서 탁월한 능력을 발휘할 수 있습니다.`
     );
   }
 
-  // 실제 사주명리학 기반 관계 운 해석
   static interpretRelationship(gender: string, dayHeavenly: string): string {
     const isYang = ['갑', '병', '무', '경', '임'].includes(dayHeavenly);
+
+    const relationshipMap: Record<string, { male: string; female: string }> = {
+      갑: {
+        male: '정직하고 듬직한 남성으로, 한 번 마음을 주면 변하지 않습니다. 책임감이 강해 가정을 잘 이끕니다.',
+        female:
+          '주체적이고 당당한 여성으로, 자신의 의견을 분명히 표현합니다. 능력 있는 파트너를 선호합니다.',
+      },
+      을: {
+        male: '온화하고 섬세한 남성으로, 상대방의 감정을 잘 헤아립니다. 예술적 감성으로 로맨틱합니다.',
+        female:
+          '부드럽고 여성스러운 매력이 있으며, 조화로운 관계를 추구합니다. 배려심이 깊습니다.',
+      },
+      병: {
+        male: '밝고 활기찬 남성으로, 연애를 즐겁게 만듭니다. 관대하고 포용력이 있습니다.',
+        female:
+          '긍정적이고 매력적인 여성으로, 상대방을 밝게 만듭니다. 자유로운 관계를 선호합니다.',
+      },
+      정: {
+        male: '로맨틱하고 감성적인 남성으로, 분위기를 중시합니다. 은은한 매력이 있습니다.',
+        female:
+          '신비롭고 매혹적인 여성으로, 상대방을 끌어당기는 매력이 있습니다. 감정이 깊습니다.',
+      },
+      무: {
+        male: '믿음직스럽고 안정적인 남성으로, 가정적입니다. 변하지 않는 사랑을 추구합니다.',
+        female:
+          '포용력 있고 모성애가 강한 여성으로, 상대방을 편안하게 만듭니다. 안정된 관계를 원합니다.',
+      },
+      기: {
+        male: '성실하고 꼼꼼한 남성으로, 세심한 배려를 합니다. 현실적인 사랑을 추구합니다.',
+        female:
+          '실속 있고 알뜰한 여성으로, 가정을 잘 꾸립니다. 안정적인 파트너를 선호합니다.',
+      },
+      경: {
+        male: '남자다운 매력이 강하고, 결단력이 있습니다. 의리를 중시하며 보호본능이 강합니다.',
+        female:
+          '독립적이고 당찬 여성으로, 자신의 길을 개척합니다. 존경할 수 있는 파트너를 원합니다.',
+      },
+      신: {
+        male: '세련되고 깔끔한 남성으로, 센스가 있습니다. 품위 있는 연애를 추구합니다.',
+        female:
+          '우아하고 품격 있는 여성으로, 고급스러운 취향을 가집니다. 능력 있는 파트너를 선호합니다.',
+      },
+      임: {
+        male: '자유롭고 낭만적인 남성으로, 모험을 즐깁니다. 구속받지 않는 관계를 선호합니다.',
+        female:
+          '지적이고 매력적인 여성으로, 대화가 통하는 파트너를 원합니다. 정신적 교감을 중시합니다.',
+      },
+      계: {
+        male: '감성적이고 이해심 많은 남성으로, 상대방을 잘 보듬습니다. 순수한 사랑을 추구합니다.',
+        female:
+          '순수하고 헌신적인 여성으로, 사랑에 올인합니다. 감정적 교류를 중시합니다.',
+      },
+    };
+
     let interpretation = '';
-
-    // 일간별 상세 연애운
-    const relationshipMap: { [key: string]: { male: string; female: string } } =
-      {
-        갑: {
-          male: '정직하고 듬직한 남성으로, 한 번 마음을 주면 변하지 않습니다. 책임감이 강해 가정을 잘 이끕니다.',
-          female:
-            '주체적이고 당당한 여성으로, 자신의 의견을 분명히 표현합니다. 능력 있는 파트너를 선호합니다.',
-        },
-        을: {
-          male: '온화하고 섬세한 남성으로, 상대방의 감정을 잘 헤아립니다. 예술적 감성으로 로맨틱합니다.',
-          female:
-            '부드럽고 여성스러운 매력이 있으며, 조화로운 관계를 추구합니다. 배려심이 깊습니다.',
-        },
-        병: {
-          male: '밝고 활기찬 남성으로, 연애를 즐겁게 만듭니다. 관대하고 포용력이 있습니다.',
-          female:
-            '긍정적이고 매력적인 여성으로, 상대방을 밝게 만듭니다. 자유로운 관계를 선호합니다.',
-        },
-        정: {
-          male: '로맨틱하고 감성적인 남성으로, 분위기를 중시합니다. 은은한 매력이 있습니다.',
-          female:
-            '신비롭고 매혹적인 여성으로, 상대방을 끌어당기는 매력이 있습니다. 감정이 깊습니다.',
-        },
-        무: {
-          male: '믿음직스럽고 안정적인 남성으로, 가정적입니다. 변하지 않는 사랑을 추구합니다.',
-          female:
-            '포용력 있고 모성애가 강한 여성으로, 상대방을 편안하게 만듭니다. 안정된 관계를 원합니다.',
-        },
-        기: {
-          male: '성실하고 꼼꼼한 남성으로, 세심한 배려를 합니다. 현실적인 사랑을 추구합니다.',
-          female:
-            '실속 있고 알뜰한 여성으로, 가정을 잘 꾸립니다. 안정적인 파트너를 선호합니다.',
-        },
-        경: {
-          male: '남자다운 매력이 강하고, 결단력이 있습니다. 의리를 중시하며 보호본능이 강합니다.',
-          female:
-            '독립적이고 당찬 여성으로, 자신의 길을 개척합니다. 존경할 수 있는 파트너를 원합니다.',
-        },
-        신: {
-          male: '세련되고 깔끔한 남성으로, 센스가 있습니다. 품위 있는 연애를 추구합니다.',
-          female:
-            '우아하고 품격 있는 여성으로, 고급스러운 취향을 가집니다. 능력 있는 파트너를 선호합니다.',
-        },
-        임: {
-          male: '자유롭고 낭만적인 남성으로, 모험을 즐깁니다. 구속받지 않는 관계를 선호합니다.',
-          female:
-            '지적이고 매력적인 여성으로, 대화가 통하는 파트너를 원합니다. 정신적 교감을 중시합니다.',
-        },
-        계: {
-          male: '감성적이고 이해심 많은 남성으로, 상대방을 잘 보듬습니다. 순수한 사랑을 추구합니다.',
-          female:
-            '순수하고 헌신적인 여성으로, 사랑에 올인합니다. 감정적 교류를 중시합니다.',
-        },
-      };
-
     const relationship = relationshipMap[dayHeavenly];
     if (relationship) {
       interpretation +=
@@ -464,7 +374,6 @@ export class SajuInterpreter {
       interpretation += '\n\n';
     }
 
-    // 음양 조화 설명
     if (isYang) {
       interpretation += '◆ 양(陽)의 기운: 적극적이고 주도적인 연애를 합니다. ';
       interpretation +=
@@ -482,9 +391,8 @@ export class SajuInterpreter {
     return interpretation;
   }
 
-  // 재물운 해석 (실제 사주명리학 기반)
   static interpretWealth(dayHeavenly: string, yearEarthly: string): string {
-    const wealthLuck = {
+    const wealthLuck: Record<string, string> = {
       갑: '정재(正財)를 추구하여 정당한 노력으로 부를 축적합니다. 부동산이나 장기 투자에 유리하며, 대기업이나 공직에서 안정적 수입을 얻습니다.',
       을: '편재(偏財)운이 있어 다양한 수입원을 만들 수 있습니다. 예술, 문화 사업이나 유연한 사고로 기회를 포착합니다.',
       병: '식신(食神)이 생재(生財)하여 즐기면서 돈을 법니다. 서비스업, 요식업, 엔터테인먼트 분야에서 재물운이 좋습니다.',
@@ -497,8 +405,7 @@ export class SajuInterpreter {
       계: '인성(印星)이 강하여 명예가 재물로 이어집니다. 학문, 종교, 예술 분야에서 명성과 함께 부를 얻습니다.',
     };
 
-    // 12지지별 추가 재물운
-    const earthlyWealth: { [key: string]: string } = {
+    const earthlyWealth: Record<string, string> = {
       자: '역마살이 있어 움직이면서 돈을 법니다.',
       축: '고지(庫地)로 저축과 절약으로 부를 축적합니다.',
       인: '편재살이 있어 투자와 사업으로 큰 돈을 벌 수 있습니다.',
@@ -519,132 +426,63 @@ export class SajuInterpreter {
     );
   }
 
-  // 실제 사주명리학 기반 건강운 해석
-  static interpretHealth(elements: { [key: string]: number }): string {
+  static interpretHealth(elements: Record<string, number>): string {
     const total = Object.values(elements).reduce(
       (sum, count) => sum + count,
       0,
     );
     let interpretation = '';
 
-    // 오행 불균형에 따른 건강 주의사항
     Object.entries(elements).forEach(([element, count]) => {
       const percentage = (count / total) * 100;
 
       if (percentage > 40) {
-        switch (element) {
-          case '목':
-            interpretation +=
-              '◆ 목(木) 과다: 간장, 담낭 계통 주의\n' +
-              '- 주요 증상: 눈의 피로, 근육 경련, 신경과민, 두통\n' +
-              '- 관리법: 스트레스 관리, 규칙적인 운동, 신맛 음식 적당히 섭취\n' +
-              '- 주의사항: 과로와 분노 조절, 음주 절제';
-            break;
-          case '화':
-            interpretation +=
-              '◆ 화(火) 과다: 심장, 소장 계통 주의\n' +
-              '- 주요 증상: 불면증, 가슴 두근거림, 혈압 상승, 구내염\n' +
-              '- 관리법: 명상과 휴식, 쓴맛 음식 적당히 섭취\n' +
-              '- 주의사항: 과도한 흥분 자제, 규칙적인 수면';
-            break;
-          case '토':
-            interpretation +=
-              '◆ 토(土) 과다: 비장, 위장 계통 주의\n' +
-              '- 주요 증상: 소화불량, 위염, 당뇨 위험, 비만\n' +
-              '- 관리법: 규칙적인 식사, 단맛 음식 절제\n' +
-              '- 주의사항: 과식 금지, 걱정과 스트레스 관리';
-            break;
-          case '금':
-            interpretation +=
-              '◆ 금(金) 과다: 폐, 대장 계통 주의\n' +
-              '- 주요 증상: 호흡기 질환, 피부 트러블, 변비, 알레르기\n' +
-              '- 관리법: 맑은 공기 호흡, 매운맛 음식 절제\n' +
-              '- 주의사항: 금연 필수, 건조한 환경 피하기';
-            break;
-          case '수':
-            interpretation +=
-              '◆ 수(水) 과다: 신장, 방광 계통 주의\n' +
-              '- 주요 증상: 부종, 요통, 이명, 탈모, 골다공증\n' +
-              '- 관리법: 체온 유지, 짠맛 음식 절제\n' +
-              '- 주의사항: 과도한 수분 섭취 주의, 하체 운동 강화';
-            break;
-        }
+        interpretation += this.getHealthWarning(element);
       }
     });
 
-    // 부족한 오행에 대한 보충 건강법 추가
     Object.entries(elements).forEach(([element, count]) => {
       const percentage = (count / total) * 100;
       if (percentage < 15) {
-        interpretation += '\n\n';
-        switch (element) {
-          case '목':
-            interpretation +=
-              '◆ 목(木) 부족: 간 기능 저하 주의\n- 보충법: 녹색 채소, 신맛 과일 섭취, 스트레칭';
-            break;
-          case '화':
-            interpretation +=
-              '◆ 화(火) 부족: 혈액순환 저하 주의\n- 보충법: 유산소 운동, 따뜻한 음식, 충분한 일광욕';
-            break;
-          case '토':
-            interpretation +=
-              '◆ 토(土) 부족: 소화력 저하 주의\n- 보충법: 규칙적 식사, 단호박, 고구마 등 섭취';
-            break;
-          case '금':
-            interpretation +=
-              '◆ 금(金) 부족: 면역력 저하 주의\n- 보충법: 심호흡 운동, 배, 무 등 흰색 음식 섭취';
-            break;
-          case '수':
-            interpretation +=
-              '◆ 수(Water) 부족: 신장 기능 저하 주의\n- 보충법: 충분한 수분 섭취, 검은콩, 검은깨 섭취';
-            break;
-        }
+        interpretation += this.getHealthSupplement(element);
       }
     });
 
     if (interpretation === '') {
-      interpretation +=
+      interpretation =
         '오행이 균형을 이루어 전반적으로 건강한 체질입니다.\n규칙적인 생활습관을 유지하며 예방에 힘쓰세요.';
     }
 
     return interpretation;
   }
 
-  // 올해 운세 (간단쓰)
-  static interpretYearlyFortune(
-    currentYear: number,
-    birthYear: number,
-  ): string {
-    const age = currentYear - birthYear;
-    const cycle = age % 12;
-
-    const fortunes = [
-      '새로운 시작과 도전의 해입니다. 적극적으로 기회를 잡으세요.',
-      '안정과 성장의 해입니다. 꾸준한 노력이 결실을 맺습니다.',
-      '변화와 전환의 해입니다. 유연하게 대처하면 좋은 결과가 있습니다.',
-      '도약과 발전의 해입니다. 큰 성과를 기대할 수 있습니다.',
-      '조정과 정리의 해입니다. 불필요한 것을 정리하고 새로운 준비를 하세요.',
-      '협력과 인연의 해입니다. 좋은 사람들과의 만남이 기대됩니다.',
-      '수확과 결실의 해입니다. 그동안의 노력이 보상받습니다.',
-      '휴식과 충전의 해입니다. 건강관리에 신경쓰세요.',
-      '도전과 모험의 해입니다. 새로운 분야에 도전해보세요.',
-      '안정과 화합의 해입니다. 가족과 주변 사람들과의 관계가 중요합니다.',
-      '성취와 인정의 해입니다. 능력을 인정받고 승진이나 성공이 기대됩니다.',
-      '준비와 계획의 해입니다. 미래를 위한 준비를 철저히 하세요.',
-    ];
-
-    return `${currentYear}년 운세:\n${fortunes[cycle]}`;
+  private static getHealthWarning(element: string): string {
+    const warnings: Record<string, string> = {
+      목: '◆ 목(Wood) 과다: 간장, 담낭 계통 주의\n- 주요 증상: 눈의 피로, 근육 경련, 신경과민, 두통\n- 관리법: 스트레스 관리, 규칙적인 운동, 신맛 음식 적당히 섭취\n- 주의사항: 과로와 분노 조절, 음주 절제',
+      화: '◆ 화(Fire) 과다: 심장, 소장 계통 주의\n- 주요 증상: 불면증, 가슴 두근거림, 혈압 상승, 구내염\n- 관리법: 명상과 휴식, 쓴맛 음식 적당히 섭취\n- 주의사항: 과도한 흥분 자제, 규칙적인 수면',
+      토: '◆ 토(Earth) 과다: 비장, 위장 계통 주의\n- 주요 증상: 소화불량, 위염, 당뇨 위험, 비만\n- 관리법: 규칙적인 식사, 단맛 음식 절제\n- 주의사항: 과식 금지, 걱정과 스트레스 관리',
+      금: '◆ 금(Metal) 과다: 폐, 대장 계통 주의\n- 주요 증상: 호흡기 질환, 피부 트러블, 변비, 알레르기\n- 관리법: 맑은 공기 호흡, 매운맛 음식 절제\n- 주의사항: 금연 필수, 건조한 환경 피하기',
+      수: '◆ 수(Water) 과다: 신장, 방광 계통 주의\n- 주요 증상: 부종, 요통, 이명, 탈모, 골다공증\n- 관리법: 체온 유지, 짠맛 음식 절제\n- 주의사항: 과도한 수분 섭취 주의, 하체 운동 강화',
+    };
+    return warnings[element] || '';
   }
 
-  // 대인관계 운 해석
+  private static getHealthSupplement(element: string): string {
+    const supplements: Record<string, string> = {
+      목: '\n\n◆ 목(Wood) 부족: 간 기능 저하 주의\n- 보충법: 녹색 채소, 신맛 과일 섭취, 스트레칭',
+      화: '\n\n◆ 화(Fire) 부족: 혈액순환 저하 주의\n- 보충법: 유산소 운동, 따뜻한 음식, 충분한 일광욕',
+      토: '\n\n◆ 토(Earth) 부족: 소화력 저하 주의\n- 보충법: 규칙적 식사, 단호박, 고구마 등 섭취',
+      금: '\n\n◆ 금(Metal) 부족: 면역력 저하 주의\n- 보충법: 심호흡 운동, 배, 무 등 흰색 음식 섭취',
+      수: '\n\n◆ 수(Water) 부족: 신장 기능 저하 주의\n- 보충법: 충분한 수분 섭취, 검은콩, 검은깨 섭취',
+    };
+    return supplements[element] || '';
+  }
+
   static interpretSocialRelationship(dayHeavenly: string): string {
     const isYang = ['갑', '병', '무', '경', '임'].includes(dayHeavenly);
-    const dayElement = this.getElementFromStem(dayHeavenly);
+    const dayElement = FIVE_ELEMENTS.getElementFromStem(dayHeavenly);
 
-    let interpretation = '';
-
-    // 일간별 인간관계 스타일
-    const relationshipStyle: { [key: string]: string } = {
+    const relationshipStyle: Record<string, string> = {
       갑: '신뢰와 의리를 중시하며, 자신과 가치관이 맞는 사람과 깊은 유대를 맺습니다. 리더십이 강해 주변 사람들을 이끄는 역할을 자주 맡습니다.',
       을: '온화하고 부드러운 성격으로 누구와도 잘 어울립니다. 섬세한 배려로 주변 사람들에게 편안함을 줍니다.',
       병: '밝고 활발한 에너지로 분위기 메이커 역할을 합니다. 넓은 인맥을 형성하며 사교적입니다.',
@@ -657,19 +495,13 @@ export class SajuInterpreter {
       계: '감성적이고 이해심이 깊어 상대방의 마음을 잘 헤아립니다. 공감 능력이 뛰어납니다.',
     };
 
-    interpretation += `◆ 인간관계 스타일:\n${relationshipStyle[dayHeavenly]}\n\n`;
+    let interpretation = `◆ 인간관계 스타일:\n${relationshipStyle[dayHeavenly]}\n\n`;
 
-    // 음양에 따른 주의점
-    if (isYang) {
-      interpretation +=
-        '◆ 주의할 점:\n양기가 강하므로 자기주장이 센 편입니다. 융통성을 의식적으로 키우고, 상대방의 의견을 경청하는 자세가 필요합니다.\n\n';
-    } else {
-      interpretation +=
-        '◆ 주의할 점:\n음기가 강하므로 수용적이지만 때론 우유부단할 수 있습니다. 자신의 의견을 명확히 표현하는 연습이 필요합니다.\n\n';
-    }
+    interpretation += isYang
+      ? '◆ 주의할 점:\n양기가 강하므로 자기주장이 센 편입니다. 융통성을 의식적으로 키우고, 상대방의 의견을 경청하는 자세가 필요합니다.\n\n'
+      : '◆ 주의할 점:\n음기가 강하므로 수용적이지만 때론 우유부단할 수 있습니다. 자신의 의견을 명확히 표현하는 연습이 필요합니다.\n\n';
 
-    // 오행에 따른 좋은 인연
-    const goodMatch: { [key: string]: string } = {
+    const goodMatch: Record<string, string> = {
       목: '화(火) 기운이 강한 사람 또는 병(丙)·정(丁) 일간과 좋은 관계를 형성합니다.',
       화: '토(土) 기운이 강한 사람 또는 무(戊)·기(己) 일간과 좋은 관계를 형성합니다.',
       토: '금(金) 기운이 강한 사람 또는 경(庚)·신(辛) 일간과 좋은 관계를 형성합니다.',
@@ -677,7 +509,7 @@ export class SajuInterpreter {
       수: '목(木) 기운이 강한 사람 또는 갑(甲)·을(乙) 일간과 좋은 관계를 형성합니다.',
     };
 
-    const avoidMatch: { [key: string]: string } = {
+    const avoidMatch: Record<string, string> = {
       목: '토(土) 기운이 지나치게 강한 사람과는 의견 충돌이 생기기 쉽습니다.',
       화: '수(水) 기운이 지나치게 강한 사람과는 갈등이 생길 수 있습니다.',
       토: '목(木) 기운이 지나치게 강한 사람과는 충돌할 가능성이 있습니다.',
@@ -689,116 +521,5 @@ export class SajuInterpreter {
     interpretation += `◆ 주의 인연:\n${avoidMatch[dayElement]}`;
 
     return interpretation;
-  }
-
-  // 대운 해석 요약표
-  static interpretDaeunSummary(
-    daeun: Array<{ age: number; pillar: { heaven: string; earth: string } }>,
-    dayHeavenly: string,
-  ): string {
-    if (!daeun || daeun.length === 0) {
-      return '대운 정보가 없습니다.';
-    }
-
-    let interpretation = '◆ 인생 주기별 운세 요약\n\n';
-
-    daeun.slice(0, 8).forEach((item) => {
-      const daeunStem = item.pillar.heaven;
-      const daeunBranch = item.pillar.earth;
-      const daeunElement = this.getElementFromStem(daeunStem);
-      const dayElement = this.getElementFromStem(dayHeavenly);
-
-      let keyword = '';
-      let feature = '';
-
-      // 나이대별 기본 키워드
-      if (item.age < 20) {
-        keyword = '학습·성장';
-        feature = '적성 탐색, 기초 실력 쌓기';
-      } else if (item.age < 30) {
-        keyword = '도전·경험';
-        feature = '사회 진출, 인맥 확장, 진로 결정';
-      } else if (item.age < 40) {
-        keyword = '확립·성공';
-        feature = '직업적 성공, 명예 상승, 자기 확립';
-      } else if (item.age < 50) {
-        keyword = '변환·안정';
-        feature = '인생 방향 전환, 가정 안정';
-      } else {
-        keyword = '축적·여유';
-        feature = '재물 축적, 사회적 영향력 확장';
-      }
-
-      // 오행 관계에 따른 추가 해석
-      const relationship = this.getFiveElementsRelationship(
-        dayElement,
-        daeunElement,
-      );
-
-      if (relationship === 'supportive') {
-        feature += ', 유리한 기운';
-      } else if (relationship === 'conflicting') {
-        feature += ', 도전적 시기';
-      }
-
-      interpretation += `${item.age}~${item.age + 9}세 | ${daeunStem}${daeunBranch} | ${keyword} | ${feature}\n`;
-    });
-
-    return interpretation;
-  }
-
-  // 천간에서 오행 추출
-  private static getElementFromStem(stem: string): string {
-    const stemElements: { [key: string]: string } = {
-      갑: '목',
-      을: '목',
-      병: '화',
-      정: '화',
-      무: '토',
-      기: '토',
-      경: '금',
-      신: '금',
-      임: '수',
-      계: '수',
-    };
-    return stemElements[stem] || '목';
-  }
-
-  // 오행 관계 판단
-  private static getFiveElementsRelationship(
-    element1: string,
-    element2: string,
-  ): string {
-    // 상생 관계
-    const supportive: { [key: string]: string } = {
-      목: '화',
-      화: '토',
-      토: '금',
-      금: '수',
-      수: '목',
-    };
-
-    // 상극 관계
-    const conflicting: { [key: string]: string } = {
-      목: '토',
-      화: '금',
-      토: '수',
-      금: '목',
-      수: '화',
-    };
-
-    if (
-      supportive[element1] === element2 ||
-      supportive[element2] === element1
-    ) {
-      return 'supportive';
-    } else if (
-      conflicting[element1] === element2 ||
-      conflicting[element2] === element1
-    ) {
-      return 'conflicting';
-    } else {
-      return 'neutral';
-    }
   }
 }
