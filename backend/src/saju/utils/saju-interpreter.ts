@@ -107,25 +107,21 @@ export class SajuInterpreter {
 
     let interpretation = '오행 분석:\n';
 
-    const dominantElements = balance.filter((item) => item.percentage > 40);
-    const lackingElements = balance.filter((item) => item.percentage < 10);
+    balance
+      .filter((item) => item.percentage > 40)
+      .forEach(
+        (item) => (interpretation += this.interpretDominantElement(item)),
+      );
 
-    if (dominantElements.length > 0) {
-      dominantElements.forEach((item) => {
-        interpretation += this.interpretDominantElement(item);
-      });
-    }
+    balance
+      .filter((item) => item.percentage < 10)
+      .forEach(
+        (item) => (interpretation += this.interpretLackingElement(item)),
+      );
 
-    if (lackingElements.length > 0) {
-      lackingElements.forEach((item) => {
-        interpretation += this.interpretLackingElement(item);
-      });
-    }
-
-    const isBalanced = balance.every(
-      (item) => item.percentage >= 15 && item.percentage <= 25,
-    );
-    if (isBalanced) {
+    if (
+      balance.every((item) => item.percentage >= 15 && item.percentage <= 25)
+    ) {
       interpretation +=
         '\n오행의 균형이 이상적인 사주\n\n특징: 조화로운 성격, 뛰어난 적응력, 종합적 사고력.\n장점: 건강한 체질, 다양한 분야 능력 발휘, 원만한 인간관계.\n\n';
     }
@@ -180,132 +176,131 @@ export class SajuInterpreter {
     return result;
   }
 
+  private static readonly CAREER_MAP: Record<string, string[]> = {
+    갑: [
+      '대기업 임원',
+      'CEO',
+      '정치인',
+      '판사',
+      '교수',
+      '산림청',
+      '목재업',
+      '가구업',
+    ],
+    을: [
+      '예술가',
+      '플로리스트',
+      '디자이너',
+      '한의사',
+      '약사',
+      '원예',
+      '섬유업',
+      '패션업',
+    ],
+    병: [
+      '방송인',
+      '연예인',
+      '홍보',
+      '마케팅',
+      '관광업',
+      '스포츠',
+      '에너지산업',
+      '조명업',
+    ],
+    정: [
+      '작가',
+      '시인',
+      '요리사',
+      '미용사',
+      '조향사',
+      '카운셀러',
+      '종교인',
+      '문화예술',
+    ],
+    무: [
+      '부동산',
+      '건설업',
+      '농업',
+      '공무원',
+      '신탁업',
+      '중개업',
+      '토목',
+      '도자기',
+    ],
+    기: [
+      '회계사',
+      '세무사',
+      '농업',
+      '원예',
+      '인테리어',
+      '도예가',
+      '지질학자',
+      '고고학자',
+    ],
+    경: [
+      '군인',
+      '경찰',
+      '검사',
+      '외과의사',
+      '금속공업',
+      '기계공업',
+      '무술가',
+      '운동선수',
+    ],
+    신: [
+      '금은세공',
+      '치과의사',
+      '보석상',
+      '금융업',
+      '펀드매니저',
+      '감정평가사',
+      '비평가',
+      '언론인',
+    ],
+    임: [
+      '무역업',
+      '해운업',
+      '여행업',
+      '철학자',
+      '종교인',
+      '외교관',
+      '통역사',
+      '수산업',
+    ],
+    계: [
+      '학자',
+      '연구원',
+      '점술가',
+      '심리학자',
+      '작가',
+      '비서',
+      '서비스업',
+      '의료업',
+    ],
+  };
+
+  private static readonly ELEMENT_CAREER: Record<string, string> = {
+    목: '교육, 출판, 의료, 예술 분야',
+    화: '전자, IT, 미디어, 엔터테인먼트 분야',
+    토: '부동산, 건설, 농업, 중개업 분야',
+    금: '금융, 법률, 기계, 의료 분야',
+    수: '무역, 유통, 서비스, 컨설팅 분야',
+  };
+
   static interpretCareer(
     dayHeavenly: string,
     elements: Record<string, number>,
   ): string {
-    const careerMap: Record<string, string[]> = {
-      갑: [
-        '대기업 임원',
-        'CEO',
-        '정치인',
-        '판사',
-        '교수',
-        '산림청',
-        '목재업',
-        '가구업',
-      ],
-      을: [
-        '예술가',
-        '플로리스트',
-        '디자이너',
-        '한의사',
-        '약사',
-        '원예',
-        '섬유업',
-        '패션업',
-      ],
-      병: [
-        '방송인',
-        '연예인',
-        '홍보',
-        '마케팅',
-        '관광업',
-        '스포츠',
-        '에너지산업',
-        '조명업',
-      ],
-      정: [
-        '작가',
-        '시인',
-        '요리사',
-        '미용사',
-        '조향사',
-        '카운셀러',
-        '종교인',
-        '문화예술',
-      ],
-      무: [
-        '부동산',
-        '건설업',
-        '농업',
-        '공무원',
-        '신탁업',
-        '중개업',
-        '토목',
-        '도자기',
-      ],
-      기: [
-        '회계사',
-        '세무사',
-        '농업',
-        '원예',
-        '인테리어',
-        '도예가',
-        '지질학자',
-        '고고학자',
-      ],
-      경: [
-        '군인',
-        '경찰',
-        '검사',
-        '외과의사',
-        '금속공업',
-        '기계공업',
-        '무술가',
-        '운동선수',
-      ],
-      신: [
-        '금은세공',
-        '치과의사',
-        '보석상',
-        '금융업',
-        '펀드매니저',
-        '감정평가사',
-        '비평가',
-        '언론인',
-      ],
-      임: [
-        '무역업',
-        '해운업',
-        '여행업',
-        '철학자',
-        '종교인',
-        '외교관',
-        '통역사',
-        '수산업',
-      ],
-      계: [
-        '학자',
-        '연구원',
-        '점술가',
-        '심리학자',
-        '작가',
-        '비서',
-        '서비스업',
-        '의료업',
-      ],
-    };
-
-    const careers = careerMap[dayHeavenly] || [];
+    const careers = this.CAREER_MAP[dayHeavenly] || [];
     const dayInfo = this.PERSONALITY_BY_DAY_STEM[dayHeavenly];
-
     const dominantElement = Object.entries(elements).reduce(
       (max, [elem, count]) => (count > elements[max] ? elem : max),
       '목',
     );
 
-    const elementCareerMap: Record<string, string> = {
-      목: '교육, 출판, 의료, 예술 분야',
-      화: '전자, IT, 미디어, 엔터테인먼트 분야',
-      토: '부동산, 건설, 농업, 중개업 분야',
-      금: '금융, 법률, 기계, 의료 분야',
-      수: '무역, 유통, 서비스, 컨설팅 분야',
-    };
-
     return (
       `◆ 일간 ${dayHeavenly}(${dayInfo.element})의 적성: ${careers.slice(0, 5).join(', ')}\n` +
-      `◆ 오행 ${dominantElement}이 강한 적성: ${elementCareerMap[dominantElement]}\n` +
+      `◆ 오행 ${dominantElement}이 강한 적성: ${this.ELEMENT_CAREER[dominantElement]}\n` +
       `일간의 특성과 오행 균형을 고려할 때, 위 분야에서 탁월한 능력을 발휘할 수 있습니다.`
     );
   }

@@ -150,21 +150,23 @@ export class SajuAdvancedInterpreter {
     return fortune;
   }
 
+  private static readonly SIPSEONG_RELATIONS: Record<
+    string,
+    Record<string, Sipseong>
+  > = {
+    목: { 화: '식상', 토: '재성', 금: '관성', 수: '인성' },
+    화: { 토: '식상', 금: '재성', 수: '관성', 목: '인성' },
+    토: { 금: '식상', 수: '재성', 목: '관성', 화: '인성' },
+    금: { 수: '식상', 목: '재성', 화: '관성', 토: '인성' },
+    수: { 목: '식상', 화: '재성', 토: '관성', 금: '인성' },
+  };
+
   static getSipseong(dayMaster: string, targetStem: string): Sipseong {
     const dayElement = FIVE_ELEMENTS.getElementFromStem(dayMaster);
     const targetElement = FIVE_ELEMENTS.getElementFromStem(targetStem);
 
     if (dayElement === targetElement) return '비겁';
-
-    const relationships: Record<string, Record<string, Sipseong>> = {
-      목: { 화: '식상', 토: '재성', 금: '관성', 수: '인성' },
-      화: { 토: '식상', 금: '재성', 수: '관성', 목: '인성' },
-      토: { 금: '식상', 수: '재성', 목: '관성', 화: '인성' },
-      금: { 수: '식상', 목: '재성', 화: '관성', 토: '인성' },
-      수: { 목: '식상', 화: '재성', 토: '관성', 금: '인성' },
-    };
-
-    return relationships[dayElement]?.[targetElement] || '비겁';
+    return this.SIPSEONG_RELATIONS[dayElement]?.[targetElement] || '비겁';
   }
 
   static getLoveFortune(dayMaster: string, yearBranch: string): string {
@@ -183,19 +185,18 @@ export class SajuAdvancedInterpreter {
     return fortune.trim();
   }
 
+  private static readonly WEALTH_MESSAGES: Record<string, string> = {
+    재성: '재물을 얻을 기회가 많은 해입니다. 투자나 사업에서 성과를 거둘 수 있으며, 부동산이나 금융 상품에 관심을 가져보세요. 다만 과욕은 금물이며, 신중한 판단이 필요합니다.',
+    비겁: '재물 관리에 주의가 필요한 해입니다. 불필요한 지출을 줄이고, 타인에게 돈을 빌려주는 것을 자제하세요. 형제나 동업자와의 금전 문제에 신중해야 합니다.',
+    식상: '노력한 만큼 수입이 생기는 해입니다. 창의적인 아이디어나 재능을 활용하면 재물을 얻을 수 있습니다. 부업이나 새로운 수입원을 개척하기에 좋습니다.',
+    관성: '직장에서의 승진이나 안정적인 급여가 기대되는 해입니다. 정직하고 성실한 태도로 일하면 정당한 보상을 받을 수 있습니다.',
+  };
+
   static getWealthFortune(dayMaster: string, yearStem: string): string {
     const sipseong = this.getSipseong(dayMaster, yearStem);
-
-    const wealthMessages: Record<string, string> = {
-      재성: '재물을 얻을 기회가 많은 해입니다. 투자나 사업에서 성과를 거둘 수 있으며, 부동산이나 금융 상품에 관심을 가져보세요. 다만 과욕은 금물이며, 신중한 판단이 필요합니다.',
-      비겁: '재물 관리에 주의가 필요한 해입니다. 불필요한 지출을 줄이고, 타인에게 돈을 빌려주는 것을 자제하세요. 형제나 동업자와의 금전 문제에 신중해야 합니다.',
-      식상: '노력한 만큼 수입이 생기는 해입니다. 창의적인 아이디어나 재능을 활용하면 재물을 얻을 수 있습니다. 부업이나 새로운 수입원을 개척하기에 좋습니다.',
-      관성: '직장에서의 승진이나 안정적인 급여가 기대되는 해입니다. 정직하고 성실한 태도로 일하면 정당한 보상을 받을 수 있습니다.',
-    };
-
     return (
       '💰 재물운: ' +
-      (wealthMessages[sipseong] ||
+      (this.WEALTH_MESSAGES[sipseong] ||
         '안정적인 재정 관리가 필요한 해입니다. 꾸준한 저축과 계획적인 소비를 권장합니다. 큰 투자보다는 안전한 자산 관리에 집중하세요.')
     );
   }
@@ -345,6 +346,22 @@ export class SajuAdvancedInterpreter {
     return advice;
   }
 
+  private static readonly ELEMENT_SUPPORTIVE: Record<string, string> = {
+    목: '화',
+    화: '토',
+    토: '금',
+    금: '수',
+    수: '목',
+  };
+
+  private static readonly ELEMENT_CONFLICTING: Record<string, string> = {
+    목: '토',
+    화: '금',
+    토: '수',
+    금: '목',
+    수: '화',
+  };
+
   private static getElementRelationship(
     stem1: string,
     stem2: string,
@@ -352,32 +369,16 @@ export class SajuAdvancedInterpreter {
     const element1 = FIVE_ELEMENTS.getElementFromStem(stem1);
     const element2 = FIVE_ELEMENTS.getElementFromStem(stem2);
 
-    const supportive: Record<string, string> = {
-      목: '화',
-      화: '토',
-      토: '금',
-      금: '수',
-      수: '목',
-    };
-
-    const conflicting: Record<string, string> = {
-      목: '토',
-      화: '금',
-      토: '수',
-      금: '목',
-      수: '화',
-    };
-
     if (
-      supportive[element1] === element2 ||
-      supportive[element2] === element1
+      this.ELEMENT_SUPPORTIVE[element1] === element2 ||
+      this.ELEMENT_SUPPORTIVE[element2] === element1
     ) {
       return 'supportive';
     }
 
     if (
-      conflicting[element1] === element2 ||
-      conflicting[element2] === element1
+      this.ELEMENT_CONFLICTING[element1] === element2 ||
+      this.ELEMENT_CONFLICTING[element2] === element1
     ) {
       return 'conflicting';
     }
