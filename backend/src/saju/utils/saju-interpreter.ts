@@ -635,4 +635,170 @@ export class SajuInterpreter {
 
     return `${currentYear}년 운세:\n${fortunes[cycle]}`;
   }
+
+  // 대인관계 운 해석
+  static interpretSocialRelationship(dayHeavenly: string): string {
+    const isYang = ['갑', '병', '무', '경', '임'].includes(dayHeavenly);
+    const dayElement = this.getElementFromStem(dayHeavenly);
+
+    let interpretation = '';
+
+    // 일간별 인간관계 스타일
+    const relationshipStyle: { [key: string]: string } = {
+      갑: '신뢰와 의리를 중시하며, 자신과 가치관이 맞는 사람과 깊은 유대를 맺습니다. 리더십이 강해 주변 사람들을 이끄는 역할을 자주 맡습니다.',
+      을: '온화하고 부드러운 성격으로 누구와도 잘 어울립니다. 섬세한 배려로 주변 사람들에게 편안함을 줍니다.',
+      병: '밝고 활발한 에너지로 분위기 메이커 역할을 합니다. 넓은 인맥을 형성하며 사교적입니다.',
+      정: '따뜻하고 세심한 성격으로 깊은 관계를 선호합니다. 소수의 친구와 진한 우정을 나눕니다.',
+      무: '믿음직하고 포용력이 있어 주변 사람들의 중심이 됩니다. 안정적인 관계를 오래 유지합니다.',
+      기: '성실하고 꼼꼼한 성격으로 신뢰를 얻습니다. 실속 있는 관계를 선호합니다.',
+      경: '직설적이고 강직한 성격으로 의리를 중시합니다. 원칙적인 관계를 선호합니다.',
+      신: '세련되고 품격 있는 교류를 좋아합니다. 수준 높은 인간관계를 형성합니다.',
+      임: '자유롭고 활동적인 성격으로 다양한 사람들과 교류합니다. 폭넓은 인맥을 가집니다.',
+      계: '감성적이고 이해심이 깊어 상대방의 마음을 잘 헤아립니다. 공감 능력이 뛰어납니다.',
+    };
+
+    interpretation += `◆ 인간관계 스타일:\n${relationshipStyle[dayHeavenly]}\n\n`;
+
+    // 음양에 따른 주의점
+    if (isYang) {
+      interpretation +=
+        '◆ 주의할 점:\n양기가 강하므로 자기주장이 센 편입니다. 융통성을 의식적으로 키우고, 상대방의 의견을 경청하는 자세가 필요합니다.\n\n';
+    } else {
+      interpretation +=
+        '◆ 주의할 점:\n음기가 강하므로 수용적이지만 때론 우유부단할 수 있습니다. 자신의 의견을 명확히 표현하는 연습이 필요합니다.\n\n';
+    }
+
+    // 오행에 따른 좋은 인연
+    const goodMatch: { [key: string]: string } = {
+      목: '화(火) 기운이 강한 사람 또는 병(丙)·정(丁) 일간과 좋은 관계를 형성합니다.',
+      화: '토(土) 기운이 강한 사람 또는 무(戊)·기(己) 일간과 좋은 관계를 형성합니다.',
+      토: '금(金) 기운이 강한 사람 또는 경(庚)·신(辛) 일간과 좋은 관계를 형성합니다.',
+      금: '수(水) 기운이 강한 사람 또는 임(壬)·계(癸) 일간과 좋은 관계를 형성합니다.',
+      수: '목(木) 기운이 강한 사람 또는 갑(甲)·을(乙) 일간과 좋은 관계를 형성합니다.',
+    };
+
+    const avoidMatch: { [key: string]: string } = {
+      목: '토(土) 기운이 지나치게 강한 사람과는 의견 충돌이 생기기 쉽습니다.',
+      화: '수(水) 기운이 지나치게 강한 사람과는 갈등이 생길 수 있습니다.',
+      토: '목(木) 기운이 지나치게 강한 사람과는 충돌할 가능성이 있습니다.',
+      금: '화(火) 기운이 지나치게 강한 사람과는 마찰이 생길 수 있습니다.',
+      수: '토(土) 기운이 지나치게 강한 사람과는 어려움이 있을 수 있습니다.',
+    };
+
+    interpretation += `◆ 좋은 인연:\n${goodMatch[dayElement]}\n\n`;
+    interpretation += `◆ 주의 인연:\n${avoidMatch[dayElement]}`;
+
+    return interpretation;
+  }
+
+  // 대운 해석 요약표
+  static interpretDaeunSummary(
+    daeun: Array<{ age: number; pillar: { heaven: string; earth: string } }>,
+    dayHeavenly: string,
+  ): string {
+    if (!daeun || daeun.length === 0) {
+      return '대운 정보가 없습니다.';
+    }
+
+    let interpretation = '◆ 인생 주기별 운세 요약\n\n';
+
+    daeun.slice(0, 8).forEach((item) => {
+      const daeunStem = item.pillar.heaven;
+      const daeunBranch = item.pillar.earth;
+      const daeunElement = this.getElementFromStem(daeunStem);
+      const dayElement = this.getElementFromStem(dayHeavenly);
+
+      let keyword = '';
+      let feature = '';
+
+      // 나이대별 기본 키워드
+      if (item.age < 20) {
+        keyword = '학습·성장';
+        feature = '적성 탐색, 기초 실력 쌓기';
+      } else if (item.age < 30) {
+        keyword = '도전·경험';
+        feature = '사회 진출, 인맥 확장, 진로 결정';
+      } else if (item.age < 40) {
+        keyword = '확립·성공';
+        feature = '직업적 성공, 명예 상승, 자기 확립';
+      } else if (item.age < 50) {
+        keyword = '변환·안정';
+        feature = '인생 방향 전환, 가정 안정';
+      } else {
+        keyword = '축적·여유';
+        feature = '재물 축적, 사회적 영향력 확장';
+      }
+
+      // 오행 관계에 따른 추가 해석
+      const relationship = this.getFiveElementsRelationship(
+        dayElement,
+        daeunElement,
+      );
+
+      if (relationship === 'supportive') {
+        feature += ', 유리한 기운';
+      } else if (relationship === 'conflicting') {
+        feature += ', 도전적 시기';
+      }
+
+      interpretation += `${item.age}~${item.age + 9}세 | ${daeunStem}${daeunBranch} | ${keyword} | ${feature}\n`;
+    });
+
+    return interpretation;
+  }
+
+  // 천간에서 오행 추출
+  private static getElementFromStem(stem: string): string {
+    const stemElements: { [key: string]: string } = {
+      갑: '목',
+      을: '목',
+      병: '화',
+      정: '화',
+      무: '토',
+      기: '토',
+      경: '금',
+      신: '금',
+      임: '수',
+      계: '수',
+    };
+    return stemElements[stem] || '목';
+  }
+
+  // 오행 관계 판단
+  private static getFiveElementsRelationship(
+    element1: string,
+    element2: string,
+  ): string {
+    // 상생 관계
+    const supportive: { [key: string]: string } = {
+      목: '화',
+      화: '토',
+      토: '금',
+      금: '수',
+      수: '목',
+    };
+
+    // 상극 관계
+    const conflicting: { [key: string]: string } = {
+      목: '토',
+      화: '금',
+      토: '수',
+      금: '목',
+      수: '화',
+    };
+
+    if (
+      supportive[element1] === element2 ||
+      supportive[element2] === element1
+    ) {
+      return 'supportive';
+    } else if (
+      conflicting[element1] === element2 ||
+      conflicting[element2] === element1
+    ) {
+      return 'conflicting';
+    } else {
+      return 'neutral';
+    }
+  }
 }

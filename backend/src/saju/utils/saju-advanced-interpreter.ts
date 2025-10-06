@@ -170,10 +170,7 @@ export class SajuAdvancedInterpreter {
 - ${currentYear}년 지지: ${yearBranch}
 - 오행 관계: ${relationship === 'supportive' ? '상생' : relationship === 'conflicting' ? '상극' : '중립'}
 
-**요청사항:**
-1. 위 사주 정보를 종합적으로 분석하여 ${currentYear}년 운세 총정리를 작성하세요.
-2. 일간의 특성, 오행 균형, 음양 균형, 올해 년운과의 관계를 모두 고려하세요.
-3. 반드시 아래 JSON 형식으로만 응답하세요:
+**중요: 반드시 아래 JSON 형식으로만 응답하세요. 다른 텍스트는 포함하지 마세요:**
 
 {
   "keywords": [
@@ -193,7 +190,13 @@ export class SajuAdvancedInterpreter {
     "피해야 할 일 2",
     "피해야 할 일 3"
   ]
-}`;
+}
+
+**주의사항:**
+- keywords는 정확히 5개만 작성하세요.
+- shouldDo는 정확히 3개만 작성하세요.
+- shouldAvoid는 정확히 3개만 작성하세요.
+- 각 항목은 구체적이고 실천 가능한 내용으로 작성하세요.`;
 
         // Gemini REST API 직접 호출
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
@@ -253,17 +256,20 @@ export class SajuAdvancedInterpreter {
 
         const aiResult = JSON.parse(jsonText);
 
-        // 포맷팅
-        let advice = '**🔑 핵심 키워드:**\n';
+        // 포맷팅 (각각 정확히 3개씩만)
+        let advice = '🔑 핵심 키워드:\n';
         advice += (aiResult.keywords || [])
+          .slice(0, 5)
           .map((item: string) => `#${item}`)
           .join(' ');
-        advice += '\n\n**✅ 해야 할 일:**\n';
+        advice += '\n\n✅ 해야 할 일:\n';
         advice += (aiResult.shouldDo || [])
+          .slice(0, 3)
           .map((item: string, i: number) => `${i + 1}. ${item}`)
           .join('\n');
-        advice += '\n\n**⚠️ 피해야 할 일:**\n';
+        advice += '\n\n⚠️ 피해야 할 일:\n';
         advice += (aiResult.shouldAvoid || [])
+          .slice(0, 3)
           .map((item: string, i: number) => `${i + 1}. ${item}`)
           .join('\n');
 
