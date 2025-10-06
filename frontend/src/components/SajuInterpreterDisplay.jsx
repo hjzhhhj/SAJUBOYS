@@ -1,6 +1,6 @@
-import styled from 'styled-components'
-import { motion, AnimatePresence } from 'framer-motion'
-import { useState } from 'react'
+import styled from 'styled-components';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useState } from 'react';
 
 const Container = styled.div`
   width: 100%;
@@ -87,53 +87,18 @@ const FeatureIcon = styled.div`
 
 const FeatureText = styled.div`
   flex: 1;
-  
+
   .label {
     color: #666;
     font-size: 0.85rem;
     margin-bottom: 0.25rem;
   }
-  
+
   .value {
     color: #150137;
     font-size: 1rem;
     font-weight: 600;
   }
-`
-
-const ProgressBar = styled.div`
-  width: 100%;
-  height: 8px;
-  background: #f0f0f0;
-  border-radius: 4px;
-  margin: 1rem 0;
-  overflow: hidden;
-`
-
-const ProgressFill = styled(motion.div)`
-  height: 100%;
-  background: linear-gradient(90deg, ${props => props.color1 || '#6200ff'}, ${props => props.color2 || '#9c27b0'});
-  border-radius: 4px;
-`
-
-const CompatibilityCard = styled.div`
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  border-radius: 20px;
-  padding: 2rem;
-  color: white;
-  margin-bottom: 1.5rem;
-  text-align: center;
-`
-
-const CompatibilityScore = styled.div`
-  font-size: 4rem;
-  font-weight: 900;
-  margin: 1rem 0;
-`
-
-const CompatibilityLabel = styled.div`
-  font-size: 1.2rem;
-  opacity: 0.9;
 `
 
 const AccordionItem = styled.div`

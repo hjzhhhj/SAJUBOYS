@@ -14,8 +14,8 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-} from "recharts";
-import styled from "styled-components";
+} from 'recharts';
+import styled from 'styled-components';
 
 const ChartsContainer = styled.div`
   display: grid;
@@ -51,57 +51,51 @@ const ChartWrapper = styled.div`
 `;
 
 const COLORS = {
-  목: "#2ecc71",
-  화: "#e74c3c",
-  토: "#f39c12",
-  금: "#95a5a6",
-  수: "#3498db",
+  목: '#2ecc71',
+  화: '#e74c3c',
+  토: '#f39c12',
+  금: '#95a5a6',
+  수: '#3498db',
 };
 
-const YIN_YANG_COLORS = ["#ef4444", "#3b82f6"]; // 빨간색(양), 파란색(음)
+const YIN_YANG_COLORS = ['#ef4444', '#3b82f6'];
 
 export function SajuCharts({ elements, yinYang }) {
-  // 오행 데이터 준비
   const elementsData = elements
     ? Object.entries(elements).map(([key, value]) => ({
         name: key,
-        value: value,
+        value,
         fill: COLORS[key],
       }))
     : [];
 
-  // 음양 데이터 준비
   const yinYangData = yinYang
     ? [
-        { name: "양(陽)", value: yinYang.yang || 0 },
-        { name: "음(陰)", value: yinYang.yin || 0 },
+        { name: '양(陽)', value: yinYang.yang || 0 },
+        { name: '음(陰)', value: yinYang.yin || 0 },
       ]
     : [];
 
-  // 오행 균형 레이더 차트 데이터
   const maxElement = elements ? Math.max(...Object.values(elements)) : 0;
   const radarData = elements
     ? Object.entries(elements).map(([key, value]) => ({
         subject: key,
-        value: value,
+        value,
         fullMark: maxElement > 0 ? maxElement : 5,
       }))
     : [];
 
-  // 커스텀 툴팁 스타일
   const customTooltipStyle = {
-    backgroundColor: "rgba(0, 0, 0, 0.8)",
-    border: "1px solid rgba(255, 255, 255, 0.2)",
-    borderRadius: "8px",
-    padding: "10px",
-    color: "white",
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    border: '1px solid rgba(255, 255, 255, 0.2)',
+    borderRadius: '8px',
+    padding: '10px',
+    color: 'white',
   };
 
-  // 커스텀 라벨 렌더링 함수
   const renderCustomLabelWithStyle = (props) => {
     const { cx, cy, midAngle, innerRadius, outerRadius, name, value } = props;
 
-    // 값이 0이면 라벨을 표시하지 않음
     if (value === 0) return null;
 
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -113,7 +107,7 @@ export function SajuCharts({ elements, yinYang }) {
         x={x}
         y={y}
         fill="white"
-        textAnchor={x > cx ? "start" : "end"}
+        textAnchor={x > cx ? 'start' : 'end'}
         dominantBaseline="central"
         fontSize="14"
       >
@@ -124,7 +118,6 @@ export function SajuCharts({ elements, yinYang }) {
 
   return (
     <ChartsContainer>
-      {/* 오행 분포 파이 차트 */}
       <ChartCard>
         <ChartTitle>오행 분포도</ChartTitle>
         <ChartWrapper>
@@ -150,7 +143,6 @@ export function SajuCharts({ elements, yinYang }) {
         </ChartWrapper>
       </ChartCard>
 
-      {/* 음양 균형 파이 차트 */}
       <ChartCard>
         <ChartTitle>음양 균형도</ChartTitle>
         <ChartWrapper>
@@ -166,7 +158,7 @@ export function SajuCharts({ elements, yinYang }) {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {yinYangData.map((entry, index) => (
+                {yinYangData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={YIN_YANG_COLORS[index]} />
                 ))}
               </Pie>
@@ -176,18 +168,17 @@ export function SajuCharts({ elements, yinYang }) {
         </ChartWrapper>
       </ChartCard>
 
-      {/* 오행 균형 레이더 차트 */}
       <ChartCard>
         <ChartTitle>오행 균형 분석</ChartTitle>
         <ChartWrapper>
           <ResponsiveContainer width="100%" height="100%">
             <RadarChart data={radarData}>
               <PolarGrid stroke="rgba(255, 255, 255, 0.3)" />
-              <PolarAngleAxis dataKey="subject" tick={{ fill: "white" }} />
+              <PolarAngleAxis dataKey="subject" tick={{ fill: 'white' }} />
               <PolarRadiusAxis
                 angle={90}
-                domain={[0, "dataMax"]}
-                tick={{ fill: "white" }}
+                domain={[0, 'dataMax']}
+                tick={{ fill: 'white' }}
               />
               <Radar
                 name="오행"
@@ -202,7 +193,6 @@ export function SajuCharts({ elements, yinYang }) {
         </ChartWrapper>
       </ChartCard>
 
-      {/* 오행 막대 차트 */}
       <ChartCard>
         <ChartTitle>오행 세부 분석</ChartTitle>
         <ChartWrapper>
@@ -214,11 +204,11 @@ export function SajuCharts({ elements, yinYang }) {
               />
               <XAxis
                 dataKey="name"
-                tick={{ fill: "white" }}
+                tick={{ fill: 'white' }}
                 stroke="rgba(255, 255, 255, 0.3)"
               />
               <YAxis
-                tick={{ fill: "white" }}
+                tick={{ fill: 'white' }}
                 stroke="rgba(255, 255, 255, 0.3)"
               />
               <Tooltip contentStyle={customTooltipStyle} />
