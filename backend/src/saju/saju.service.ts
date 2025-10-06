@@ -266,11 +266,7 @@ export class SajuService {
       _id: new Types.ObjectId(sajuId),
     });
 
-    if (!result) {
-      throw new Error('결과를 찾을 수 없습니다.');
-    }
-
-    // 이미 다른 사용자의 결과인지 확인
+    if (!result) throw new Error('결과를 찾을 수 없습니다.');
     if (result.userId && result.userId.toString() !== userId) {
       throw new Error('다른 사용자의 결과입니다.');
     }
@@ -288,24 +284,17 @@ export class SajuService {
   }
 
   async searchAddress(query: string): Promise<AddressResult[]> {
-    // 한국 시·군·구 좌표 데이터 가져오기
     const { KOREA_COORDINATES } = (await import('./korea-coordinates.js')) as {
       KOREA_COORDINATES: CityCoordinate[];
     };
 
-    // 검색어가 비어있으면 빈 배열 반환
-    if (!query?.trim()) {
-      return [];
-    }
+    if (!query?.trim()) return [];
 
-    // 검색어 정규화
     const searchQuery = query.toLowerCase().replace(/\s+/g, '');
-
-    // 좌표 데이터에서 검색 및 중복 제거
     const uniqueResults = new Map<string, AddressResult>();
 
     KOREA_COORDINATES.forEach((coord) => {
-      const cityDistrict = (coord.city + coord.district)
+      const cityDistrict = `${coord.city}${coord.district}`
         .toLowerCase()
         .replace(/\s+/g, '');
       const districtOnly = coord.district.toLowerCase().replace(/\s+/g, '');
@@ -316,7 +305,7 @@ export class SajuService {
       ) {
         const key = `${coord.city} ${coord.district}`;
         if (!uniqueResults.has(key)) {
-          const fullAddress = `${coord.city} ${coord.district}`;
+          const fullAddress = key;
           uniqueResults.set(key, {
             placeName:
               coord.district === '세종시' ? '세종특별자치시' : fullAddress,
@@ -329,7 +318,6 @@ export class SajuService {
       }
     });
 
-    // 최대 30개 결과 반환
     return Array.from(uniqueResults.values()).slice(0, 30);
   }
 }
