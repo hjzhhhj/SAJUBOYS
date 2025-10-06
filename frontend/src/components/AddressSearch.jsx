@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useRef, useEffect } from "react";
-import styled from "styled-components";
-import axios from "axios";
-import debounce from "lodash/debounce";
+import { useState, useCallback, useRef, useEffect } from 'react';
+import styled from 'styled-components';
+import axios from 'axios';
+import debounce from 'lodash/debounce';
 
 const Container = styled.div`
   position: relative;
@@ -112,35 +112,32 @@ const AddressSearch = ({
   const [showResults, setShowResults] = useState(false);
   const containerRef = useRef(null);
 
-  // 검색 함수
-  const debouncedSearch = useCallback(
-    debounce(async (searchQuery) => {
-      if (!searchQuery || searchQuery.length < 2) {
-        setResults([]);
-        return;
-      }
+  const searchAddress = async (searchQuery) => {
+    if (!searchQuery || searchQuery.length < 2) {
+      setResults([]);
+      return;
+    }
 
-      setIsLoading(true);
-      try {
-        const response = await axios.get(
-          "http://localhost:3001/api/saju/search-address",
-          {
-            params: { query: searchQuery },
-            timeout: 3000, // 3초 타임아웃 설정
-          }
-        );
-        setResults(response.data.data || []);
-        setShowResults(true);
-      } catch {
-        // API 실패 시 빈 결과 표시
-        setResults([]);
-        setShowResults(true);
-      } finally {
-        setIsLoading(false);
-      }
-    }, 300),
-    []
-  );
+    setIsLoading(true);
+    try {
+      const response = await axios.get(
+        'http://localhost:3001/api/saju/search-address',
+        {
+          params: { query: searchQuery },
+          timeout: 3000,
+        }
+      );
+      setResults(response.data.data || []);
+      setShowResults(true);
+    } catch {
+      setResults([]);
+      setShowResults(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const debouncedSearch = useCallback(debounce(searchAddress, 300), []);
 
   // 입력값 변경 처리
   const handleInputChange = (e) => {

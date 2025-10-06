@@ -21,14 +21,6 @@ interface FourPillars {
   time: Pillar | null;
 }
 
-interface TimelyFortune {
-  overall: string;
-  advice: string;
-  love: string;
-  wealth: string;
-  health: string;
-}
-
 interface Elements extends Record<string, number> {
   목: number;
   화: number;

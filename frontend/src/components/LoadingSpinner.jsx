@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { keyframes } from 'styled-components';
 
 const pulse = keyframes`
   0% {
@@ -132,10 +132,10 @@ const SkipButton = styled.button`
   }
 `;
 
-const LoadingSpinner = ({ 
-  message = "사주 결과 분석 중...", 
-  subMessage = "잠시만 기다려주세요",
-  onSkip = null 
+const LoadingSpinner = ({
+  message = '사주 결과 분석 중...',
+  subMessage = '잠시만 기다려주세요',
+  onSkip = null,
 }) => {
   return (
     <LoadingOverlay>
@@ -146,11 +146,7 @@ const LoadingSpinner = ({
       </SpinnerContainer>
       <LoadingText>{message}</LoadingText>
       <SubText>{subMessage}</SubText>
-      {onSkip && (
-        <SkipButton onClick={onSkip}>
-          결과 확인하기
-        </SkipButton>
-      )}
+      {onSkip && <SkipButton onClick={onSkip}>결과 확인하기</SkipButton>}
     </LoadingOverlay>
   );
 };

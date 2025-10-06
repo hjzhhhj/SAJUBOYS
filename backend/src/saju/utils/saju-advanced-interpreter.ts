@@ -62,21 +62,6 @@ export class SajuAdvancedInterpreter {
 
   private static readonly LOVE_STARS = ['자', '오', '묘', '유'];
 
-  private static readonly YUK_HAP: Record<string, string> = {
-    자: '축',
-    축: '자',
-    인: '해',
-    해: '인',
-    묘: '술',
-    술: '묘',
-    진: '유',
-    유: '진',
-    사: '신',
-    신: '사',
-    오: '미',
-    미: '오',
-  };
-
   private static readonly SIPSEONG_FORTUNES: Record<Sipseong, string> = {
     비겁: '올해는 형제, 친구, 동료와의 인연이 강한 해입니다. 협력과 경쟁이 동시에 일어날 수 있으며, 독립심과 자립심이 강해집니다. 재물 관리에 주의가 필요하며, 과도한 지출을 자제하세요.',
     식상: '올해는 표현력과 창의력이 빛나는 해입니다. 새로운 아이디어가 샘솟고 자유로운 활동이 많아집니다. 학업, 창작, 사업 확장에 유리하나, 말조심과 감정 조절이 필요합니다.',
@@ -208,7 +193,9 @@ export class SajuAdvancedInterpreter {
 
     const minElement = Object.entries(elements).reduce(
       (min, [elem, count]) =>
-        count < min.count ? { element: elem, count } : min,
+        (count as number) < min.count
+          ? { element: elem, count: count as number }
+          : min,
       { element: '', count: 10 },
     );
 

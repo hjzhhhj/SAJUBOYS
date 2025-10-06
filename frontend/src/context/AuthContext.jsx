@@ -73,11 +73,11 @@ export const AuthProvider = ({ children }) => {
       dispatch({ type: "LOGIN", payload: userData });
 
       return { success: true };
-    } else {
-      const errorMessage = response.message || "로그인에 실패했습니다";
-      dispatch({ type: "SET_ERROR", payload: errorMessage });
-      return { success: false, error: errorMessage };
     }
+
+    const errorMessage = response.message || "로그인에 실패했습니다";
+    dispatch({ type: "SET_ERROR", payload: errorMessage });
+    return { success: false, error: errorMessage };
   };
 
   const signup = async (name, email, password) => {
@@ -89,9 +89,9 @@ export const AuthProvider = ({ children }) => {
       if (response.success) {
         dispatch({ type: "SET_LOADING", payload: false });
         return { success: true, user: response.data };
-      } else {
-        throw new Error(response.message || "회원가입에 실패했습니다");
       }
+
+      throw new Error(response.message || "회원가입에 실패했습니다");
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||

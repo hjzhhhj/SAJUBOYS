@@ -30,8 +30,8 @@ export class AuthService {
     const user = new this.userModel({ name, email, password: hashedPassword });
     await user.save();
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _pwd, ...userWithoutPassword } = user.toObject();
+    const { password: _password, ...userWithoutPassword } = user.toObject();
+    void _password;
     return userWithoutPassword;
   }
 
@@ -50,9 +50,8 @@ export class AuthService {
 
     const payload = { sub: user._id, email: user.email };
     const accessToken = this.jwtService.sign(payload);
-
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _pwd, ...userWithoutPassword } = user.toObject();
+    const { password: _password, ...userWithoutPassword } = user.toObject();
+    void _password;
 
     return {
       user: userWithoutPassword,

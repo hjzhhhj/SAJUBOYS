@@ -15,7 +15,7 @@ class AuthService {
       return {
         success: true,
         data: response.data,
-        message: response.message
+        message: response.message,
       };
     } catch (error) {
       return this.handleError(error);
@@ -30,7 +30,7 @@ class AuthService {
 
     return {
       success: false,
-      message: errorMessage
+      message: errorMessage,
     };
   }
 }

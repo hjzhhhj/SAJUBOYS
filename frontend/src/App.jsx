@@ -5,7 +5,6 @@ import { AuthProvider } from './context/AuthContext';
 import { SajuProvider } from './context/SajuContext';
 import { ROUTES } from './constants';
 
-// Lazy loading 적용
 const Starting = lazy(() => import('./Starting'));
 const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
