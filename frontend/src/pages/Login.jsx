@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import styled, { keyframes } from 'styled-components';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import styled, { keyframes } from "styled-components";
 
 const float1 = keyframes`
   0%, 100% {
@@ -100,22 +100,15 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 4rem;
-  font-weight: 900;
+  font-size: 3rem;
+  font-weight: 800;
   margin-bottom: 1.5rem;
   font-family: "Cinzel", cursive;
-  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+  letter-spacing: 2px;
   position: relative;
 
-  &::after {
-    content: "Login";
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: none;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
+  @media (min-width: 768px) {
+    font-size: 3.5rem;
   }
 `;
 

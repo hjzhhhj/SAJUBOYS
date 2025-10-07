@@ -1,11 +1,11 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSaju } from '../context/SajuContext';
-import { useAuth } from '../context/AuthContext';
-import styled, { keyframes } from 'styled-components';
-import AddressSearch from '../components/AddressSearch';
-import DateInput from '../components/DateInput';
-import LoadingSpinner from '../components/LoadingSpinner';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useSaju } from "../context/SajuContext";
+import { useAuth } from "../context/AuthContext";
+import styled, { keyframes } from "styled-components";
+import AddressSearch from "../components/AddressSearch";
+import DateInput from "../components/DateInput";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const float1 = keyframes`
   0%, 100% {
@@ -101,22 +101,15 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 4rem;
+  font-size: 3rem;
   font-weight: 900;
   margin-bottom: 1.5rem;
-  font-family: 'Cinzel Decorative', cursive;
-  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+  font-family: "Cinzel Decorative", cursive;
+  letter-spacing: 2px;
   position: relative;
 
-  &::after {
-    content: 'SAJUBOYS';
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: none;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
+  @media (min-width: 768px) {
+    font-size: 3.5rem;
   }
 `;
 
@@ -333,70 +326,70 @@ function SajuInput() {
   const navigate = useNavigate();
   const { calculateSaju, loading, setLoading } = useSaju();
   const { user } = useAuth();
-  const [name, setName] = useState(user?.name || '');
-  const [gender, setGender] = useState('male');
-  const [calendarType, setCalendarType] = useState('solar');
+  const [name, setName] = useState(user?.name || "");
+  const [gender, setGender] = useState("male");
+  const [calendarType, setCalendarType] = useState("solar");
   const [birthDate, setBirthDate] = useState(null);
-  const [birthTime, setBirthTime] = useState('');
-  const [city, setCity] = useState('');
+  const [birthTime, setBirthTime] = useState("");
+  const [city, setCity] = useState("");
   const [resultData, setResultData] = useState(null);
 
   const handleSajuAnalysis = async () => {
     // 입력값 검증
     if (!name || !name.trim()) {
-      alert('이름을 입력해주세요');
+      alert("이름을 입력해주세요");
       return;
     }
 
     if (!birthDate) {
-      alert('생년월일을 선택해주세요');
+      alert("생년월일을 선택해주세요");
       return;
     }
 
     if (!birthTime) {
-      alert('태어난 시간을 선택해주세요');
+      alert("태어난 시간을 선택해주세요");
       return;
     }
 
     if (!city || !city.trim()) {
-      alert('태어난 도시를 입력해주세요');
+      alert("태어난 도시를 입력해주세요");
       return;
     }
 
     // 시간 처리 (API 형식에 맞게)
-    let formattedTime = '00:00'; // 시간 모름일 때는 사용되지 않지만 빈 값 방지용
-    if (birthTime !== 'unknown') {
+    let formattedTime = "00:00"; // 시간 모름일 때는 사용되지 않지만 빈 값 방지용
+    if (birthTime !== "unknown") {
       const timeMap = {
-        '23-01': '00:00',
-        '01-03': '02:00',
-        '03-05': '04:00',
-        '05-07': '06:00',
-        '07-09': '08:00',
-        '09-11': '10:00',
-        '11-13': '12:00',
-        '13-15': '14:00',
-        '15-17': '16:00',
-        '17-19': '18:00',
-        '19-21': '20:00',
-        '21-23': '22:00',
+        "23-01": "00:00",
+        "01-03": "02:00",
+        "03-05": "04:00",
+        "05-07": "06:00",
+        "07-09": "08:00",
+        "09-11": "10:00",
+        "11-13": "12:00",
+        "13-15": "14:00",
+        "15-17": "16:00",
+        "17-19": "18:00",
+        "19-21": "20:00",
+        "21-23": "22:00",
       };
-      formattedTime = timeMap[birthTime] || '00:00';
+      formattedTime = timeMap[birthTime] || "00:00";
     }
 
     // API 형식에 맞게 데이터 포맷팅
     const formData = {
       name: name.trim(),
-      gender: gender === 'male' ? '남' : '여',
+      gender: gender === "male" ? "남" : "여",
       birthDate: `${birthDate.getFullYear()}-${String(
         birthDate.getMonth() + 1
-      ).padStart(2, '0')}-${String(birthDate.getDate()).padStart(2, '0')}`, // YYYY-MM-DD 형식 (로컬 시간 기준)
+      ).padStart(2, "0")}-${String(birthDate.getDate()).padStart(2, "0")}`, // YYYY-MM-DD 형식 (로컬 시간 기준)
       birthTime: formattedTime, // HH:MM 형식
-      calendarType: calendarType === 'solar' ? '양력' : '음력',
+      calendarType: calendarType === "solar" ? "양력" : "음력",
       city: city.trim(),
     };
 
     // 시간 모름일 때만 isTimeUnknown 추가
-    if (birthTime === 'unknown') {
+    if (birthTime === "unknown") {
       formData.isTimeUnknown = true;
     }
 
@@ -407,32 +400,32 @@ function SajuInput() {
         setResultData(result.data);
         // 버튼 클릭으로 이동
       } else {
-        alert(result.error || '사주 계산에 실패했습니다');
+        alert(result.error || "사주 계산에 실패했습니다");
       }
     } catch {
-      alert('사주 계산 중 오류가 발생했습니다. 다시 시도해주세요.');
+      alert("사주 계산 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
 
   const handleSavedResults = () => {
-    navigate('/saved-saju');
+    navigate("/saved-saju");
   };
 
   const timeOptions = [
-    { value: '', label: '시간을 선택해주세요' },
-    { value: 'unknown', label: '시간 모름' },
-    { value: '23-01', label: '자시 (23:00 - 01:00)' },
-    { value: '01-03', label: '축시 (01:00 - 03:00)' },
-    { value: '03-05', label: '인시 (03:00 - 05:00)' },
-    { value: '05-07', label: '묘시 (05:00 - 07:00)' },
-    { value: '07-09', label: '진시 (07:00 - 09:00)' },
-    { value: '09-11', label: '사시 (09:00 - 11:00)' },
-    { value: '11-13', label: '오시 (11:00 - 13:00)' },
-    { value: '13-15', label: '미시 (13:00 - 15:00)' },
-    { value: '15-17', label: '신시 (15:00 - 17:00)' },
-    { value: '17-19', label: '유시 (17:00 - 19:00)' },
-    { value: '19-21', label: '술시 (19:00 - 21:00)' },
-    { value: '21-23', label: '해시 (21:00 - 23:00)' },
+    { value: "", label: "시간을 선택해주세요" },
+    { value: "unknown", label: "시간 모름" },
+    { value: "23-01", label: "자시 (23:00 - 01:00)" },
+    { value: "01-03", label: "축시 (01:00 - 03:00)" },
+    { value: "03-05", label: "인시 (03:00 - 05:00)" },
+    { value: "05-07", label: "묘시 (05:00 - 07:00)" },
+    { value: "07-09", label: "진시 (07:00 - 09:00)" },
+    { value: "09-11", label: "사시 (09:00 - 11:00)" },
+    { value: "11-13", label: "오시 (11:00 - 13:00)" },
+    { value: "13-15", label: "미시 (13:00 - 15:00)" },
+    { value: "15-17", label: "신시 (15:00 - 17:00)" },
+    { value: "17-19", label: "유시 (17:00 - 19:00)" },
+    { value: "19-21", label: "술시 (19:00 - 21:00)" },
+    { value: "21-23", label: "해시 (21:00 - 23:00)" },
   ];
 
   return (
@@ -445,8 +438,8 @@ function SajuInput() {
         <InputWrapper>
           <Label>이름</Label>
           <Input
-            placeholder='이름을 입력해주세요'
-            type='text'
+            placeholder="이름을 입력해주세요"
+            type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
@@ -456,14 +449,14 @@ function SajuInput() {
           <Label>성별</Label>
           <ToggleWrapper>
             <ToggleButton
-              $active={gender === 'male'}
-              onClick={() => setGender('male')}
+              $active={gender === "male"}
+              onClick={() => setGender("male")}
             >
               남성
             </ToggleButton>
             <ToggleButton
-              $active={gender === 'female'}
-              onClick={() => setGender('female')}
+              $active={gender === "female"}
+              onClick={() => setGender("female")}
             >
               여성
             </ToggleButton>
@@ -475,14 +468,14 @@ function SajuInput() {
           <DateInputRow>
             <DateToggleWrapper>
               <DateToggleButton
-                $active={calendarType === 'solar'}
-                onClick={() => setCalendarType('solar')}
+                $active={calendarType === "solar"}
+                onClick={() => setCalendarType("solar")}
               >
                 양력
               </DateToggleButton>
               <DateToggleButton
-                $active={calendarType === 'lunar'}
-                onClick={() => setCalendarType('lunar')}
+                $active={calendarType === "lunar"}
+                onClick={() => setCalendarType("lunar")}
               >
                 음력
               </DateToggleButton>
@@ -491,7 +484,7 @@ function SajuInput() {
               <DateInput
                 value={birthDate}
                 onChange={(date) => setBirthDate(date)}
-                placeholder='생년월일 8자리를 입력해주세요'
+                placeholder="생년월일 8자리를 입력해주세요"
               />
             </DateInputWrapper>
             <TimeSelect
@@ -510,31 +503,31 @@ function SajuInput() {
         <InputWrapper>
           <Label>도시명</Label>
           <AddressSearch
-            placeholder='도시명을 입력해주세요'
+            placeholder="도시명을 입력해주세요"
             value={city}
             onChange={(value) => setCity(value)}
           />
         </InputWrapper>
 
-        <Button id='btn1' onClick={handleSajuAnalysis} disabled={loading}>
-          {loading ? '분석 중...' : '사주팔자 확인하기'}
+        <Button id="btn1" onClick={handleSajuAnalysis} disabled={loading}>
+          {loading ? "분석 중..." : "사주팔자 확인하기"}
         </Button>
         <Button onClick={handleSavedResults}>저장된 사주팔자 보러가기</Button>
       </ContentWrapper>
 
       {loading && (
         <LoadingSpinner
-          message={resultData ? '사주 팔자 계산 완료!' : '사주 팔자 계산 중...'}
+          message={resultData ? "사주 팔자 계산 완료!" : "사주 팔자 계산 중..."}
           subMessage={
             resultData
-              ? '결과를 확인해보세요'
-              : '당신의 운명을 분석하고 있습니다'
+              ? "결과를 확인해보세요"
+              : "당신의 운명을 분석하고 있습니다"
           }
           onSkip={
             resultData
               ? () => {
                   setLoading(false); // 버튼 클릭 시 로딩 상태 해제
-                  navigate('/saju-result', { state: resultData });
+                  navigate("/saju-result", { state: resultData });
                 }
               : null
           }
