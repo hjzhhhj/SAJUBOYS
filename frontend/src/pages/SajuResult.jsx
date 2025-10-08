@@ -499,31 +499,30 @@ const ButtonGroup = styled.div`
 const Button = styled.button`
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.12),
-    rgba(118, 75, 162, 0.12)
+    rgba(102, 126, 234, 0.4),
+    rgba(118, 75, 162, 0.4)
   );
   backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.85);
-  border: 1px solid rgba(102, 126, 234, 0.25);
-  border-radius: 50px;
-  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 100px;
+  font-size: 1.25rem;
   font-weight: 500;
   cursor: pointer;
   padding: 1.1rem 3rem;
   min-width: 180px;
-  transition: all 0.25s ease;
-  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  letter-spacing: 0.5px;
   width: 100%;
 
   &:hover {
     background: linear-gradient(
       135deg,
-      rgba(102, 126, 234, 0.2),
-      rgba(118, 75, 162, 0.2)
+      rgba(102, 126, 234, 0.5),
+      rgba(118, 75, 162, 0.5)
     );
-    border-color: rgba(102, 126, 234, 0.4);
-    color: rgba(255, 255, 255, 0.95);
     transform: translateY(-1px);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
   }
 
   &:active {
@@ -531,7 +530,7 @@ const Button = styled.button`
   }
 
   &:disabled {
-    opacity: 0.4;
+    opacity: 0.6;
     cursor: not-allowed;
     transform: none;
   }
