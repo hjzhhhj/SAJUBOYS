@@ -425,65 +425,10 @@ const DaeunItem = styled.div`
   }
 `;
 
-const AdvancedCard = styled.div`
-  background: ${(props) =>
-    props.$variant === "immutable"
-      ? "rgba(102, 126, 234, 0.08)"
-      : props.$variant === "mutable"
-      ? "rgba(156, 102, 234, 0.08)"
-      : "rgba(255, 255, 255, 0.08)"};
-  backdrop-filter: blur(10px);
-  border: 1px solid
-    ${(props) =>
-      props.$variant === "immutable"
-        ? "rgba(102, 126, 234, 0.3)"
-        : props.$variant === "mutable"
-        ? "rgba(156, 102, 234, 0.3)"
-        : "rgba(255, 255, 255, 0.2)"};
-  border-radius: 16px;
-  padding: 2rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 1.5rem;
-  width: 100%;
-`;
-
-const AdvancedTitle = styled.h3`
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 1rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-`;
-
-const AdvancedContent = styled.div`
-  color: rgba(255, 255, 255, 0.8);
-  line-height: 1.8;
-  font-size: 1rem;
-  padding-top: 1rem;
-`;
-
-const ZodiacCard = styled.div`
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 16px;
-  padding: 2.5rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 1.5rem;
-  text-align: center;
-  width: 100%;
-`;
-
-const ZodiacAnimal = styled.div`
-  font-size: 4rem;
-  margin-bottom: 1.5rem;
-`;
-
 const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 2rem;
   margin-top: 2rem;
   justify-content: center;
   width: 100%;
@@ -499,30 +444,29 @@ const ButtonGroup = styled.div`
 const Button = styled.button`
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.4),
-    rgba(118, 75, 162, 0.4)
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
   );
   backdrop-filter: blur(10px);
   color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 400;
   cursor: pointer;
-  padding: 1.1rem 3rem;
+  padding: 1rem 3.25rem;
   min-width: 180px;
   transition: all 0.3s ease;
-  letter-spacing: 0.5px;
   width: 100%;
 
   &:hover {
     background: linear-gradient(
       135deg,
-      rgba(102, 126, 234, 0.5),
-      rgba(118, 75, 162, 0.5)
+      rgba(102, 126, 234, 0.25),
+      rgba(118, 75, 162, 0.25)
     );
     transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
   }
 
   &:active {
@@ -899,7 +843,16 @@ function SajuResult() {
 
         {/* 조언 섹션 - 공통 */}
         {resultData.interpretation?.advancedAnalysis?.timelyFortune?.advice && (
-          <ResultCard style={{ marginTop: "2rem" }}>
+          <ResultCard
+            style={{
+              marginTop: "2rem",
+              background:
+                "linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(156, 102, 234, 0.08))",
+              backdropFilter: "blur(10px)",
+              borderRadius: "16px",
+              border: "1px solid rgba(185, 161, 230, 0.35)",
+            }}
+          >
             <SectionTitle>💡 올해 행동 가이드</SectionTitle>
             <Description>
               {resultData.interpretation.advancedAnalysis.timelyFortune.advice}
