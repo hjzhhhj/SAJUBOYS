@@ -114,16 +114,17 @@ export class SajuInterpreter {
       );
 
     balance
-      .filter((item) => item.percentage < 10)
+      .filter((item) => item.percentage < 15)
       .forEach(
         (item) => (interpretation += this.interpretLackingElement(item)),
       );
 
-    if (
-      balance.every((item) => item.percentage >= 15 && item.percentage <= 25)
-    ) {
+    const hasExtreme = balance.some(
+      (item) => item.percentage > 40 || item.percentage < 15,
+    );
+    if (!hasExtreme) {
       interpretation +=
-        '\n오행의 균형이 이상적인 사주\n\n특징: 조화로운 성격, 뛰어난 적응력, 종합적 사고력.\n장점: 건강한 체질, 다양한 분야 능력 발휘, 원만한 인간관계.\n\n';
+        '\n오행의 균형이 잘 잡힌 사주\n\n특징: 조화로운 성격, 뛰어난 적응력, 종합적 사고력.\n장점: 건강한 체질, 다양한 분야 능력 발휘, 원만한 인간관계.\n\n';
     }
 
     return interpretation;
@@ -300,7 +301,7 @@ export class SajuInterpreter {
 
     return (
       `◆ 일간 ${dayHeavenly}(${dayInfo.element})의 적성: ${careers.slice(0, 5).join(', ')}\n` +
-      `◆ 오행 ${dominantElement}이 강한 적성: ${this.ELEMENT_CAREER[dominantElement]}\n` +
+      `◆ 오행 ${dominantElement}(이)가 강한 적성: ${this.ELEMENT_CAREER[dominantElement]}\n` +
       `일간의 특성과 오행 균형을 고려할 때, 위 분야에서 탁월한 능력을 발휘할 수 있습니다.`
     );
   }

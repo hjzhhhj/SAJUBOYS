@@ -253,6 +253,7 @@ export class SajuAdvancedInterpreter {
 
 **주의사항:**
 - keywords는 정확히 5개만 작성하세요.
+- keywords는 띄어쓰기 없이 작성하세요.
 - shouldDo는 정확히 3개만 작성하세요.
 - shouldAvoid는 정확히 3개만 작성하세요.
 - 각 항목은 구체적이고 실천 가능한 내용으로 작성하세요.`;
