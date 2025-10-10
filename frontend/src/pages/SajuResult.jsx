@@ -313,6 +313,21 @@ const Description = styled.p`
   white-space: pre-line;
 `;
 
+const Highlight = styled.span`
+  font-weight: 600;
+  color: ${(props) => {
+    const colors = {
+      금: "#fff9c7",
+      화: "#ffb3b3",
+      목: "#b3f5b3",
+      토: "#f5d9b3",
+      수: "#b3d9ff",
+      default: "#ffffff",
+    };
+    return colors[props.$element] || colors.default;
+  }};
+`;
+
 const FiveElementsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -483,6 +498,88 @@ const Button = styled.button`
     width: auto;
   }
 `;
+
+const highlightText = (text) => {
+  if (!text || typeof text !== "string") return text;
+
+  const detectElement = (str, type) => {
+    // element type일 때만 오행 색상 감지, 나머지는 모두 default
+    if (type !== "element") return "default";
+
+    if (/금|金|Metal/i.test(str)) return "금";
+    if (/화|火|Fire/i.test(str)) return "화";
+    if (/목|木|Wood/i.test(str)) return "목";
+    if (/토|土|Earth/i.test(str)) return "토";
+    if (/수|水|Water/i.test(str)) return "수";
+    return "default";
+  };
+
+  const keywordPatterns = [
+    {
+      pattern:
+        /(?:금|金|Metal|화|火|Fire|목|木|Wood|토|土|Earth|수|水|Water)\s*(?:\([^)]+\))?\s*(?:기운이?\s*)?(?:약한|강한|부족|과다|지나치게\s강한)\s*(?:체질|사람)?/gi,
+      type: "element",
+    },
+    {
+      pattern: /◆\s*(?:목|화|토|금|수)\((?:Wood|Fire|Earth|Metal|Water)\)\s*(?:과다|부족):[^\n]+/g,
+      type: "element",
+    },
+    { pattern: /양기가\s*강한\s*사주입니다\s*\([^)]+\)/g, type: "yinyang" },
+    { pattern: /음기가\s*강한\s*사주입니다\s*\([^)]+\)/g, type: "yinyang" },
+    { pattern: /강점:\s*[^\n]+/g, type: "keyword" },
+    { pattern: /약점:\s*[^\n]+/g, type: "keyword" },
+    { pattern: /◆[^◆\n]+/g, type: "keyword" },
+    { pattern: /#[가-힣a-zA-Z0-9]+/g, type: "hashtag" },
+  ];
+
+  const matches = [];
+  keywordPatterns.forEach(({ pattern, type }) => {
+    let match;
+    const regex = new RegExp(pattern.source, pattern.flags);
+    while ((match = regex.exec(text)) !== null) {
+      matches.push({
+        start: match.index,
+        end: match.index + match[0].length,
+        text: match[0],
+        element: detectElement(match[0], type),
+      });
+    }
+  });
+
+  if (matches.length === 0) return text;
+
+  matches.sort((a, b) => a.start - b.start);
+
+  const filtered = [];
+  let lastEnd = -1;
+  matches.forEach((m) => {
+    if (m.start >= lastEnd) {
+      filtered.push(m);
+      lastEnd = m.end;
+    }
+  });
+
+  const result = [];
+  let lastIdx = 0;
+
+  filtered.forEach((match, idx) => {
+    if (match.start > lastIdx) {
+      result.push(text.substring(lastIdx, match.start));
+    }
+    result.push(
+      <Highlight key={`highlight-${idx}`} $element={match.element}>
+        {match.text}
+      </Highlight>
+    );
+    lastIdx = match.end;
+  });
+
+  if (lastIdx < text.length) {
+    result.push(text.substring(lastIdx));
+  }
+
+  return result;
+};
 
 function SajuResult() {
   const location = useLocation();
@@ -705,14 +802,7 @@ function SajuResult() {
                 </FiveElementsGrid>
                 {resultData.interpretation?.elementBalance && (
                   <Description>
-                    {resultData.interpretation.elementBalance
-                      .split("\n")
-                      .map((line, index) => (
-                        <span key={index}>
-                          <br />
-                          {line}
-                        </span>
-                      ))}
+                    {highlightText(resultData.interpretation.elementBalance)}
                     <div
                       style={{
                         textAlign: "center",
@@ -786,32 +876,40 @@ function SajuResult() {
             {/* 해석 결과 - 바뀌는 부분 */}
             <ResultCard $variant="mutable">
               <SectionTitle>✨ 성격 분석</SectionTitle>
-              <Description>{resultData.interpretation.personality}</Description>
+              <Description>
+                {highlightText(resultData.interpretation.personality)}
+              </Description>
             </ResultCard>
 
             <ResultCard $variant="mutable">
               <SectionTitle>💼 직업 운</SectionTitle>
-              <Description>{resultData.interpretation.career}</Description>
+              <Description>
+                {highlightText(resultData.interpretation.career)}
+              </Description>
             </ResultCard>
 
             <ResultCard $variant="mutable">
               <SectionTitle>💕 연애 운</SectionTitle>
               <Description>
-                {resultData.interpretation.relationship}
+                {highlightText(resultData.interpretation.relationship)}
               </Description>
             </ResultCard>
 
             {resultData.interpretation.wealth && (
               <ResultCard $variant="mutable">
                 <SectionTitle>💰 재물운</SectionTitle>
-                <Description>{resultData.interpretation.wealth}</Description>
+                <Description>
+                  {highlightText(resultData.interpretation.wealth)}
+                </Description>
               </ResultCard>
             )}
 
             {resultData.interpretation.health && (
               <ResultCard $variant="mutable">
                 <SectionTitle>🍃 건강운</SectionTitle>
-                <Description>{resultData.interpretation.health}</Description>
+                <Description>
+                  {highlightText(resultData.interpretation.health)}
+                </Description>
               </ResultCard>
             )}
 
@@ -819,7 +917,7 @@ function SajuResult() {
               <ResultCard $variant="immutable">
                 <SectionTitle>🤝 대인관계 & 인간관계 운</SectionTitle>
                 <Description>
-                  {resultData.interpretation.socialRelationship}
+                  {highlightText(resultData.interpretation.socialRelationship)}
                 </Description>
               </ResultCard>
             )}
@@ -836,7 +934,9 @@ function SajuResult() {
 
             <ResultCard $variant="mutable">
               <SectionTitle>🌟 총운</SectionTitle>
-              <Description>{resultData.interpretation.fortune}</Description>
+              <Description>
+                {highlightText(resultData.interpretation.fortune)}
+              </Description>
             </ResultCard>
           </Column>
         </SectionWrapper>
@@ -855,7 +955,9 @@ function SajuResult() {
           >
             <SectionTitle>💡 올해 행동 가이드</SectionTitle>
             <Description>
-              {resultData.interpretation.advancedAnalysis.timelyFortune.advice}
+              {highlightText(
+                resultData.interpretation.advancedAnalysis.timelyFortune.advice
+              )}
             </Description>
           </ResultCard>
         )}
