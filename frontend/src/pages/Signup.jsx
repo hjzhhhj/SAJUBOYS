@@ -156,35 +156,40 @@ const Input = styled.input`
 const Button = styled.button`
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.4),
-    rgba(118, 75, 162, 0.4)
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
   );
   backdrop-filter: blur(10px);
   color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 400;
   cursor: pointer;
   margin-top: 1rem;
-  width: 100%;
-  height: 3.75rem;
+  padding: 1rem 3.25rem;
+  min-width: 180px;
   transition: all 0.3s ease;
-  letter-spacing: 0.5px;
+  width: 100%;
 
   &:hover {
     background: linear-gradient(
       135deg,
-      rgba(102, 126, 234, 0.5),
-      rgba(118, 75, 162, 0.5)
+      rgba(102, 126, 234, 0.25),
+      rgba(118, 75, 162, 0.25)
     );
     transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
   }
 `;
 

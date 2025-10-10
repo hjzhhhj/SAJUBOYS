@@ -140,24 +140,38 @@ const BackButton = styled.button`
   color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 400;
   cursor: pointer;
-  padding: 0.75rem 2rem;
+  padding: 1rem 3.25rem;
+  min-width: 180px;
   transition: all 0.3s ease;
   position: absolute;
-  top: 40px;
+  top: 25px;
   right: 40px;
-  letter-spacing: 0.5px;
 
   &:hover {
     background: linear-gradient(
       135deg,
-      rgba(102, 126, 234, 0.3),
-      rgba(118, 75, 162, 0.3)
+      rgba(102, 126, 234, 0.25),
+      rgba(118, 75, 162, 0.25)
     );
     transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @media (min-width: 768px) {
+    width: auto;
   }
 `;
 
@@ -240,29 +254,43 @@ const EmptyDescription = styled.p`
 const CalculateButton = styled.button`
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.4),
-    rgba(118, 75, 162, 0.4)
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
   );
   backdrop-filter: blur(10px);
   color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  padding: 14px 28px;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.2rem;
+  font-weight: 400;
   cursor: pointer;
-  margin-top: 20px;
+  padding: 1.1rem 3.25rem;
+  min-width: 180px;
   transition: all 0.3s ease;
-  letter-spacing: 0.5px;
+  margin-top: 20px;
 
   &:hover {
     background: linear-gradient(
       135deg,
-      rgba(102, 126, 234, 0.5),
-      rgba(118, 75, 162, 0.5)
+      rgba(102, 126, 234, 0.25),
+      rgba(118, 75, 162, 0.25)
     );
     transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @media (min-width: 768px) {
+    width: auto;
   }
 `;
 

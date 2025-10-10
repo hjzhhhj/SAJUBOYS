@@ -45,9 +45,9 @@ const Container = styled.div`
 `;
 
 const GradientCircle1 = styled.div`
-  position: absolute;
-  width: 800px;
-  height: 800px;
+  position: fixed;
+  width: 600px;
+  height: 600px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
@@ -55,16 +55,24 @@ const GradientCircle1 = styled.div`
     rgba(98, 0, 255, 0.31) 50%,
     #0e0025 100%
   );
-  top: -300px;
-  right: -200px;
+  top: -200px;
+  right: -100px;
   animation: ${float1} 15s ease-in-out infinite;
   filter: blur(40px);
+  pointer-events: none;
+
+  @media (min-width: 768px) {
+    width: 800px;
+    height: 800px;
+    top: -300px;
+    right: -200px;
+  }
 `;
 
 const GradientCircle2 = styled.div`
-  position: absolute;
-  width: 800px;
-  height: 800px;
+  position: fixed;
+  width: 600px;
+  height: 600px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
@@ -72,10 +80,18 @@ const GradientCircle2 = styled.div`
     rgba(98, 0, 255, 0.31) 50%,
     #0e0025 100%
   );
-  bottom: -200px;
-  left: 300px;
+  bottom: -150px;
+  left: 100px;
   animation: ${float2} 18s ease-in-out infinite;
   filter: blur(40px);
+  pointer-events: none;
+
+  @media (min-width: 768px) {
+    width: 800px;
+    height: 800px;
+    bottom: -200px;
+    left: 300px;
+  }
 `;
 
 const ContentWrapper = styled.div`
@@ -115,7 +131,7 @@ const Title = styled.h1`
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.8rem;
+  margin-bottom: 1.6rem;
   width: 100%;
 `;
 
@@ -156,30 +172,39 @@ const Input = styled.input`
 const Button = styled.button`
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.4),
-    rgba(118, 75, 162, 0.4)
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
   );
   backdrop-filter: blur(10px);
   color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 400;
   cursor: pointer;
-  margin-top: 1rem;
-  width: 100%;
-  height: 3.75rem;
+  margin-top: 1.2rem;
+  padding: 1rem 3.25rem;
   transition: all 0.3s ease;
-  letter-spacing: 0.5px;
+  width: 100%;
 
   &:hover {
     background: linear-gradient(
       135deg,
-      rgba(102, 126, 234, 0.5),
-      rgba(118, 75, 162, 0.5)
+      rgba(102, 126, 234, 0.25),
+      rgba(118, 75, 162, 0.25)
     );
     transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
   }
 `;
 

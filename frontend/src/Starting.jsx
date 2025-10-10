@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
+import { useNavigate } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
 
 const float1 = keyframes`
   0%, 100% {
@@ -53,9 +53,9 @@ const ContentWrapper = styled.div`
 `;
 
 const GradientCircle1 = styled.div`
-  position: absolute;
-  width: 800px;
-  height: 800px;
+  position: fixed;
+  width: 600px;
+  height: 600px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
@@ -63,16 +63,24 @@ const GradientCircle1 = styled.div`
     rgba(98, 0, 255, 0.31) 50%,
     #0e0025 100%
   );
-  top: -300px;
-  right: -200px;
+  top: -200px;
+  right: -100px;
   animation: ${float1} 15s ease-in-out infinite;
   filter: blur(40px);
+  pointer-events: none;
+
+  @media (min-width: 768px) {
+    width: 800px;
+    height: 800px;
+    top: -300px;
+    right: -200px;
+  }
 `;
 
 const GradientCircle2 = styled.div`
-  position: absolute;
-  width: 800px;
-  height: 800px;
+  position: fixed;
+  width: 600px;
+  height: 600px;
   border-radius: 50%;
   background: radial-gradient(
     circle,
@@ -80,10 +88,18 @@ const GradientCircle2 = styled.div`
     rgba(98, 0, 255, 0.31) 50%,
     #0e0025 100%
   );
-  bottom: -200px;
-  left: 300px;
+  bottom: -150px;
+  left: 100px;
   animation: ${float2} 18s ease-in-out infinite;
   filter: blur(40px);
+  pointer-events: none;
+
+  @media (min-width: 768px) {
+    width: 800px;
+    height: 800px;
+    bottom: -200px;
+    left: 300px;
+  }
 `;
 
 const SubTitle = styled.h1`
@@ -106,7 +122,7 @@ const Title = styled.h1`
   position: relative;
 
   &::after {
-    content: 'SAJUBOYS';
+    content: "SAJUBOYS";
     position: absolute;
     left: 0;
     top: 0;
@@ -120,30 +136,45 @@ const Title = styled.h1`
 const Button = styled.button`
   background: linear-gradient(
     135deg,
-    rgba(102, 126, 234, 0.4),
-    rgba(118, 75, 162, 0.4)
+    rgba(102, 126, 234, 0.2),
+    rgba(118, 75, 162, 0.2)
   );
   backdrop-filter: blur(10px);
   color: rgba(255, 255, 255, 0.8);
   border: 1px solid rgba(102, 126, 234, 0.3);
   border-radius: 100px;
-  font-size: 1.25rem;
-  font-weight: 500;
+  font-size: 1.1rem;
+  font-weight: 400;
   cursor: pointer;
-  margin-top: 7rem;
-  width: 28rem;
-  height: 4rem;
+  margin-top: 4.5rem;
+  padding: 1rem 3.5rem;
+  min-width: 180px;
   transition: all 0.3s ease;
+  width: 28rem;
   letter-spacing: 0.5px;
 
   &:hover {
     background: linear-gradient(
       135deg,
-      rgba(102, 126, 234, 0.5),
-      rgba(118, 75, 162, 0.5)
+      rgba(102, 126, 234, 0.25),
+      rgba(118, 75, 162, 0.25)
     );
     transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  @media (min-width: 768px) {
+    width: auto;
   }
 `;
 
@@ -157,7 +188,7 @@ function Starting() {
       <ContentWrapper>
         <SubTitle>오늘 당신의 사주를 확인해보세요</SubTitle>
         <Title>SAJUBOYS</Title>
-        <Button onClick={() => navigate('/login')}>사주팔자 보러가기</Button>
+        <Button onClick={() => navigate("/login")}>사주팔자 보러가기</Button>
       </ContentWrapper>
     </Container>
   );
