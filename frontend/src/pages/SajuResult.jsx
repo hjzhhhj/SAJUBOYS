@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import styled, { keyframes } from 'styled-components';
-import SajuCharts from '../components/SajuCharts';
-import { useAuth } from '../context/AuthContext';
-import api from '../services/api'; // axios 대신 api 인스턴스 사용
+import { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
+import SajuCharts from "../components/SajuCharts";
+import { useAuth } from "../context/AuthContext";
+import api from "../services/api"; // axios 대신 api 인스턴스 사용
 
 const float1 = keyframes`
   0%, 100% {
@@ -203,9 +203,9 @@ const Title = styled.h1`
   -webkit-text-fill-color: transparent;
   background-clip: text;
   font-size: 3rem;
-  font-weight: 700;
-  margin-bottom: 2.5rem;
-  font-family: 'Cinzel', cursive;
+  font-weight: 800;
+  margin-bottom: 3rem;
+  font-family: "Cinzel", cursive;
   letter-spacing: 2px;
   position: relative;
 
@@ -558,29 +558,29 @@ function SajuResult() {
 
       // 날짜 형식 변환
       let formattedDate = data.birthDate;
-      if (data.birthDate && data.birthDate.includes('-')) {
-        const [year, month, day] = data.birthDate.split('-');
+      if (data.birthDate && data.birthDate.includes("-")) {
+        const [year, month, day] = data.birthDate.split("-");
         formattedDate = `${year}년 ${month}월 ${day}일`;
       }
 
       // 시간 표시 형식 변환
       let formattedTime = null;
       if (data.isTimeUnknown) {
-        formattedTime = '시간 모름';
+        formattedTime = "시간 모름";
       } else if (data.birthTime) {
         const timeMap = {
-          '00:00': '자시 (23:00 - 01:00)',
-          '02:00': '축시 (01:00 - 03:00)',
-          '04:00': '인시 (03:00 - 05:00)',
-          '06:00': '묘시 (05:00 - 07:00)',
-          '08:00': '진시 (07:00 - 09:00)',
-          '10:00': '사시 (09:00 - 11:00)',
-          '12:00': '오시 (11:00 - 13:00)',
-          '14:00': '미시 (13:00 - 15:00)',
-          '16:00': '신시 (15:00 - 17:00)',
-          '18:00': '유시 (17:00 - 19:00)',
-          '20:00': '술시 (19:00 - 21:00)',
-          '22:00': '해시 (21:00 - 23:00)',
+          "00:00": "자시 (23:00 - 01:00)",
+          "02:00": "축시 (01:00 - 03:00)",
+          "04:00": "인시 (03:00 - 05:00)",
+          "06:00": "묘시 (05:00 - 07:00)",
+          "08:00": "진시 (07:00 - 09:00)",
+          "10:00": "사시 (09:00 - 11:00)",
+          "12:00": "오시 (11:00 - 13:00)",
+          "14:00": "미시 (13:00 - 15:00)",
+          "16:00": "신시 (15:00 - 17:00)",
+          "18:00": "유시 (17:00 - 19:00)",
+          "20:00": "술시 (19:00 - 21:00)",
+          "22:00": "해시 (21:00 - 23:00)",
         };
         formattedTime = timeMap[data.birthTime] || data.birthTime;
       }
@@ -591,31 +591,31 @@ function SajuResult() {
         birthDate: formattedDate,
         birthTime: formattedTime,
         gender:
-          data.gender === '남'
-            ? '남성'
-            : data.gender === '여'
-            ? '여성'
+          data.gender === "남"
+            ? "남성"
+            : data.gender === "여"
+            ? "여성"
             : data.gender,
         isTimeUnknown: data.isTimeUnknown,
       });
     } else {
-      navigate('/saju-input');
+      navigate("/saju-input");
     }
   }, [location.state, navigate]);
 
   const handleNewReading = () => {
-    navigate('/saju-input');
+    navigate("/saju-input");
   };
 
   const handleSaveResult = async () => {
     if (!user) {
-      alert('로그인이 필요합니다.');
-      navigate('/login');
+      alert("로그인이 필요합니다.");
+      navigate("/login");
       return;
     }
 
     if (!resultData._id) {
-      alert('저장할 수 있는 결과가 아닙니다.');
+      alert("저장할 수 있는 결과가 아닙니다.");
       return;
     }
 
@@ -625,10 +625,10 @@ function SajuResult() {
       const response = await api.post(`/saju/${resultData._id}/save`, {});
 
       if (response.data.success) {
-        alert('결과가 성공적으로 저장되었습니다!');
+        alert("결과가 성공적으로 저장되었습니다!");
       }
     } catch {
-      alert('결과 저장에 실패했습니다.');
+      alert("결과 저장에 실패했습니다.");
     } finally {
       setSaving(false);
     }
@@ -639,7 +639,7 @@ function SajuResult() {
       <Container>
         <ContentWrapper>
           <Title>SAJUBOYS</Title>
-          <p style={{ color: 'rgba(255, 255, 255, 0.6)', fontSize: '1.2rem' }}>
+          <p style={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "1.2rem" }}>
             데이터를 불러오는 중...
           </p>
         </ContentWrapper>
@@ -772,33 +772,33 @@ function SajuResult() {
                       ))}
                     <div
                       style={{
-                        textAlign: 'center',
-                        margin: '2rem 0',
-                        padding: '1.5rem',
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        borderRadius: '12px',
+                        textAlign: "center",
+                        margin: "2rem 0",
+                        padding: "1.5rem",
+                        background: "rgba(255, 255, 255, 0.03)",
+                        borderRadius: "12px",
                       }}
                     >
                       <img
-                        src='/src/assets/saju.png'
-                        alt='오행 상생상극 다이어그램'
+                        src="/src/assets/saju.png"
+                        alt="오행 상생상극 다이어그램"
                         style={{
-                          maxWidth: '100%',
-                          height: 'auto',
-                          maxHeight: '300px',
-                          margin: '0 auto',
-                          display: 'block',
+                          maxWidth: "100%",
+                          height: "auto",
+                          maxHeight: "300px",
+                          margin: "0 auto",
+                          display: "block",
                         }}
                       />
                       <p
                         style={{
-                          marginTop: '1rem',
-                          color: 'rgba(255, 255, 255, 0.7)',
-                          fontSize: '0.9rem',
-                          lineHeight: '1.6',
+                          marginTop: "1rem",
+                          color: "rgba(255, 255, 255, 0.7)",
+                          fontSize: "0.9rem",
+                          lineHeight: "1.6",
                         }}
                       >
-                        <strong style={{ color: 'rgba(255, 255, 255, 0.9)' }}>
+                        <strong style={{ color: "rgba(255, 255, 255, 0.9)" }}>
                           오행 상생상극의 원리
                         </strong>
                         <br />
@@ -875,7 +875,9 @@ function SajuResult() {
             {resultData.interpretation?.socialRelationship && (
               <ResultCard $variant="immutable">
                 <SectionTitle>🤝 대인관계 & 인간관계 운</SectionTitle>
-                <Description>{resultData.interpretation.socialRelationship}</Description>
+                <Description>
+                  {resultData.interpretation.socialRelationship}
+                </Description>
               </ResultCard>
             )}
 
@@ -898,7 +900,7 @@ function SajuResult() {
 
         {/* 조언 섹션 - 공통 */}
         {resultData.interpretation?.advancedAnalysis?.timelyFortune?.advice && (
-          <ResultCard style={{ marginTop: '2rem' }}>
+          <ResultCard style={{ marginTop: "2rem" }}>
             <SectionTitle>💡 올해 행동 가이드</SectionTitle>
             <Description>
               {resultData.interpretation.advancedAnalysis.timelyFortune.advice}
@@ -909,14 +911,14 @@ function SajuResult() {
         <ButtonGroup>
           {isFromSaved ? (
             // 저장된 결과를 볼 때는 뒤로가기 버튼만 표시
-            <Button onClick={() => navigate('/saved-saju')}>
+            <Button onClick={() => navigate("/saved-saju")}>
               저장된 목록으로 돌아가기
             </Button>
           ) : (
             // 새로운 결과를 볼 때는 저장하기와 새로운 사주 버튼 표시
             <>
               <Button $primary onClick={handleSaveResult} disabled={saving}>
-                {saving ? '저장 중...' : '결과 저장하기'}
+                {saving ? "저장 중..." : "결과 저장하기"}
               </Button>
               <Button onClick={handleNewReading}>새로운 사주 보기</Button>
             </>

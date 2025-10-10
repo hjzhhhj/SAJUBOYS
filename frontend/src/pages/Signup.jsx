@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import styled, { keyframes } from 'styled-components';
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import styled, { keyframes } from "styled-components";
 
 const float1 = keyframes`
   0%, 100% {
@@ -100,22 +100,15 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 4rem;
-  font-weight: 900;
+  font-size: 3rem;
+  font-weight: 800;
   margin-bottom: 1.5rem;
-  font-family: 'Cinzel', cursive;
-  text-shadow: 0 0 40px rgba(102, 126, 234, 0.3);
+  font-family: "Cinzel", cursive;
+  letter-spacing: 2px;
   position: relative;
 
-  &::after {
-    content: 'SIGN UP';
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: -1;
-    background: none;
-    -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 80px rgba(118, 75, 162, 0.5);
+  @media (min-width: 768px) {
+    font-size: 3.5rem;
   }
 `;
 
@@ -229,20 +222,20 @@ function Signup() {
   const navigate = useNavigate();
   const { signup, loading } = useAuth();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
+    setError("");
   };
 
   const validateForm = () => {
@@ -252,23 +245,23 @@ function Signup() {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      setError('모든 필드를 입력해주세요');
+      setError("모든 필드를 입력해주세요");
       return false;
     }
 
     if (formData.password.length < 6) {
-      setError('비밀번호는 6자 이상이어야 합니다');
+      setError("비밀번호는 6자 이상이어야 합니다");
       return false;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError('비밀번호가 일치하지 않습니다');
+      setError("비밀번호가 일치하지 않습니다");
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(formData.email)) {
-      setError('올바른 이메일 형식이 아닙니다');
+      setError("올바른 이메일 형식이 아닙니다");
       return false;
     }
 
@@ -289,12 +282,12 @@ function Signup() {
     );
 
     if (result.success) {
-      setSuccess('회원가입이 완료되었습니다!');
+      setSuccess("회원가입이 완료되었습니다!");
       setTimeout(() => {
-        navigate('/login');
+        navigate("/login");
       }, 2000);
     } else {
-      setError(result.error || '회원가입에 실패했습니다');
+      setError(result.error || "회원가입에 실패했습니다");
     }
   };
 
@@ -310,9 +303,9 @@ function Signup() {
           <InputWrapper>
             <Label>이름</Label>
             <Input
-              type='text'
-              name='name'
-              placeholder='이름을 입력해주세요'
+              type="text"
+              name="name"
+              placeholder="이름을 입력해주세요"
               value={formData.name}
               onChange={handleChange}
             />
@@ -320,9 +313,9 @@ function Signup() {
           <InputWrapper>
             <Label>이메일</Label>
             <Input
-              type='email'
-              name='email'
-              placeholder='이메일을 입력해주세요'
+              type="email"
+              name="email"
+              placeholder="이메일을 입력해주세요"
               value={formData.email}
               onChange={handleChange}
             />
@@ -330,9 +323,9 @@ function Signup() {
           <InputWrapper>
             <Label>비밀번호</Label>
             <Input
-              type='password'
-              name='password'
-              placeholder='비밀번호를 입력해주세요 (6자 이상)'
+              type="password"
+              name="password"
+              placeholder="비밀번호를 입력해주세요 (6자 이상)"
               value={formData.password}
               onChange={handleChange}
             />
@@ -340,18 +333,18 @@ function Signup() {
           <InputWrapper>
             <Label>비밀번호 확인</Label>
             <Input
-              type='password'
-              name='confirmPassword'
-              placeholder='비밀번호를 다시 입력해주세요'
+              type="password"
+              name="confirmPassword"
+              placeholder="비밀번호를 다시 입력해주세요"
               value={formData.confirmPassword}
               onChange={handleChange}
             />
           </InputWrapper>
-          <Button type='submit' disabled={loading}>
-            {loading ? '가입 중...' : '회원가입'}
+          <Button type="submit" disabled={loading}>
+            {loading ? "가입 중..." : "회원가입"}
           </Button>
           <LinkText>
-            이미 계정이 있으신가요? <Link to='/login'>로그인하기</Link>
+            이미 계정이 있으신가요? <Link to="/login">로그인하기</Link>
           </LinkText>
         </SignupForm>
       </ContentWrapper>
