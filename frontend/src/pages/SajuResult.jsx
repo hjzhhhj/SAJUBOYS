@@ -503,7 +503,9 @@ const highlightText = (text) => {
   if (!text || typeof text !== "string") return text;
 
   const detectElement = (str, type) => {
-    if (type === "hashtag") return "default";
+    // element type일 때만 오행 색상 감지, 나머지는 모두 default
+    if (type !== "element") return "default";
+
     if (/금|金|Metal/i.test(str)) return "금";
     if (/화|火|Fire/i.test(str)) return "화";
     if (/목|木|Wood/i.test(str)) return "목";
@@ -516,6 +518,10 @@ const highlightText = (text) => {
     {
       pattern:
         /(?:금|金|Metal|화|火|Fire|목|木|Wood|토|土|Earth|수|水|Water)\s*(?:\([^)]+\))?\s*(?:기운이?\s*)?(?:약한|강한|부족|과다|지나치게\s강한)\s*(?:체질|사람)?/gi,
+      type: "element",
+    },
+    {
+      pattern: /◆\s*(?:목|화|토|금|수)\((?:Wood|Fire|Earth|Metal|Water)\)\s*(?:과다|부족):[^\n]+/g,
       type: "element",
     },
     { pattern: /양기가\s*강한\s*사주입니다\s*\([^)]+\)/g, type: "yinyang" },
