@@ -7,22 +7,29 @@ const Input = styled.input`
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   width: 100%;
-  padding: 1.15rem 2rem;
+  padding: 0.9rem 1.5rem;
+  height: 3.2rem;
   box-sizing: border-box;
   transition: all 0.3s ease;
-  
+
   &:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(102, 126, 234, 0.5);
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+    border-color: rgba(180, 140, 230, 0.6);
+    box-shadow: 0 0 25px rgba(150, 100, 200, 0.4);
   }
-  
+
   &::placeholder {
     color: rgba(255, 255, 255, 0.5);
+  }
+
+  @media (min-width: 769px) {
+    height: 3.5rem;
+    padding: 1rem 1.8rem;
+    font-size: 0.95rem;
   }
 `;
 

@@ -16,10 +16,11 @@ const InputContainer = styled.div`
 
 const Input = styled.input`
   width: 100%;
-  padding: 1.25rem 3rem 1.25rem 2rem;
+  padding: 0.9rem 2.5rem 0.9rem 1.5rem;
+  height: 3.2rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(10px);
   color: white;
@@ -30,12 +31,18 @@ const Input = styled.input`
   &:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(102, 126, 234, 0.5);
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+    border-color: rgba(180, 140, 230, 0.6);
+    box-shadow: 0 0 25px rgba(150, 100, 200, 0.4);
   }
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.5);
+  }
+
+  @media (min-width: 769px) {
+    height: 3.5rem;
+    padding: 1rem 2.5rem 1rem 1.8rem;
+    font-size: 0.95rem;
   }
 `;
 
@@ -72,7 +79,7 @@ const ResultItem = styled.li`
   transition: all 0.2s;
 
   &:hover {
-    background: rgba(102, 126, 234, 0.2);
+    background: rgba(200, 160, 255, 0.2);
   }
 
   &:not(:last-child) {

@@ -43,10 +43,9 @@ const Container = styled.div`
   align-items: center;
   justify-content: center;
   background-color: black;
-  min-height: 100vh;
   height: 100vh;
-  width: 100vw;
-  position: fixed;
+  width: 100%;
+  position: relative;
   overflow: hidden;
   padding: 0;
   margin: 0;
@@ -56,10 +55,23 @@ const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: space-evenly;
   z-index: 1;
   width: 100%;
-  margin-top: 1rem;
+  max-width: 100%;
+  height: 100%;
+  padding: 2vh 1rem;
+  box-sizing: border-box;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  @media (min-width: 769px) {
+    padding: 3vh 2rem;
+  }
+
+  @media (min-width: 1025px) {
+    padding: 4vh 2rem;
+  }
 `;
 
 const GradientCircle1 = styled.div`
@@ -70,7 +82,7 @@ const GradientCircle1 = styled.div`
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0) 0%,
-    rgba(98, 0, 255, 0.31) 50%,
+    rgba(135, 60, 255, 0.3) 50%,
     #0e0025 100%
   );
   top: -200px;
@@ -95,7 +107,7 @@ const GradientCircle2 = styled.div`
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0) 0%,
-    rgba(98, 0, 255, 0.31) 50%,
+    rgba(135, 60, 255, 0.3) 50%,
     #0e0025 100%
   );
   bottom: -150px;
@@ -117,14 +129,20 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 3rem;
+  font-size: 2.2rem;
   font-weight: 900;
-  margin-bottom: 1.5rem;
+  margin: 0;
   font-family: "Cinzel Decorative", cursive;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   position: relative;
+  line-height: 1.2;
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
+    font-size: 2.8rem;
+    letter-spacing: 2px;
+  }
+
+  @media (min-width: 1025px) {
     font-size: 3.5rem;
   }
 `;
@@ -132,8 +150,16 @@ const Title = styled.h1`
 const InputWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  margin-bottom: 1.8rem;
-  width: 800px;
+  margin: 0;
+  margin-bottom: 1.2rem;
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+
+  @media (min-width: 769px) {
+    width: 90%;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const Input = styled.input`
@@ -142,13 +168,14 @@ const Input = styled.input`
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   margin-bottom: 0;
   width: 100%;
-  padding: 1.25rem 2rem;
+  padding: 0.9rem 1.5rem;
   box-sizing: border-box;
   transition: all 0.3s ease;
+  height: 3.2rem;
 
   &::placeholder {
     color: rgba(255, 255, 255, 0.5);
@@ -157,46 +184,52 @@ const Input = styled.input`
   &:focus {
     outline: none;
     background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(102, 126, 234, 0.5);
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+    border-color: rgba(180, 140, 230, 0.6);
+    box-shadow: 0 0 25px rgba(150, 100, 200, 0.4);
+  }
+
+  @media (min-width: 769px) {
+    height: 3.5rem;
+    padding: 1rem 1.8rem;
+    font-size: 0.95rem;
   }
 `;
 
 const Label = styled.label`
   color: rgba(255, 255, 255, 0.9);
-  font-size: 0.95rem;
-  margin-bottom: 0.7rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
   font-weight: 500;
   letter-spacing: 0.5px;
+
+  @media (min-width: 769px) {
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const Button = styled.button`
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.2),
-    rgba(118, 75, 162, 0.2)
-  );
+  background: rgba(190, 144, 255, 0.3);
   backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(102, 126, 234, 0.3);
+  color: white;
+  border: 1px solid rgba(200, 160, 255, 0.5);
   border-radius: 100px;
-  font-size: 1.1rem;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  margin-top: 1rem;
-  padding: 1rem 3.25rem;
+  margin: 0;
+  margin-top: 0.5rem;
+  padding: 1rem 2.5rem;
   min-width: 180px;
   transition: all 0.3s ease;
-  width: 800px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 6px 25px rgba(150, 100, 200, 0.2);
 
   &:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.25),
-      rgba(118, 75, 162, 0.25)
-    );
-    transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+    background: rgba(190, 150, 250, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(150, 100, 200, 0.4);
   }
 
   &:active {
@@ -204,9 +237,17 @@ const Button = styled.button`
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    box-shadow: 0 6px 25px rgba(150, 100, 200, 0.2);
+  }
+
+  @media (min-width: 769px) {
+    width: 90%;
+    font-size: 1.05rem;
+    padding: 1.1rem 3rem;
+    margin-top: 0.8rem;
   }
 `;
 
@@ -226,9 +267,7 @@ const ToggleButton = styled.button`
   flex: 1;
   padding: 1rem 1.5rem;
   background: ${(props) =>
-    props.$active
-      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4))"
-      : "transparent"};
+    props.$active ? "rgba(200, 160, 255, 0.35)" : "transparent"};
   color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.5)")};
   border: none;
   border-radius: 12px;
@@ -236,11 +275,13 @@ const ToggleButton = styled.button`
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: ${(props) => (props.$active ? "500" : "400")};
+  box-shadow: ${(props) =>
+    props.$active ? "0 4px 20px rgba(150, 100, 200, 0.4)" : "none"};
 
   &:hover {
     background: ${(props) =>
       props.$active
-        ? "linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5))"
+        ? "rgba(200, 160, 255, 0.45)"
         : "rgba(255, 255, 255, 0.05)"};
     color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.7)")};
   }
@@ -254,31 +295,41 @@ const DateToggleWrapper = styled.div`
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
   width: 180px;
+  height: 3.2rem;
   box-sizing: border-box;
   padding: 4px;
+
+  @media (min-width: 769px) {
+    height: 3.5rem;
+  }
 `;
 
 const DateToggleButton = styled.button`
   flex: 1;
-  padding: 1.1rem 0.8rem;
+  padding: 0 0.8rem;
   background: ${(props) =>
-    props.$active
-      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.4), rgba(118, 75, 162, 0.4))"
-      : "transparent"};
+    props.$active ? "rgba(200, 160, 255, 0.35)" : "transparent"};
   color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.5)")};
   border: none;
   border-radius: 12px;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: ${(props) => (props.$active ? "500" : "400")};
+  box-shadow: ${(props) =>
+    props.$active ? "0 4px 20px rgba(150, 100, 200, 0.4)" : "none"};
+  height: 100%;
 
   &:hover {
     background: ${(props) =>
       props.$active
-        ? "linear-gradient(135deg, rgba(102, 126, 234, 0.5), rgba(118, 75, 162, 0.5))"
+        ? "rgba(200, 160, 255, 0.45)"
         : "rgba(255, 255, 255, 0.05)"};
     color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.7)")};
+  }
+
+  @media (min-width: 769px) {
+    font-size: 0.95rem;
   }
 `;
 
@@ -299,28 +350,34 @@ const TimeSelect = styled.select`
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   width: 240px;
-  padding: 1.15rem 1.5rem;
+  padding: 0 1.5rem;
+  height: 3.2rem;
   box-sizing: border-box;
   appearance: none;
   background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3e%3cpolyline points="6 9 12 15 18 9"%3e%3c/polyline%3e%3c/svg%3e');
   background-repeat: no-repeat;
-  background-position: right 1.5rem center;
-  background-size: 20px;
+  background-position: right 1.2rem center;
+  background-size: 18px;
   transition: all 0.3s ease;
 
   &:focus {
     outline: none;
     background-color: rgba(255, 255, 255, 0.12);
-    border-color: rgba(102, 126, 234, 0.5);
-    box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+    border-color: rgba(180, 140, 230, 0.6);
+    box-shadow: 0 0 25px rgba(150, 100, 200, 0.4);
   }
 
   option {
     background-color: #1a1a1a;
     color: white;
+  }
+
+  @media (min-width: 769px) {
+    height: 3.5rem;
+    font-size: 0.95rem;
   }
 `;
 
