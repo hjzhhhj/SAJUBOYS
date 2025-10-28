@@ -143,7 +143,7 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 2.5rem;
+  font-size: 4rem;
   font-weight: 900;
   font-family: "Cinzel Decorative", cursive;
   text-shadow: 0 0 40px rgba(150, 100, 200, 0.3);
@@ -160,10 +160,6 @@ const Title = styled.h1`
     background: none;
     -webkit-text-fill-color: transparent;
     text-shadow: 0 0 80px rgba(150, 100, 200, 0.5);
-  }
-
-  @media (min-width: 481px) {
-    font-size: 3.5rem;
   }
 
   @media (min-width: 769px) {

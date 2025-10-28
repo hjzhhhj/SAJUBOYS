@@ -129,21 +129,21 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 2.2rem;
+  font-size: 3rem;
   font-weight: 900;
-  margin: 0;
+  margin: 1rem;
   font-family: "Cinzel Decorative", cursive;
   letter-spacing: 1.5px;
   position: relative;
   line-height: 1.2;
 
   @media (min-width: 769px) {
-    font-size: 2.8rem;
+    font-size: 3.2rem;
     letter-spacing: 2px;
   }
 
   @media (min-width: 1025px) {
-    font-size: 3.5rem;
+    font-size: 3.6rem;
   }
 `;
 
@@ -258,25 +258,31 @@ const ToggleWrapper = styled.div`
   backdrop-filter: blur(10px);
   border-radius: 16px;
   width: 100%;
+  height: 3.2rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-sizing: border-box;
   padding: 4px;
+
+  @media (min-width: 769px) {
+    height: 3.5rem;
+  }
 `;
 
 const ToggleButton = styled.button`
   flex: 1;
-  padding: 1rem 1.5rem;
+  padding: 0 1.5rem;
   background: ${(props) =>
     props.$active ? "rgba(200, 160, 255, 0.35)" : "transparent"};
   color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.5)")};
   border: none;
   border-radius: 12px;
-  font-size: 1rem;
+  font-size: 0.9rem;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: ${(props) => (props.$active ? "500" : "400")};
   box-shadow: ${(props) =>
     props.$active ? "0 4px 20px rgba(150, 100, 200, 0.4)" : "none"};
+  height: 100%;
 
   &:hover {
     background: ${(props) =>
@@ -284,6 +290,10 @@ const ToggleButton = styled.button`
         ? "rgba(200, 160, 255, 0.45)"
         : "rgba(255, 255, 255, 0.05)"};
     color: ${(props) => (props.$active ? "white" : "rgba(255, 255, 255, 0.7)")};
+  }
+
+  @media (min-width: 769px) {
+    font-size: 0.95rem;
   }
 `;
 
