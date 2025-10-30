@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import { sajuAPI } from "../services/api";
+import { formatBirthTimeDisplay } from "../utils/birthTime";
 
 const float1 = keyframes`
   0%, 100% {
@@ -324,6 +325,7 @@ const SavedSaju = () => {
   }, []);
 
   const loadSavedResults = async () => {
+    // 서버에서 최신 저장 목록을 받아온다
     try {
       setLoading(true);
       const response = await sajuAPI.getSavedResults();
@@ -342,7 +344,7 @@ const SavedSaju = () => {
       const response = await sajuAPI.getSajuById(sajuId);
 
       if (response.success) {
-        // 결과 페이지로 이동하면서 데이터 전달
+        // 상세 페이지로 이동하면서 조회한 데이터를 함께 전달
         navigate("/saju-result", {
           state: {
             resultData: response.data,
@@ -358,27 +360,20 @@ const SavedSaju = () => {
   };
 
   const handleDelete = async (e, sajuId) => {
-    e.stopPropagation(); // 카드 클릭 이벤트 방지
+    e.stopPropagation(); // 카드 이동 이벤트 중단
 
     if (!window.confirm("정말로 삭제하시겠습니까?")) {
       return;
     }
 
     try {
-      const response = await fetch(`http://localhost:3001/api/saju/${sajuId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${
-            JSON.parse(localStorage.getItem("user"))?.accessToken
-          }`,
-        },
-      });
+      // 인터셉터가 자동으로 토큰을 주입하므로 추가 헤더 없이 호출한다
+      const response = await sajuAPI.deleteSaju(sajuId);
 
-      if (response.ok) {
-        // 삭제 성공 시 목록 새로고침
+      if (response.success) {
         loadSavedResults();
       } else {
-        alert("삭제에 실패했습니다");
+        alert(response.message || "삭제에 실패했습니다");
       }
     } catch {
       alert("삭제에 실패했습니다");
@@ -394,32 +389,8 @@ const SavedSaju = () => {
     });
   };
 
-  const formatTime = (result) => {
-    if (result.isTimeUnknown) {
-      return "시간 모름";
-    }
-
-    if (!result.birthTime) {
-      return "시간 모름";
-    }
-
-    const timeMap = {
-      "00:00": "자시 (23:00 - 01:00)",
-      "02:00": "축시 (01:00 - 03:00)",
-      "04:00": "인시 (03:00 - 05:00)",
-      "06:00": "묘시 (05:00 - 07:00)",
-      "08:00": "진시 (07:00 - 09:00)",
-      "10:00": "사시 (09:00 - 11:00)",
-      "12:00": "오시 (11:00 - 13:00)",
-      "14:00": "미시 (13:00 - 15:00)",
-      "16:00": "신시 (15:00 - 17:00)",
-      "18:00": "유시 (17:00 - 19:00)",
-      "20:00": "술시 (19:00 - 21:00)",
-      "22:00": "해시 (21:00 - 23:00)",
-    };
-
-    return timeMap[result.birthTime] || result.birthTime;
-  };
+  const formatTime = (result) =>
+    formatBirthTimeDisplay(result.birthTime, result.isTimeUnknown);
 
   if (loading) {
     return (

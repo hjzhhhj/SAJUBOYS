@@ -250,8 +250,9 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // 이전 오류 메시지 초기화
+    setError("");
 
+    // 필수 입력 누락 시 서버 호출 전에 사용자에게 즉시 안내한다
     if (!formData.email || !formData.password) {
       setError("모든 필드를 입력해주세요");
       return;
@@ -260,6 +261,7 @@ function Login() {
     const result = await login(formData.email, formData.password);
 
     if (result.success) {
+      // 로그인 성공 후 바로 사주 입력 화면으로 이동시켜 흐름을 유지한다
       navigate("/saju-input");
     } else {
       setError(result.error || "로그인에 실패했습니다");

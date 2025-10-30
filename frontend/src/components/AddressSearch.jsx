@@ -1,7 +1,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import axios from 'axios';
 import debounce from 'lodash/debounce';
+import { sajuAPI } from '../services/api';
 
 const Container = styled.div`
   position: relative;
@@ -119,6 +119,7 @@ const AddressSearch = ({
   const [showResults, setShowResults] = useState(false);
   const containerRef = useRef(null);
 
+  // 주소 검색 API 요청을 디바운스하여 불필요한 호출을 줄인다
   const debouncedSearch = useMemo(
     () =>
       debounce(async (searchQuery) => {
@@ -129,14 +130,9 @@ const AddressSearch = ({
 
         setIsLoading(true);
         try {
-          const response = await axios.get(
-            'http://localhost:3001/api/saju/search-address',
-            {
-              params: { query: searchQuery },
-              timeout: 3000,
-            }
-          );
-          setResults(response.data.data || []);
+          // 공통 API 클라이언트는 인증 헤더 처리와 에러 포맷을 일관화한다
+          const response = await sajuAPI.searchAddress(searchQuery);
+          setResults(response.data || []);
           setShowResults(true);
         } catch {
           setResults([]);
@@ -162,6 +158,7 @@ const AddressSearch = ({
   };
 
   useEffect(() => {
+    // 입력창 밖을 클릭하면 검색 결과 패널을 닫는다
     const handleClickOutside = (event) => {
       if (containerRef.current && !containerRef.current.contains(event.target)) {
         setShowResults(false);

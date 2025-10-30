@@ -260,6 +260,7 @@ function Signup() {
     setError("");
   };
 
+  // 기본 입력 검증을 통과해야 서버에 회원가입을 위임한다
   const validateForm = () => {
     if (
       !formData.name ||
@@ -305,6 +306,7 @@ function Signup() {
 
     if (result.success) {
       setSuccess("회원가입이 완료되었습니다!");
+      // 성공 메시지를 잠시 노출한 뒤 로그인 화면으로 보내 사용자 흐름을 이어간다
       setTimeout(() => {
         navigate("/login");
       }, 2000);
