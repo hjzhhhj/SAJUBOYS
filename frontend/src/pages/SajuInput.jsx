@@ -6,10 +6,7 @@ import { useAuth } from "../context/AuthContext";
 import AddressSearch from "../components/AddressSearch";
 import DateInput from "../components/DateInput";
 import LoadingSpinner from "../components/LoadingSpinner";
-import {
-  BIRTH_TIME_OPTIONS,
-  resolveBirthTimeForApi,
-} from "../utils/birthTime";
+import { BIRTH_TIME_OPTIONS, resolveBirthTimeForApi } from "../utils/birthTime";
 
 const float1 = keyframes`
   0%, 100% {
@@ -415,7 +412,13 @@ function SajuInput() {
     }
 
     if (!birthDate) {
-      alert("생년월일을 선택해주세요");
+      alert("생년월일을 입력해주세요");
+      return;
+    }
+
+    // 날짜 유효성 검증
+    if (birthDate && (isNaN(birthDate.getTime()) || birthDate > new Date())) {
+      alert("생년월일을 정확히 입력해주세요");
       return;
     }
 
@@ -425,7 +428,7 @@ function SajuInput() {
     }
 
     if (!city || !city.trim()) {
-      alert("태어난 도시를 입력해주세요");
+      alert("태어난 도시명을 입력해주세요");
       return;
     }
 
@@ -542,7 +545,7 @@ function SajuInput() {
         <InputWrapper>
           <Label>도시명</Label>
           <AddressSearch
-            placeholder="도시명을 입력해주세요"
+            placeholder="태어난 도시명을 입력해주세요"
             value={city}
             onChange={(value) => setCity(value)}
           />
