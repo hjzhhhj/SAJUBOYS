@@ -1,11 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import styled, { keyframes } from "styled-components";
 import { useSaju } from "../context/SajuContext";
 import { useAuth } from "../context/AuthContext";
-import styled, { keyframes } from "styled-components";
 import AddressSearch from "../components/AddressSearch";
 import DateInput from "../components/DateInput";
 import LoadingSpinner from "../components/LoadingSpinner";
+import {
+  BIRTH_TIME_OPTIONS,
+  resolveBirthTimeForApi,
+} from "../utils/birthTime";
 
 const float1 = keyframes`
   0%, 100% {
@@ -404,7 +408,7 @@ function SajuInput() {
   const [resultData, setResultData] = useState(null);
 
   const handleSajuAnalysis = async () => {
-    // 입력값 검증
+    // 필수 입력값 검증
     if (!name || !name.trim()) {
       alert("이름을 입력해주세요");
       return;
@@ -425,40 +429,22 @@ function SajuInput() {
       return;
     }
 
-    // 시간 처리 (API 형식에 맞게)
-    let formattedTime = "00:00"; // 시간 모름일 때는 사용되지 않지만 빈 값 방지용
-    if (birthTime !== "unknown") {
-      const timeMap = {
-        "23-01": "00:00",
-        "01-03": "02:00",
-        "03-05": "04:00",
-        "05-07": "06:00",
-        "07-09": "08:00",
-        "09-11": "10:00",
-        "11-13": "12:00",
-        "13-15": "14:00",
-        "15-17": "16:00",
-        "17-19": "18:00",
-        "19-21": "20:00",
-        "21-23": "22:00",
-      };
-      formattedTime = timeMap[birthTime] || "00:00";
-    }
+    const { time: formattedTime, isTimeUnknown } =
+      resolveBirthTimeForApi(birthTime);
 
-    // API 형식에 맞게 데이터 포맷팅
+    // 백엔드 API 규격에 맞춰 요청 객체 구성
     const formData = {
       name: name.trim(),
       gender: gender === "male" ? "남" : "여",
       birthDate: `${birthDate.getFullYear()}-${String(
         birthDate.getMonth() + 1
-      ).padStart(2, "0")}-${String(birthDate.getDate()).padStart(2, "0")}`, // YYYY-MM-DD 형식 (로컬 시간 기준)
-      birthTime: formattedTime, // HH:MM 형식
+      ).padStart(2, "0")}-${String(birthDate.getDate()).padStart(2, "0")}`,
+      birthTime: formattedTime,
       calendarType: calendarType === "solar" ? "양력" : "음력",
       city: city.trim(),
     };
 
-    // 시간 모름일 때만 isTimeUnknown 추가
-    if (birthTime === "unknown") {
+    if (isTimeUnknown) {
       formData.isTimeUnknown = true;
     }
 
@@ -467,7 +453,6 @@ function SajuInput() {
 
       if (result.success) {
         setResultData(result.data);
-        // 버튼 클릭으로 이동
       } else {
         alert(result.error || "사주 계산에 실패했습니다");
       }
@@ -480,22 +465,7 @@ function SajuInput() {
     navigate("/saved-saju");
   };
 
-  const timeOptions = [
-    { value: "", label: "시간을 선택해주세요" },
-    { value: "unknown", label: "시간 모름" },
-    { value: "23-01", label: "자시 (23:00 - 01:00)" },
-    { value: "01-03", label: "축시 (01:00 - 03:00)" },
-    { value: "03-05", label: "인시 (03:00 - 05:00)" },
-    { value: "05-07", label: "묘시 (05:00 - 07:00)" },
-    { value: "07-09", label: "진시 (07:00 - 09:00)" },
-    { value: "09-11", label: "사시 (09:00 - 11:00)" },
-    { value: "11-13", label: "오시 (11:00 - 13:00)" },
-    { value: "13-15", label: "미시 (13:00 - 15:00)" },
-    { value: "15-17", label: "신시 (15:00 - 17:00)" },
-    { value: "17-19", label: "유시 (17:00 - 19:00)" },
-    { value: "19-21", label: "술시 (19:00 - 21:00)" },
-    { value: "21-23", label: "해시 (21:00 - 23:00)" },
-  ];
+  const timeOptions = BIRTH_TIME_OPTIONS;
 
   return (
     <Container>
@@ -595,7 +565,7 @@ function SajuInput() {
           onSkip={
             resultData
               ? () => {
-                  setLoading(false); // 버튼 클릭 시 로딩 상태 해제
+                  setLoading(false); // 결과 확인 버튼으로 오버레이 닫기
                   navigate("/saju-result", { state: resultData });
                 }
               : null

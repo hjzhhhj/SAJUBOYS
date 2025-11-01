@@ -4,7 +4,8 @@ import styled, { keyframes } from "styled-components";
 import SajuCharts from "../components/SajuCharts";
 import sajuDiagram from "../assets/saju.png";
 import { useAuth } from "../context/AuthContext";
-import api from "../services/api"; // axios 대신 api 인스턴스 사용
+import api from "../services/api";
+import { formatBirthTimeDisplay } from "../utils/birthTime";
 
 const float1 = keyframes`
   0%, 100% {
@@ -562,11 +563,12 @@ const Button = styled.button`
   }
 `;
 
+// 텍스트 내 주요 키워드를 하이라이트 색상으로 감싸는 헬퍼
 const highlightText = (text) => {
   if (!text || typeof text !== "string") return text;
 
   const detectElement = (str, type) => {
-    // element type일 때만 오행 색상 감지, 나머지는 모두 default
+    // 오행 키워드 탐지가 필요한 경우에만 색상 매핑
     if (type !== "element") return "default";
 
     if (/금|金|Metal/i.test(str)) return "금";
@@ -654,42 +656,23 @@ function SajuResult() {
   const [isFromSaved, setIsFromSaved] = useState(false);
 
   useEffect(() => {
-    // location.state에서 데이터 받기
+    // 라우터 이동 시 전달받은 결과 데이터를 화면용으로 변환
     if (location.state) {
       const data = location.state.resultData || location.state;
-      // 저장된 결과에서 온 것인지 확인
+      // 저장 목록에서 이동했는지 별도 표시해 UI 조건 분기를 제어한다
       setIsFromSaved(location.state.isFromSaved || false);
 
-      // 날짜 형식 변환
       let formattedDate = data.birthDate;
       if (data.birthDate && data.birthDate.includes("-")) {
         const [year, month, day] = data.birthDate.split("-");
         formattedDate = `${year}년 ${month}월 ${day}일`;
       }
 
-      // 시간 표시 형식 변환
-      let formattedTime = null;
-      if (data.isTimeUnknown) {
-        formattedTime = "시간 모름";
-      } else if (data.birthTime) {
-        const timeMap = {
-          "00:00": "자시 (23:00 - 01:00)",
-          "02:00": "축시 (01:00 - 03:00)",
-          "04:00": "인시 (03:00 - 05:00)",
-          "06:00": "묘시 (05:00 - 07:00)",
-          "08:00": "진시 (07:00 - 09:00)",
-          "10:00": "사시 (09:00 - 11:00)",
-          "12:00": "오시 (11:00 - 13:00)",
-          "14:00": "미시 (13:00 - 15:00)",
-          "16:00": "신시 (15:00 - 17:00)",
-          "18:00": "유시 (17:00 - 19:00)",
-          "20:00": "술시 (19:00 - 21:00)",
-          "22:00": "해시 (21:00 - 23:00)",
-        };
-        formattedTime = timeMap[data.birthTime] || data.birthTime;
-      }
+      const formattedTime = formatBirthTimeDisplay(
+        data.birthTime,
+        data.isTimeUnknown
+      );
 
-      // 데이터 설정
       setResultData({
         ...data,
         birthDate: formattedDate,
@@ -1028,13 +1011,15 @@ function SajuResult() {
 
         <ButtonGroup>
           {isFromSaved ? (
-            // 저장된 결과를 볼 때는 뒤로가기 버튼만 표시
-            <Button onClick={() => navigate("/saved-saju")}>
-              저장된 목록으로 돌아가기
-            </Button>
-          ) : (
-            // 새로운 결과를 볼 때는 저장하기와 새로운 사주 버튼 표시
             <>
+              {/* 저장된 결과를 보는 경우에는 뒤로가기만 활성화 */}
+              <Button onClick={() => navigate("/saved-saju")}>
+                저장된 목록으로 돌아가기
+              </Button>
+            </>
+          ) : (
+            <>
+              {/* 새로 계산된 결과에서는 저장과 재분석 버튼을 함께 노출한다 */}
               <Button $primary onClick={handleSaveResult} disabled={saving}>
                 {saving ? "저장 중..." : "결과 저장하기"}
               </Button>

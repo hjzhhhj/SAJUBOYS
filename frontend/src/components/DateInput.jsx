@@ -46,6 +46,7 @@ const DateInput = ({ value, onChange, placeholder = "1990-01-01" }) => {
     }
   }, [value]);
 
+  // 자유 입력을 받아 YYYY-MM-DD 형태로 자동으로 맞춰준다
   const formatDate = (input) => {
     const cleaned = input.replace(/[^\d-]/g, '');
     const numbers = cleaned.replace(/-/g, '');
@@ -74,6 +75,7 @@ const DateInput = ({ value, onChange, placeholder = "1990-01-01" }) => {
     setDisplayValue(formatted);
 
     if (formatted.length === 10) {
+      // 유효한 달력 날짜인지 검증한 뒤 부모 콜백으로 전달
       const [year, month, day] = formatted.split('-').map(Number);
 
       if (year >= 1900 && year <= new Date().getFullYear() &&
@@ -93,6 +95,7 @@ const DateInput = ({ value, onChange, placeholder = "1990-01-01" }) => {
   };
 
   const handleKeyDown = (e) => {
+    // 하이픈 삭제 시 커서가 어색하게 이동하는 문제를 방지
     if (e.key === 'Backspace' && displayValue.endsWith('-')) {
       e.preventDefault();
       setDisplayValue(displayValue.slice(0, -1));
