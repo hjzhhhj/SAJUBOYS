@@ -53,7 +53,7 @@ const GradientCircle1 = styled.div`
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0) 0%,
-    rgba(98, 0, 255, 0.31) 50%,
+    rgba(135, 60, 255, 0.3) 50%,
     #0e0025 100%
   );
   top: -200px;
@@ -78,7 +78,7 @@ const GradientCircle2 = styled.div`
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0) 0%,
-    rgba(98, 0, 255, 0.31) 50%,
+    rgba(135, 60, 255, 0.3) 50%,
     #0e0025 100%
   );
   bottom: -150px;
@@ -117,47 +117,47 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin: 0;
   margin-bottom: 1.5rem;
   font-family: "Cinzel", cursive;
-  letter-spacing: 2px;
+  letter-spacing: 1.5px;
   text-align: center;
   position: relative;
+  line-height: 1.2;
 
-  @media (min-width: 768px) {
+  @media (min-width: 769px) {
+    font-size: 2.8rem;
+    letter-spacing: 2px;
+  }
+
+  @media (min-width: 1025px) {
     font-size: 3.5rem;
   }
 `;
 
 const BackButton = styled.button`
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.2),
-    rgba(118, 75, 162, 0.2)
-  );
+  background: rgba(190, 144, 255, 0.3);
   backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(102, 126, 234, 0.3);
+  color: white;
+  border: 1px solid rgba(200, 160, 255, 0.5);
   border-radius: 100px;
-  font-size: 1.1rem;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 1rem 3.25rem;
+  padding: 1rem 2.5rem;
   min-width: 180px;
   transition: all 0.3s ease;
   position: absolute;
   top: 25px;
   right: 40px;
+  box-shadow: 0 6px 25px rgba(150, 100, 200, 0.2);
 
   &:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.25),
-      rgba(118, 75, 162, 0.25)
-    );
-    transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+    background: rgba(190, 150, 250, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(150, 100, 200, 0.4);
   }
 
   &:active {
@@ -165,9 +165,10 @@ const BackButton = styled.button`
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    box-shadow: 0 6px 25px rgba(150, 100, 200, 0.2);
   }
 
   @media (min-width: 768px) {
@@ -194,8 +195,8 @@ const SavedCard = styled.div`
   &:hover {
     transform: translateY(-1px);
     background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(102, 126, 234, 0.3);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+    border-color: rgba(180, 140, 230, 0.6);
+    box-shadow: 0 0 25px rgba(150, 100, 200, 0.4);
   }
 `;
 
@@ -252,31 +253,24 @@ const EmptyDescription = styled.p`
 `;
 
 const CalculateButton = styled.button`
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.2),
-    rgba(118, 75, 162, 0.2)
-  );
+  background: rgba(190, 144, 255, 0.3);
   backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(102, 126, 234, 0.3);
+  color: white;
+  border: 1px solid rgba(200, 160, 255, 0.5);
   border-radius: 100px;
-  font-size: 1.2rem;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 1.1rem 3.25rem;
+  padding: 1rem 2.5rem;
   min-width: 180px;
   transition: all 0.3s ease;
   margin-top: 20px;
+  box-shadow: 0 6px 25px rgba(150, 100, 200, 0.2);
 
   &:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.25),
-      rgba(118, 75, 162, 0.25)
-    );
-    transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+    background: rgba(190, 150, 250, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(150, 100, 200, 0.4);
   }
 
   &:active {
@@ -284,9 +278,10 @@ const CalculateButton = styled.button`
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    box-shadow: 0 6px 25px rgba(150, 100, 200, 0.2);
   }
 
   @media (min-width: 768px) {
@@ -399,9 +394,31 @@ const SavedSaju = () => {
     });
   };
 
-  const formatTime = (timeString) => {
-    if (!timeString || timeString === "00:00") return "시간 모름";
-    return timeString;
+  const formatTime = (result) => {
+    if (result.isTimeUnknown) {
+      return "시간 모름";
+    }
+
+    if (!result.birthTime) {
+      return "시간 모름";
+    }
+
+    const timeMap = {
+      "00:00": "자시 (23:00 - 01:00)",
+      "02:00": "축시 (01:00 - 03:00)",
+      "04:00": "인시 (03:00 - 05:00)",
+      "06:00": "묘시 (05:00 - 07:00)",
+      "08:00": "진시 (07:00 - 09:00)",
+      "10:00": "사시 (09:00 - 11:00)",
+      "12:00": "오시 (11:00 - 13:00)",
+      "14:00": "미시 (13:00 - 15:00)",
+      "16:00": "신시 (15:00 - 17:00)",
+      "18:00": "유시 (17:00 - 19:00)",
+      "20:00": "술시 (19:00 - 21:00)",
+      "22:00": "해시 (21:00 - 23:00)",
+    };
+
+    return timeMap[result.birthTime] || result.birthTime;
   };
 
   if (loading) {
@@ -454,7 +471,7 @@ const SavedSaju = () => {
                   </InfoRow>
                   <InfoRow>
                     <InfoLabel>출생시간:</InfoLabel>
-                    <InfoValue>{formatTime(result.birthTime)}</InfoValue>
+                    <InfoValue>{formatTime(result)}</InfoValue>
                   </InfoRow>
                   <InfoRow>
                     <InfoLabel>성별:</InfoLabel>

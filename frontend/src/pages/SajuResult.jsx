@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import styled, { keyframes } from "styled-components";
 import SajuCharts from "../components/SajuCharts";
+import sajuDiagram from "../assets/saju.png";
 import { useAuth } from "../context/AuthContext";
 import api from "../services/api"; // axios 대신 api 인스턴스 사용
 
@@ -43,8 +44,12 @@ const Container = styled.div`
   min-height: 100vh;
   position: relative;
   overflow-x: hidden;
-  padding: 2rem 1rem;
+  padding: 1.5rem 0;
   width: 100%;
+
+  @media (min-width: 768px) {
+    padding: 2rem 1rem;
+  }
 `;
 
 const GradientCircle1 = styled.div`
@@ -55,7 +60,7 @@ const GradientCircle1 = styled.div`
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0) 0%,
-    rgba(98, 0, 255, 0.31) 50%,
+    rgba(135, 60, 255, 0.3) 50%,
     #0e0025 100%
   );
   top: -200px;
@@ -80,7 +85,7 @@ const GradientCircle2 = styled.div`
   background: radial-gradient(
     circle,
     rgba(255, 255, 255, 0) 0%,
-    rgba(98, 0, 255, 0.31) 50%,
+    rgba(135, 60, 255, 0.3) 50%,
     #0e0025 100%
   );
   bottom: -150px;
@@ -105,10 +110,11 @@ const ContentWrapper = styled.div`
   max-width: 1400px;
   padding: 0 1rem;
   z-index: 1;
-  margin-top: 3rem;
+  margin-top: 1.5rem;
 
   @media (min-width: 768px) {
     padding: 0 2rem;
+    margin-top: 3rem;
   }
 `;
 
@@ -116,11 +122,12 @@ const SectionWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0;
 
   @media (min-width: 1024px) {
     flex-direction: row;
     align-items: flex-start;
+    gap: 0;
   }
 `;
 
@@ -128,10 +135,16 @@ const Column = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 1rem;
+  width: 100%;
+  min-width: 0;
+
+  @media (min-width: 768px) {
+    gap: 1.5rem;
+  }
 
   @media (min-width: 1024px) {
-    max-width: ${(props) => (props.$sticky ? "45%" : "55%")};
+    width: auto;
   }
 `;
 
@@ -145,23 +158,24 @@ const StickyColumn = styled(Column)`
 
 const SectionHeader = styled.div`
   width: 100%;
-  padding: 1.5rem 2rem;
+  padding: 1.25rem 1rem;
   background: ${(props) =>
     props.$variant === "immutable"
-      ? "linear-gradient(135deg, rgba(102, 126, 234, 0.15), rgba(102, 126, 234, 0.08))"
-      : "linear-gradient(135deg, rgba(156, 102, 234, 0.15), rgba(156, 102, 234, 0.08))"};
+      ? "linear-gradient(135deg, rgba(180, 140, 230, 0.15), rgba(180, 140, 230, 0.08))"
+      : "linear-gradient(135deg, rgba(200, 160, 255, 0.15), rgba(200, 160, 255, 0.08))"};
   border: 1px solid
     ${(props) =>
       props.$variant === "immutable"
-        ? "rgba(102, 126, 234, 0.3)"
-        : "rgba(156, 102, 234, 0.3)"};
+        ? "rgba(180, 140, 230, 0.3)"
+        : "rgba(200, 160, 255, 0.3)"};
   border-radius: 12px;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   text-align: center;
   backdrop-filter: blur(10px);
+  box-sizing: border-box;
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: 600;
     background: linear-gradient(135deg, #cec2ff, #dab6ff);
     -webkit-background-clip: text;
@@ -173,27 +187,53 @@ const SectionHeader = styled.div`
 
   p {
     margin: 0.5rem 0 0 0;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.6);
+  }
+
+  @media (min-width: 768px) {
+    padding: 1.5rem 2rem;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+
+    p {
+      font-size: 0.9rem;
+    }
   }
 `;
 
 const Divider = styled.div`
-  width: 1px;
+  /* 모바일: 가로 구분선 */
+  width: 100%;
+  height: 1px;
   background: linear-gradient(
-    to bottom,
+    to right,
     rgba(255, 255, 255, 0.05) 0%,
     rgba(255, 255, 255, 0.15) 20%,
     rgba(255, 255, 255, 0.2) 50%,
     rgba(255, 255, 255, 0.15) 80%,
     rgba(255, 255, 255, 0.05) 100%
   );
-  align-self: stretch;
-  margin: 0 1.5rem;
-  display: none;
+  margin: 1rem 0;
+  display: block;
 
+  /* 데스크톱: 세로 구분선 */
   @media (min-width: 1024px) {
-    display: block;
+    width: 1px;
+    height: auto;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.05) 0%,
+      rgba(255, 255, 255, 0.15) 20%,
+      rgba(255, 255, 255, 0.2) 50%,
+      rgba(255, 255, 255, 0.15) 80%,
+      rgba(255, 255, 255, 0.05) 100%
+    );
+    align-self: stretch;
+    margin: 0 1.5rem;
   }
 `;
 
@@ -202,47 +242,60 @@ const Title = styled.h1`
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-size: 3rem;
+  font-size: 2.5rem;
   font-weight: 800;
-  margin-bottom: 3rem;
+  margin-bottom: 1.5rem;
   font-family: "Cinzel", cursive;
   letter-spacing: 2px;
   position: relative;
 
   @media (min-width: 768px) {
     font-size: 3.5rem;
+    margin-bottom: 3rem;
   }
 `;
 
 const ResultCard = styled.div`
   background: ${(props) =>
     props.$variant === "immutable"
-      ? "rgba(102, 126, 234, 0.08)"
+      ? "rgba(180, 140, 230, 0.08)"
       : props.$variant === "mutable"
-      ? "rgba(156, 102, 234, 0.08)"
+      ? "rgba(200, 160, 255, 0.08)"
       : "rgba(255, 255, 255, 0.08)"};
   backdrop-filter: blur(10px);
   border: 1px solid
     ${(props) =>
       props.$variant === "immutable"
-        ? "rgba(102, 126, 234, 0.3)"
+        ? "rgba(180, 140, 230, 0.3)"
         : props.$variant === "mutable"
-        ? "rgba(156, 102, 234, 0.3)"
+        ? "rgba(200, 160, 255, 0.3)"
         : "rgba(255, 255, 255, 0.2)"};
-  border-radius: 16px;
-  padding: 2rem;
+  border-radius: 12px;
+  padding: 1.25rem;
   width: 100%;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+
+  @media (min-width: 768px) {
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const SectionTitle = styled.h2`
   color: rgba(255, 255, 255, 0.9);
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   padding-bottom: 0.5rem;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   letter-spacing: 0.5px;
+
+  @media (min-width: 768px) {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const InfoGrid = styled.div`
@@ -281,23 +334,37 @@ const PillarGrid = styled.div`
 const Pillar = styled.div`
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 16px;
-  padding: 1.5rem;
+  border-radius: 12px;
+  padding: 1rem;
   text-align: center;
+
+  @media (min-width: 768px) {
+    border-radius: 16px;
+    padding: 1.5rem;
+  }
 `;
 
 const PillarTitle = styled.h3`
   color: rgba(255, 255, 255, 0.9);
-  font-size: 1rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
+
+  @media (min-width: 768px) {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
 `;
 
 const PillarContent = styled.div`
   color: rgba(255, 255, 255, 0.9);
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   font-weight: bold;
   margin-bottom: 0.5rem;
+
+  @media (min-width: 768px) {
+    font-size: 1.8rem;
+  }
 `;
 
 const PillarSub = styled.div`
@@ -443,45 +510,38 @@ const DaeunItem = styled.div`
 const ButtonGroup = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.5rem;
   margin-top: 2rem;
   justify-content: center;
   width: 100%;
-  padding: 0 1rem;
+  padding: 0;
 
   @media (min-width: 768px) {
     flex-direction: row;
     width: auto;
-    padding: 0;
+    gap: 2rem;
   }
 `;
 
 const Button = styled.button`
-  background: linear-gradient(
-    135deg,
-    rgba(102, 126, 234, 0.2),
-    rgba(118, 75, 162, 0.2)
-  );
+  background: rgba(190, 144, 255, 0.3);
   backdrop-filter: blur(10px);
-  color: rgba(255, 255, 255, 0.8);
-  border: 1px solid rgba(102, 126, 234, 0.3);
+  color: white;
+  border: 1px solid rgba(200, 160, 255, 0.5);
   border-radius: 100px;
-  font-size: 1.1rem;
-  font-weight: 400;
+  font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  padding: 1rem 3.25rem;
-  min-width: 180px;
+  padding: 0.875rem 2rem;
+  min-width: 160px;
   transition: all 0.3s ease;
   width: 100%;
+  box-shadow: 0 6px 25px rgba(150, 100, 200, 0.2);
 
   &:hover {
-    background: linear-gradient(
-      135deg,
-      rgba(102, 126, 234, 0.25),
-      rgba(118, 75, 162, 0.25)
-    );
-    transform: translateY(-1px);
-    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.1);
+    background: rgba(190, 150, 250, 0.5);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(150, 100, 200, 0.4);
   }
 
   &:active {
@@ -489,13 +549,16 @@ const Button = styled.button`
   }
 
   &:disabled {
-    opacity: 0.6;
+    opacity: 0.5;
     cursor: not-allowed;
     transform: none;
+    box-shadow: 0 6px 25px rgba(150, 100, 200, 0.2);
   }
 
   @media (min-width: 768px) {
     width: auto;
+    font-size: 1.1rem;
+    padding: 1rem 3rem;
   }
 `;
 
@@ -521,7 +584,8 @@ const highlightText = (text) => {
       type: "element",
     },
     {
-      pattern: /◆\s*(?:목|화|토|금|수)\((?:Wood|Fire|Earth|Metal|Water)\)\s*(?:과다|부족):[^\n]+/g,
+      pattern:
+        /◆\s*(?:목|화|토|금|수)\((?:Wood|Fire|Earth|Metal|Water)\)\s*(?:과다|부족):[^\n]+/g,
       type: "element",
     },
     { pattern: /양기가\s*강한\s*사주입니다\s*\([^)]+\)/g, type: "yinyang" },
@@ -813,7 +877,7 @@ function SajuResult() {
                       }}
                     >
                       <img
-                        src="/src/assets/saju.png"
+                        src={sajuDiagram}
                         alt="오행 상생상극 다이어그램"
                         style={{
                           maxWidth: "100%",
@@ -947,10 +1011,10 @@ function SajuResult() {
             style={{
               marginTop: "2rem",
               background:
-                "linear-gradient(135deg, rgba(102, 126, 234, 0.12), rgba(156, 102, 234, 0.08))",
+                "linear-gradient(135deg, rgba(180, 140, 230, 0.12), rgba(200, 160, 255, 0.08))",
               backdropFilter: "blur(10px)",
               borderRadius: "16px",
-              border: "1px solid rgba(185, 161, 230, 0.35)",
+              border: "1px solid rgba(200, 160, 255, 0.35)",
             }}
           >
             <SectionTitle>💡 올해 행동 가이드</SectionTitle>
